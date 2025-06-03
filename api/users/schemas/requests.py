@@ -12,8 +12,16 @@ class UserLoginRequest(Request):
     @classmethod
     def get_examples(cls) -> dict[str, Any]:
         return {
-            "default": {
+            "alice": {
                 "email": "alice.johnson@example.com",
                 "password": "Password1!",
+            },
+            "bob": {
+                "email": "bob.martin@example.com",
+                "password": "Password2!",
+            },
+            "charlie": {
+                "email": "charlie.adams@example.com",
+                "password": "Password3!",
             }
         }

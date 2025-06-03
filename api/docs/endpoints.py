@@ -1,6 +1,7 @@
 from flask import Blueprint, send_file
 
 from api.users.docs import endpoints
+from config import CONFIG
 
 docs = Blueprint("docs", "docs", url_prefix="/docs")
 
@@ -70,7 +71,32 @@ def openapi():
 
 @docs.get("/")
 def swagger():
-    return send_file("api/docs/static/swagger.html")
+    url = f"{CONFIG['PROTOCOL']}://{CONFIG['HOST']}:{CONFIG['PORT']}"
+    return f"""
+      <!doctype html>
+      <html>
+        <head>
+          <script src="{url}/docs/swagger.js"></script>
+          <script src="{url}/docs/tags.js"></script> 
+          <link rel="stylesheet" type="text/css" href="{url}/docs/style.css" />
+          <script>
+            window.onload = function() {{
+              SwaggerUIBundle({{
+                url: "{url}/docs/openapi.json",
+                dom_id: "#swagger",
+                plugins: [
+                  HierarchicalTagsPlugin
+                ],
+                tryItOutEnabled: true,
+                docExpansion: "none",
+                hierarchicalTagSeparator: /[:|]/
+              }})
+            }}
+          </script>
+        </head>
+        <body><div id="swagger"></div></body>
+      </html>
+    """
 
 
 @docs.get("/swagger.js")
