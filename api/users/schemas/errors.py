@@ -1,10 +1,10 @@
-from api.schemas import Error
+from api.schemas import APIError
 
 
-class InvalidCredentialsError(Error):
+class InvalidCredentialsError(APIError):
     CODE = 401
     MESSAGE = "invalid credentials"
 
-class UserExistsError(Error):
+class UserExistsError(APIError):
     CODE = 409
     MESSAGE = "email already registered"

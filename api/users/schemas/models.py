@@ -9,3 +9,8 @@ class UserModel(Model):
     username: str
     email: str
     password: str
+
+@dataclass
+class UserSessionModel(Model):
+    user_id: int
+    token: str

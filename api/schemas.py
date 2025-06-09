@@ -34,6 +34,6 @@ class Request(ABC):
 class Model: ...
 
 
-class Error:
+class APIError(Exception):
     CODE = 500
     MESSAGE = "Internal Server Error"

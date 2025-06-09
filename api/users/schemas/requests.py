@@ -2,12 +2,16 @@ from dataclasses import dataclass
 from typing import Any
 
 from api.schemas import Request
+from api.users.schemas.models import UserModel
 
 
 @dataclass
 class UserLoginRequest(Request):
     email: str
     password: str
+
+    def to_model(self) -> UserModel:
+        return UserModel(0, self.email, self.email, self.password)
 
     @classmethod
     def get_examples(cls) -> dict[str, Any]:

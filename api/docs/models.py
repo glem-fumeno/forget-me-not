@@ -1,6 +1,6 @@
 from typing import Literal, NotRequired, TypedDict
 
-from api.schemas import Error, Request, Response
+from api.schemas import APIError, Request, Response
 
 DocTypeLiteral = Literal["string", "integer", "number", "boolean"]
 
@@ -12,6 +12,6 @@ EndpointDict = TypedDict(
         "query": NotRequired[dict[str, DocTypeLiteral]],
         "body": NotRequired[type[Request]],
         "responses": type[Response],
-        "errors": list[type[Error]],
+        "errors": list[type[APIError]],
     }
 )
