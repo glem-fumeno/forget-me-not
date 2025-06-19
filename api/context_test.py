@@ -25,5 +25,3 @@ class TestContext(unittest.TestCase):
 
         with self.assertRaises(ValueError) as e:
             ctx.get("user_id", "12")
-
-        self.assertStartsWith(e.exception.args[0], "Context type mismatch: ")

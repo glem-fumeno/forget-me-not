@@ -1,5 +1,3 @@
-import uuid
-
 from flask import Blueprint, Response, make_response, request
 
 from api.schemas import APIError
@@ -7,6 +5,7 @@ from api.users.controllers.login import UserLoginController
 from api.users.controllers.register import UserRegisterController
 from api.users.database.core import UserDatabaseRepository
 from api.users.schemas.requests import UserLoginRequest
+from config import CONFIG
 
 users = Blueprint("users", "users", url_prefix="/users")
 
@@ -17,10 +16,10 @@ def response_from_error(error: APIError) -> Response:
 
 @users.post("/register")
 def register():
-    repository = UserDatabaseRepository()
-    controller = UserRegisterController(repository)
     try:
-        response_ = controller.run(UserLoginRequest.from_flask(request))
+        with UserDatabaseRepository(CONFIG["DB_PATH"]) as repository:
+            controller = UserRegisterController(repository)
+            response_ = controller.run(UserLoginRequest.from_flask(request))
     except APIError as e:
         return response_from_error(e)
     response = make_response(response_.to_dict())
@@ -30,10 +29,10 @@ def register():
 
 @users.post("/login")
 def login():
-    repository = UserDatabaseRepository()
-    controller = UserLoginController(repository)
     try:
-        response_ = controller.run(UserLoginRequest.from_flask(request))
+        with UserDatabaseRepository(CONFIG["DB_PATH"]) as repository:
+            controller = UserLoginController(repository)
+            response_ = controller.run(UserLoginRequest.from_flask(request))
     except APIError as e:
         return response_from_error(e)
     response = make_response(response_.to_dict())
