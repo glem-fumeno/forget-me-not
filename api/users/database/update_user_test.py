@@ -23,13 +23,6 @@ class TestUpdateUser(unittest.TestCase):
             "charlie.cooper@example.com",
             get_hash("CoffeeLover#1"),
         )
-        users = self.repository.cursor.execute(
-            """
-            SELECT user_id_, username_, email_, password_
-            FROM users_
-            """,
-        )
-        r = users.fetchall()
         self.repository.update_user(model)
         result = self.repository.cursor.execute(
             """
