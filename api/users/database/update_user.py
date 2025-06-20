@@ -13,7 +13,8 @@ class UserUpdateUserOperation(DatabaseOperation):
             SET
                 username_ = ?,
                 email_ = ?,
-                password_ = ?
+                password_ = ?,
+                role_ = ?
             WHERE
                 user_id_ = ?
         """

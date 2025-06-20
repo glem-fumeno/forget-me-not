@@ -1,6 +1,6 @@
 from api.users.common import get_hash
 from api.users.database.core import UserDatabaseRepository
-from api.users.schemas.models import UserModel
+from api.users.schemas.models import RoleLiteral, UserModel
 
 
 class UserDatabaseTestRepository(UserDatabaseRepository):
@@ -10,14 +10,16 @@ class UserDatabaseTestRepository(UserDatabaseRepository):
         self.email_map: dict[str, int] = {}
 
         self.__insert_user(
-            "aanderson", "alice.anderson@example.com", "A1ice_89rocks"
+            "aanderson", "alice.anderson@example.com", "A1ice_89rocks", "admin"
         )
         self.__insert_user(
-            "b.baker92", "bob.baker@example.com", "SunsetDrive@34"
+            "b.baker92", "bob.baker@example.com", "SunsetDrive@34", "user"
         )
 
-    def __insert_user(self, username: str, email: str, password: str):
-        model = UserModel(-1, username, email, get_hash(password))
+    def __insert_user(
+        self, username: str, email: str, password: str, role: RoleLiteral
+    ):
+        model = UserModel(-1, username, email, get_hash(password), role)
         result = self.cursor.execute(self.__user_query, model.parameters)
         assert result.lastrowid is not None
         model.user_id = result.lastrowid
@@ -27,6 +29,6 @@ class UserDatabaseTestRepository(UserDatabaseRepository):
     @property
     def __user_query(self) -> str:
         return """
-            INSERT INTO users_ (username_, email_, password_)
-            VALUES (?, ?, ?)
+            INSERT INTO users_ (username_, email_, password_, role_)
+            VALUES (?, ?, ?, ?)
         """

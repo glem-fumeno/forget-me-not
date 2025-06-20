@@ -11,6 +11,6 @@ class UserInsertUserOperation(DatabaseOperation):
     @property
     def query(self) -> str:
         return """
-            INSERT INTO users_ (username_, email_, password_)
-            VALUES (?, ?, ?)
+            INSERT INTO users_ (username_, email_, password_, role_)
+            VALUES (?, ?, ?, ?)
         """

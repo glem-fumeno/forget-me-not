@@ -1,5 +1,5 @@
 from api.users.common import get_hash, get_uuid
-from api.users.schemas.models import UserModel, UserSessionModel
+from api.users.schemas.models import RoleLiteral, UserModel, UserSessionModel
 
 
 class UserTestRepository:
@@ -14,10 +14,10 @@ class UserTestRepository:
         self.user_login_map: dict[str, int] = {}
 
         self.__insert_user(
-            "aanderson", "alice.anderson@example.com", "A1ice_89rocks"
+            "aanderson", "alice.anderson@example.com", "A1ice_89rocks", "admin"
         )
         self.__insert_user(
-            "b.baker92", "bob.baker@example.com", "SunsetDrive@34"
+            "b.baker92", "bob.baker@example.com", "SunsetDrive@34", "user"
         )
 
     def login(self, user_id: int):
@@ -25,10 +25,12 @@ class UserTestRepository:
         self.user_login_map[token] = user_id
         return token
 
-    def __insert_user(self, username: str, email: str, password: str):
+    def __insert_user(
+        self, username: str, email: str, password: str, role: RoleLiteral
+    ):
         self.max_user_id += 1
         self.user_map[self.max_user_id] = UserModel(
-            self.max_user_id, username, email, get_hash(password)
+            self.max_user_id, username, email, get_hash(password), role
         )
         self.email_map[email] = self.max_user_id
 

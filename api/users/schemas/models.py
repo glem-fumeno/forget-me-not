@@ -1,7 +1,9 @@
 from dataclasses import dataclass
+from typing import Literal
 
 from api.schemas import Model
 
+RoleLiteral = Literal["new", "user", "admin"]
 
 @dataclass
 class UserModel(Model):
@@ -9,10 +11,11 @@ class UserModel(Model):
     username: str
     email: str
     password: str
+    role: RoleLiteral
 
     @property
-    def parameters(self) -> tuple[str, str, str]:
-        return (self.username, self.email, self.password)
+    def parameters(self) -> tuple[str, str, str, str]:
+        return (self.username, self.email, self.password, self.role)
 
 
 @dataclass

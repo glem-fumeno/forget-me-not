@@ -3,7 +3,7 @@ import unittest
 from api.context import Context
 from api.users.controllers.core_test import UserTestRepository
 from api.users.controllers.delete import UserDeleteController
-from api.users.schemas.errors import Inaccessible, LoggedOut
+from api.users.schemas.errors import Inaccessible, LoggedOut, UserNotFoundError
 
 
 class TestDelete(unittest.TestCase):
@@ -12,6 +12,10 @@ class TestDelete(unittest.TestCase):
         user_id = self.repository.email_map["alice.anderson@example.com"]
         self.ctx = Context().add("token", self.repository.login(user_id))
         self.controller = UserDeleteController(self.ctx, self.repository)
+
+    def test_raises_error_if_not_found(self):
+        with self.assertRaises(UserNotFoundError):
+            self.controller.run(-1)
 
     def test_found_removes_user(self):
         user_id = self.repository.email_map["alice.anderson@example.com"]

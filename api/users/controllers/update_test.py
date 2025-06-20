@@ -14,6 +14,11 @@ class TestUpdate(unittest.TestCase):
         self.ctx = Context().add("token", self.repository.login(user_id))
         self.controller = UserUpdateController(self.ctx, self.repository)
 
+    def test_raises_error_if_not_found(self):
+        request = UserUpdateRequest()
+        with self.assertRaises(UserNotFoundError):
+            self.controller.run(-1, request)
+
     def test_updates_email(self):
         request = UserUpdateRequest(email="alice.adams@example.com")
         user_id = self.repository.email_map["alice.anderson@example.com"]

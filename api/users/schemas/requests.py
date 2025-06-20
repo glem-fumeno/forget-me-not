@@ -11,7 +11,7 @@ class UserLoginRequest(Request):
     password: str
 
     def to_model(self) -> UserModel:
-        return UserModel(0, self.email, self.email, self.password)
+        return UserModel(0, self.email, self.email, self.password, "new")
 
     @classmethod
     def get_examples(cls) -> dict[str, Any]:

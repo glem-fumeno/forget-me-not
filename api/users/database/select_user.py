@@ -13,7 +13,7 @@ class UserSelectUserOperation(DatabaseOperation):
     @property
     def query(self) -> str:
         return """
-            SELECT user_id_, username_, email_, password_
+            SELECT user_id_, username_, email_, password_, role_
             FROM users_
             WHERE user_id_ = ?
         """
