@@ -1,5 +1,6 @@
 from typing import Protocol
 
+from api.context import Context
 from api.controller import Controller, Repository
 from api.users.schemas.models import UserModel, UserSessionModel
 
@@ -9,10 +10,12 @@ class UserRepository(Repository, Protocol):
     def insert_user_session(self, model: UserSessionModel): ...
     def select_user(self, user_id: int) -> UserModel | None: ...
     def select_user_id_by_email(self, email: str) -> int | None: ...
+    def select_user_by_token(self, token: str) -> UserModel | None: ...
     def update_user(self, model: UserModel): ...
+    def delete_user(self, user_id: int): ...
 
 
 class UserController(Controller):
-    def __init__(self, repository: UserRepository) -> None:
+    def __init__(self, ctx: Context, repository: UserRepository) -> None:
         self.repository = repository
-        super().__init__()
+        super().__init__(ctx)

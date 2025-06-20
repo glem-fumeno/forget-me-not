@@ -12,3 +12,11 @@ class UserExistsError(APIError):
 class UserNotFoundError(APIError):
     CODE = 404
     MESSAGE = "user not found"
+
+class LoggedOut(APIError):
+    CODE = 401
+    MESSAGE = "logged out"
+
+class Inaccessible(APIError):
+    CODE = 403
+    MESSAGE = "resource is inaccessible"

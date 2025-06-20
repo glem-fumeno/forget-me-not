@@ -1,5 +1,6 @@
 import unittest
 
+from api.context import Context
 from api.users.controllers.core_test import UserTestRepository
 from api.users.controllers.register import UserRegisterController
 from api.users.schemas.errors import UserExistsError
@@ -8,8 +9,9 @@ from api.users.schemas.requests import UserLoginRequest
 
 class TestRegister(unittest.TestCase):
     def setUp(self) -> None:
+        self.ctx = Context()
         self.repository = UserTestRepository()
-        self.controller = UserRegisterController(self.repository)
+        self.controller = UserRegisterController(self.ctx, self.repository)
 
     def test_register_email_exists_raises_error(self):
         with self.assertRaises(UserExistsError):

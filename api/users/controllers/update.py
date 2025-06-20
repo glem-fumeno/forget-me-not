@@ -1,3 +1,4 @@
+from api.docs.models import EndpointDict
 from api.users.controllers.core import UserController
 from api.users.schemas.errors import UserExistsError, UserNotFoundError
 from api.users.schemas.requests import UserUpdateRequest
@@ -36,3 +37,13 @@ class UserUpdateController(UserController):
         if self.request.password is None:
             return
         self.model.password = self.request.password
+
+    @classmethod
+    def get_docs(cls):
+        return EndpointDict(
+            endpoint="patch /users/{user_id}",
+            path={"user_id": "integer"},
+            body=UserUpdateRequest,
+            responses=UserResponse,
+            errors=[UserNotFoundError, UserExistsError],
+        )

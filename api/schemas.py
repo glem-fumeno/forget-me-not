@@ -39,7 +39,7 @@ class Model:
 
     @property
     @abstractmethod
-    def parameters(cls) -> tuple: ...
+    def parameters(self) -> tuple: ...
 
 
 class APIError(Exception):

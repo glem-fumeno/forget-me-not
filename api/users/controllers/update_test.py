@@ -1,5 +1,6 @@
 import unittest
 
+from api.context import Context
 from api.users.controllers.core_test import UserTestRepository
 from api.users.controllers.update import UserUpdateController
 from api.users.schemas.errors import UserExistsError, UserNotFoundError
@@ -8,8 +9,9 @@ from api.users.schemas.requests import UserUpdateRequest
 
 class TestUpdate(unittest.TestCase):
     def setUp(self) -> None:
+        self.ctx = Context()
         self.repository = UserTestRepository()
-        self.controller = UserUpdateController(self.repository)
+        self.controller = UserUpdateController(self.ctx, self.repository)
 
     def test_raises_error_if_not_found(self):
         request = UserUpdateRequest()

@@ -1,4 +1,5 @@
 from api.database.repository import DatabaseRepository
+from api.users.database.delete_user import UserDeleteUserOperation
 from api.users.database.insert_user import UserInsertUserOperation
 from api.users.database.insert_user_session import (
     UserInsertUserSessionOperation,
@@ -26,3 +27,6 @@ class UserDatabaseRepository(DatabaseRepository):
 
     def update_user(self, model: UserModel):
         return UserUpdateUserOperation(self.cursor).run(model)
+
+    def delete_user(self, user_id: int):
+        return UserDeleteUserOperation(self.cursor).run(user_id)

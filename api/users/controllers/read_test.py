@@ -1,14 +1,17 @@
 import unittest
 
+from api.context import Context
 from api.users.controllers.core_test import UserTestRepository
 from api.users.controllers.read import UserReadController
-from api.users.schemas.errors import UserNotFoundError
+from api.users.schemas.errors import LoggedOut, UserNotFoundError
 
 
 class TestRead(unittest.TestCase):
     def setUp(self) -> None:
         self.repository = UserTestRepository()
-        self.controller = UserReadController(self.repository)
+        user_id = self.repository.email_map["alice.anderson@example.com"]
+        self.ctx = Context().add("token", self.repository.login(user_id))
+        self.controller = UserReadController(self.ctx, self.repository)
 
     def test_raises_error_if_not_found(self):
         with self.assertRaises(UserNotFoundError):
@@ -21,3 +24,10 @@ class TestRead(unittest.TestCase):
         self.assertEqual(result.user_id, user_id)
         self.assertEqual(result.email, model.email)
         self.assertEqual(result.username, model.username)
+
+    def test_logged_out_raises_error(self):
+        user_id = self.repository.email_map["alice.anderson@example.com"]
+        self.controller.ctx = self.controller.ctx.add("token", "")
+
+        with self.assertRaises(LoggedOut):
+            self.controller.run(user_id)

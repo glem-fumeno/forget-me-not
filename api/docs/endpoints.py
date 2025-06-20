@@ -1,19 +1,22 @@
 from flask import Blueprint, send_file
 
-from api.users.docs import endpoints
+from api.users.endpoints import endpoints
 from config import CONFIG
 
-docs = Blueprint("docs", "docs", url_prefix="/docs")
+blueprint = Blueprint("docs", "docs", url_prefix="/docs")
+docs = [
+    *endpoints.docs,
+]
 
 
-@docs.route("/openapi.json")
+@blueprint.route("/openapi.json")
 def openapi():
     response = {
         "openapi": "3.1.0",
         "info": {"title": "Sample API"},
         "paths": {},
     }
-    for endpoint_info in endpoints:
+    for endpoint_info in docs:
         method, endpoint = endpoint_info["endpoint"].split(" ")
         _, tag, _ = endpoint.split("/", 3)
 
@@ -69,7 +72,7 @@ def openapi():
     return response
 
 
-@docs.get("/")
+@blueprint.get("/")
 def swagger():
     url = f"{CONFIG['PROTOCOL']}://{CONFIG['HOST']}:{CONFIG['PORT']}"
     return f"""
@@ -99,16 +102,16 @@ def swagger():
     """
 
 
-@docs.get("/swagger.js")
+@blueprint.get("/swagger.js")
 def swagger_js():
     return send_file("api/docs/static/swagger.js")
 
 
-@docs.get("/style.css")
+@blueprint.get("/style.css")
 def swagger_css():
     return send_file("api/docs/static/swagger.css")
 
 
-@docs.get("/tags.js")
+@blueprint.get("/tags.js")
 def swagger_tags():
     return send_file("api/docs/static/tags.js")

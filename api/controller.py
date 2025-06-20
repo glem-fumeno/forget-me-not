@@ -1,15 +1,21 @@
+from abc import ABC, abstractmethod
 from typing import Protocol
 from api.broker import Broker
 from api.context import Context
-import random
+
+from api.docs.models import EndpointDict
 
 
 class Repository(Protocol): ...
 
-class Controller:
-    def __init__(self) -> None:
+class Controller(ABC):
+    def __init__(self, ctx: Context) -> None:
         self.broker = Broker()
-        self.ctx = Context().add("hash", f"{random.getrandbits(32):08x}")
+        self.ctx = ctx
 
     def publish(self, *args, **kwargs):
         self.broker.publish(self.ctx, self.__class__.__name__, *args, **kwargs)
+
+    @classmethod
+    @abstractmethod
+    def get_docs(cls) -> EndpointDict: ...

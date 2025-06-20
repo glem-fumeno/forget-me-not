@@ -1,3 +1,4 @@
+from api.docs.models import EndpointDict
 from api.users.common import get_hash, get_uuid
 from api.users.controllers.core import UserController
 from api.users.schemas.errors import InvalidCredentialsError
@@ -19,3 +20,12 @@ class UserLoginController(UserController):
         session = UserSessionModel(user_id, get_uuid())
         self.repository.insert_user_session(session)
         return UserTokenResponse.from_model(model, session.token)
+
+    @classmethod
+    def get_docs(cls):
+        return EndpointDict(
+            endpoint="post /users/login",
+            body=UserLoginRequest,
+            responses=UserTokenResponse,
+            errors=[InvalidCredentialsError],
+        )
