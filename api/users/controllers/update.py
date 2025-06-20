@@ -1,12 +1,19 @@
 from api.docs.models import EndpointDict
 from api.users.controllers.core import UserController
-from api.users.schemas.errors import UserExistsError, UserNotFoundError
+from api.users.schemas.errors import Inaccessible, LoggedOut, UserExistsError, UserNotFoundError
 from api.users.schemas.requests import UserUpdateRequest
 from api.users.schemas.responses import UserResponse
 
 
 class UserUpdateController(UserController):
     def run(self, user_id: int, request: UserUpdateRequest) -> UserResponse:
+        requestee = self.repository.select_user_by_token(
+            self.ctx.get("token", "")
+        )
+        if requestee is None:
+            raise LoggedOut
+        if requestee.user_id != user_id:
+            raise Inaccessible
         self.user_id = user_id
         self.request = request
         model = self.repository.select_user(user_id)

@@ -1,11 +1,18 @@
 from api.docs.models import EndpointDict
 from api.users.controllers.core import UserController
-from api.users.schemas.errors import UserNotFoundError
+from api.users.schemas.errors import Inaccessible, LoggedOut, UserNotFoundError
 from api.users.schemas.responses import UserResponse
 
 
 class UserDeleteController(UserController):
     def run(self, user_id: int) -> UserResponse:
+        requestee = self.repository.select_user_by_token(
+            self.ctx.get("token", "")
+        )
+        if requestee is None:
+            raise LoggedOut
+        if requestee.user_id != user_id:
+            raise Inaccessible
         model = self.repository.select_user(user_id)
         if model is None:
             raise UserNotFoundError

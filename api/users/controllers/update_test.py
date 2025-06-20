@@ -3,20 +3,16 @@ import unittest
 from api.context import Context
 from api.users.controllers.core_test import UserTestRepository
 from api.users.controllers.update import UserUpdateController
-from api.users.schemas.errors import UserExistsError, UserNotFoundError
+from api.users.schemas.errors import Inaccessible, LoggedOut, UserExistsError, UserNotFoundError
 from api.users.schemas.requests import UserUpdateRequest
 
 
 class TestUpdate(unittest.TestCase):
     def setUp(self) -> None:
-        self.ctx = Context()
         self.repository = UserTestRepository()
+        user_id = self.repository.email_map["alice.anderson@example.com"]
+        self.ctx = Context().add("token", self.repository.login(user_id))
         self.controller = UserUpdateController(self.ctx, self.repository)
-
-    def test_raises_error_if_not_found(self):
-        request = UserUpdateRequest()
-        with self.assertRaises(UserNotFoundError):
-            self.controller.run(-1, request)
 
     def test_updates_email(self):
         request = UserUpdateRequest(email="alice.adams@example.com")
@@ -76,3 +72,22 @@ class TestUpdate(unittest.TestCase):
         self.assertEqual(result.user_id, user_id)
         self.assertEqual(result.email, model.email)
         self.assertEqual(result.username, model.username)
+
+    def test_logged_out_raises_error(self):
+        user_id = self.repository.email_map["alice.anderson@example.com"]
+        self.controller.ctx = self.controller.ctx.add("token", "")
+
+        request = UserUpdateRequest()
+        with self.assertRaises(LoggedOut):
+            self.controller.run(user_id, request)
+
+    def test_different_user_raises_error(self):
+        user_id = self.repository.email_map["alice.anderson@example.com"]
+        requestee_id = self.repository.email_map["bob.baker@example.com"]
+        self.controller.ctx = self.controller.ctx.add(
+            "token", self.repository.login(requestee_id)
+        )
+
+        request = UserUpdateRequest()
+        with self.assertRaises(Inaccessible):
+            self.controller.run(user_id, request)
