@@ -1,8 +1,6 @@
-from hashlib import sha256
-
+from api.users.common import get_hash
 from api.users.database.core import UserDatabaseRepository
 from api.users.schemas.models import UserModel
-from config import CONFIG
 
 
 class UserDatabaseTestRepository(UserDatabaseRepository):
@@ -19,21 +17,16 @@ class UserDatabaseTestRepository(UserDatabaseRepository):
         )
 
     def __insert_user(self, username: str, email: str, password: str):
-        password = sha256((password + CONFIG["SALT"]).encode()).hexdigest()
-
-        user_id = self.cursor.execute(
-            self.__user_insert_query,
-            (username, email, password),
-        ).fetchone()
-        self.user_map[user_id] = UserModel(user_id, username, email, password)
-        self.email_map[email] = user_id
+        model = UserModel(-1, username, email, get_hash(password))
+        result = self.cursor.execute(self.__user_query, model.parameters)
+        assert result.lastrowid is not None
+        model.user_id = result.lastrowid
+        self.user_map[model.user_id] = model
+        self.email_map[email] = model.user_id
 
     @property
-    def __user_insert_query(self) -> str:
+    def __user_query(self) -> str:
         return """
-            INSERT INTO users_
-                (username_, email_, password_)
-            VALUES
-                (?, ?, ?)
-            RETURNING user_id_
+            INSERT INTO users_ (username_, email_, password_)
+            VALUES (?, ?, ?)
         """

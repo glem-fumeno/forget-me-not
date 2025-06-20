@@ -23,5 +23,5 @@ class TestContext(unittest.TestCase):
     def test_add_value_get_value_type_mismatch_raises_error(self):
         ctx = Context().add("user_id", 3)
 
-        with self.assertRaises(ValueError) as e:
+        with self.assertRaises(ValueError):
             ctx.get("user_id", "12")

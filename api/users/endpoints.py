@@ -5,7 +5,6 @@ from api.users.controllers.login import UserLoginController
 from api.users.controllers.register import UserRegisterController
 from api.users.database.core import UserDatabaseRepository
 from api.users.schemas.requests import UserLoginRequest
-from config import CONFIG
 
 users = Blueprint("users", "users", url_prefix="/users")
 
@@ -17,7 +16,7 @@ def response_from_error(error: APIError) -> Response:
 @users.post("/register")
 def register():
     try:
-        with UserDatabaseRepository(CONFIG["DB_PATH"]) as repository:
+        with UserDatabaseRepository() as repository:
             controller = UserRegisterController(repository)
             response_ = controller.run(UserLoginRequest.from_flask(request))
     except APIError as e:
@@ -30,7 +29,7 @@ def register():
 @users.post("/login")
 def login():
     try:
-        with UserDatabaseRepository(CONFIG["DB_PATH"]) as repository:
+        with UserDatabaseRepository() as repository:
             controller = UserLoginController(repository)
             response_ = controller.run(UserLoginRequest.from_flask(request))
     except APIError as e:

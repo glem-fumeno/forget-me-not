@@ -1,10 +1,7 @@
-import uuid
-from hashlib import sha256
 from typing import Protocol
 
 from api.controller import Controller, Repository
 from api.users.schemas.models import UserModel, UserSessionModel
-from config import CONFIG
 
 
 class UserRepository(Repository, Protocol):
@@ -17,10 +14,3 @@ class UserController(Controller):
     def __init__(self, repository: UserRepository) -> None:
         self.repository = repository
         super().__init__()
-
-    def hash(self, value: str) -> str:
-        return sha256((value + CONFIG["SALT"]).encode()).hexdigest()
-
-    @property
-    def uuid(self) -> str:
-        return uuid.uuid4().hex

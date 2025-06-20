@@ -4,18 +4,13 @@ from api.users.schemas.models import UserModel
 
 class UserInsertUserOperation(DatabaseOperation):
     def run(self, model: UserModel):
-        user_id = self.cursor.execute(
-            self.__user_insert_query,
-            (model.username, model.email, model.password),
-        ).fetchone()
-        model.user_id = user_id
+        result = self.cursor.execute(self.query, model.parameters)
+        assert result.lastrowid is not None, "could not insert user"
+        model.user_id = result.lastrowid
 
     @property
-    def __user_insert_query(self) -> str:
+    def query(self) -> str:
         return """
-            INSERT INTO users_
-                (username_, email_, password_)
-            VALUES
-                (?, ?, ?)
-            RETURNING user_id_
+            INSERT INTO users_ (username_, email_, password_)
+            VALUES (?, ?, ?)
         """

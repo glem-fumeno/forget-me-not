@@ -10,7 +10,16 @@ class UserModel(Model):
     email: str
     password: str
 
+    @property
+    def parameters(self) -> tuple[str, str, str]:
+        return (self.username, self.email, self.password)
+
+
 @dataclass
 class UserSessionModel(Model):
     user_id: int
     token: str
+
+    @property
+    def parameters(self) -> tuple[int, str]:
+        return (self.user_id, self.token)

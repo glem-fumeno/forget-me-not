@@ -21,6 +21,7 @@ class Response(ABC):
 
 @dataclass
 class Request(ABC):
+
     @classmethod
     def from_flask(cls, request: FlaskRequest) -> Self:
         return cls(**request.get_json())
@@ -31,7 +32,11 @@ class Request(ABC):
 
 
 @dataclass
-class Model: ...
+class Model:
+
+    @property
+    @abstractmethod
+    def parameters(cls) -> tuple: ...
 
 
 class APIError(Exception):

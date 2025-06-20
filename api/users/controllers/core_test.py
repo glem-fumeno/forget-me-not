@@ -1,7 +1,5 @@
-from hashlib import sha256
-
+from api.users.common import get_hash
 from api.users.schemas.models import UserModel, UserSessionModel
-from config import CONFIG
 
 
 class UserTestRepository:
@@ -23,10 +21,9 @@ class UserTestRepository:
         )
 
     def __insert_user(self, username: str, email: str, password: str):
-        password = sha256((password + CONFIG["SALT"]).encode()).hexdigest()
         self.max_user_id += 1
         self.user_map[self.max_user_id] = UserModel(
-            self.max_user_id, username, email, password
+            self.max_user_id, username, email, get_hash(password)
         )
         self.email_map[email] = self.max_user_id
 

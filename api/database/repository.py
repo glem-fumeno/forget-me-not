@@ -1,11 +1,16 @@
 import sqlite3
 
 from api.database.migrator import DatabaseMigrator
+from config import CONFIG
+
 
 class DatabaseRepository:
-    def __init__(self, database_path: str):
-        self.database_path = database_path
-        DatabaseMigrator().migrate(database_path)
+    def __init__(self, database_path: str | None = None):
+        self.config = CONFIG
+        self.database_path = self.config["DB_PATH"]
+        if database_path is not None:
+            self.database_path = database_path
+        DatabaseMigrator().migrate(self.database_path)
 
     def __enter__(self):
         self.connect()
@@ -14,7 +19,7 @@ class DatabaseRepository:
     def connect(self):
         self.connection = sqlite3.connect(self.database_path)
         self.cursor = self.connection.cursor()
-        self.cursor.execute('BEGIN')
+        self.cursor.execute("BEGIN")
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         del exc_val, exc_tb
