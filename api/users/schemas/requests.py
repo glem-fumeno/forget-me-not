@@ -29,3 +29,23 @@ class UserLoginRequest(Request):
                 "password": "Password3!",
             }
         }
+
+@dataclass
+class UserUpdateRequest(Request):
+    username: str | None = None
+    email: str | None = None
+    password: str | None = None
+
+    @classmethod
+    def get_examples(cls) -> dict[str, Any]:
+        return {
+            "alice": {
+                "username": "aanderson",
+            },
+            "bob": {
+                "email": "bob.baker@example.com",
+            },
+            "charlie": {
+                "password": "SunsetDrive@34",
+            }
+        }

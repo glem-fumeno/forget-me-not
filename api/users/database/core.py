@@ -7,6 +7,7 @@ from api.users.database.select_user import UserSelectUserOperation
 from api.users.database.select_user_id_by_email import (
     UserSelectUserIdByEmailOperation,
 )
+from api.users.database.update_user import UserUpdateUserOperation
 from api.users.schemas.models import UserModel, UserSessionModel
 
 
@@ -22,3 +23,6 @@ class UserDatabaseRepository(DatabaseRepository):
 
     def select_user_id_by_email(self, email: str) -> int | None:
         return UserSelectUserIdByEmailOperation(self.cursor).run(email)
+
+    def update_user(self, model: UserModel):
+        return UserUpdateUserOperation(self.cursor).run(model)

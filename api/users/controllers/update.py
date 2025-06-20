@@ -1,0 +1,38 @@
+from api.users.controllers.core import UserController
+from api.users.schemas.errors import UserExistsError, UserNotFoundError
+from api.users.schemas.requests import UserUpdateRequest
+from api.users.schemas.responses import UserResponse
+
+
+class UserUpdateController(UserController):
+    def run(self, user_id: int, request: UserUpdateRequest) -> UserResponse:
+        self.user_id = user_id
+        self.request = request
+        model = self.repository.select_user(user_id)
+        if model is None:
+            raise UserNotFoundError
+        self.model = model
+        self.update_email()
+        self.update_username()
+        self.update_password()
+
+        self.repository.update_user(self.model)
+        return UserResponse.from_model(self.model)
+
+    def update_email(self):
+        if self.request.email is None:
+            return
+        duplicate = self.repository.select_user_id_by_email(self.request.email)
+        if duplicate is not None and duplicate != self.user_id:
+            raise UserExistsError
+        self.model.email = self.request.email
+
+    def update_username(self):
+        if self.request.username is None:
+            return
+        self.model.username = self.request.username
+
+    def update_password(self):
+        if self.request.password is None:
+            return
+        self.model.password = self.request.password

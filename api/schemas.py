@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from typing import Any, Self
 
 from flask import Request as FlaskRequest
@@ -33,6 +33,9 @@ class Request(ABC):
 
 @dataclass
 class Model:
+
+    def copy(self) -> Self:
+        return replace(self)
 
     @property
     @abstractmethod
