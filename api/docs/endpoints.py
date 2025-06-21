@@ -1,11 +1,13 @@
 from flask import Blueprint, send_file
 
-from api.users.endpoints import endpoints
+from api.users.endpoints import endpoints as users
+from api.items.endpoints import endpoints as items
 from config import CONFIG
 
 blueprint = Blueprint("docs", "docs", url_prefix="/docs")
 docs = [
-    *endpoints.docs,
+    *users.docs,
+    *items.docs,
 ]
 
 

@@ -40,8 +40,3 @@ class Model:
     @property
     @abstractmethod
     def parameters(self) -> tuple: ...
-
-
-class APIError(Exception):
-    CODE = 500
-    MESSAGE = "Internal Server Error"

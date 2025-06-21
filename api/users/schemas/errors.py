@@ -1,4 +1,4 @@
-from api.schemas import APIError
+from api.errors import APIError
 
 
 class InvalidCredentialsError(APIError):

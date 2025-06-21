@@ -1,6 +1,6 @@
 from api.users.common import get_hash
 from api.users.database.core import UserDatabaseRepository
-from api.users.schemas.models import RoleLiteral, UserModel
+from api.users.schemas.models import RoleLiteral, UserModel, UserSessionModel
 
 
 class UserDatabaseTestRepository(UserDatabaseRepository):
@@ -14,6 +14,9 @@ class UserDatabaseTestRepository(UserDatabaseRepository):
         )
         self.__insert_user(
             "b.baker92", "bob.baker@example.com", "SunsetDrive@34", "user"
+        )
+        self.__insert_session(
+            "alice.anderson@example.com", "f77e3ce3430c4aeba5cc273089075c81"
         )
 
     def __insert_user(
@@ -31,4 +34,15 @@ class UserDatabaseTestRepository(UserDatabaseRepository):
         return """
             INSERT INTO users_ (username_, email_, password_, role_)
             VALUES (?, ?, ?, ?)
+        """
+
+    def __insert_session(self, email: str, token: str):
+        model = UserSessionModel(self.email_map[email], token)
+        self.cursor.execute(self.__session_query, model.parameters)
+
+    @property
+    def __session_query(self) -> str:
+        return """
+            INSERT INTO users_sessions_ (user_id_, token_)
+            VALUES (?, ?)
         """

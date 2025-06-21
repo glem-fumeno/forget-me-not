@@ -1,6 +1,7 @@
 from typing import Literal, NotRequired, TypedDict
 
-from api.schemas import APIError, Request, Response
+from api.errors import APIError
+from api.schemas import Request, Response
 
 DocTypeLiteral = Literal["string", "integer", "number", "boolean"]
 
