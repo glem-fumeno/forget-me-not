@@ -8,6 +8,7 @@ from api.items.database.select_by_name_item import (
     ItemSelectItemByNameOperation,
 )
 from api.items.database.select_item import ItemSelectItemOperation
+from api.items.database.select_items import ItemSelectItemsOperation
 from api.items.database.update_item import ItemUpdateItemOperation
 from api.items.schemas.models import ItemModel, ItemUserModel
 from api.users.database.select_user_by_token import (
@@ -22,6 +23,9 @@ class ItemDatabaseRepository(DatabaseRepository):
 
     def insert_item_user(self, model: ItemUserModel):
         return ItemInsertItemUserOperation(self.cursor).run(model)
+
+    def select_items(self) -> dict[int, ItemModel]:
+        return ItemSelectItemsOperation(self.cursor).run()
 
     def select_item(self, item_id: int) -> ItemModel | None:
         return ItemSelectItemOperation(self.cursor).run(item_id)

@@ -25,6 +25,31 @@ class UserResponse(Response):
             "role": "admin",
         }
 
+@dataclass
+class UserListResponse(Response):
+    users: list[UserResponse]
+    count: int
+
+    @classmethod
+    def get_example(cls) -> dict:
+        return {
+            "users": [
+                {
+                    "user_id": 15,
+                    "username": "alice",
+                    "email": "alice.johnson@example.com",
+                    "role": "admin",
+                },
+                {
+                    "user_id": 34,
+                    "username": "bob",
+                    "email": "bob.martin@example.com",
+                    "role": "user",
+                }
+            ],
+            "count": 2
+        }
+
 
 @dataclass
 class UserTokenResponse(Response):

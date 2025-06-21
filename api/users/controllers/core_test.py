@@ -49,6 +49,9 @@ class UserTestRepository:
             return
         return result.copy()
 
+    def select_users(self) -> dict[int, UserModel]:
+        return self.user_map
+
     def select_user_id_by_email(self, email: str) -> int | None:
         return self.email_map.get(email)
 

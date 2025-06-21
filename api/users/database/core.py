@@ -11,6 +11,7 @@ from api.users.database.select_user_by_token import (
 from api.users.database.select_user_id_by_email import (
     UserSelectUserIdByEmailOperation,
 )
+from api.users.database.select_users import UserSelectUsersOperation
 from api.users.database.update_user import UserUpdateUserOperation
 from api.users.schemas.models import UserModel, UserSessionModel
 
@@ -24,6 +25,9 @@ class UserDatabaseRepository(DatabaseRepository):
 
     def select_user(self, user_id: int) -> UserModel | None:
         return UserSelectUserOperation(self.cursor).run(user_id)
+
+    def select_users(self) -> dict[int, UserModel]:
+        return UserSelectUsersOperation(self.cursor).run()
 
     def select_user_id_by_email(self, email: str) -> int | None:
         return UserSelectUserIdByEmailOperation(self.cursor).run(email)

@@ -35,6 +35,9 @@ class ItemTestRepository:
             return
         return result.copy()
 
+    def select_items(self) -> dict[int, ItemModel]:
+        return self.item_map
+
     def update_item(self, model: ItemModel):
         old_model = self.item_map[model.item_id]
         self.item_map[model.item_id] = model
