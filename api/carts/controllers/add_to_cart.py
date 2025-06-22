@@ -1,16 +1,21 @@
 from api.carts.controllers.core import CartController
-from api.carts.schemas.errors import CartNotFoundError
+from api.carts.schemas.errors import CartNotFoundError, ItemNotFoundError
 from api.carts.schemas.responses import CartResponse
 from api.docs.models import EndpointDict
 from api.errors import LoggedOut
 
 
-class CartReadController(CartController):
-    def run(self, cart_id: int) -> CartResponse:
+class CartAddToCartController(CartController):
+    def run(self, cart_id: int, item_id: int) -> CartResponse:
         self.validate_access()
         model = self.repository.select_cart(self.issuer.user_id, cart_id)
         if model is None:
             raise CartNotFoundError
+        items = self.repository.select_items()
+        if item_id not in items:
+            raise ItemNotFoundError
+
+        self.repository.insert_cart_item(cart_id, item_id)
         return CartResponse.from_model(
             model, self.repository.select_cart_items(cart_id)
         )
@@ -18,8 +23,8 @@ class CartReadController(CartController):
     @classmethod
     def get_docs(cls):
         return EndpointDict(
-            endpoint="get /carts/{cart_id}",
-            path={"cart_id": "integer"},
+            endpoint="put /carts/{cart_id}/{item_id}",
+            path={"cart_id": "integer", "item_id": "integer"},
             responses=CartResponse,
-            errors=[LoggedOut, CartNotFoundError],
+            errors=[CartNotFoundError, ItemNotFoundError, LoggedOut],
         )

@@ -1,9 +1,10 @@
 from flask import request
 
-from api.endpoints import Endpoints
+from api.carts.controllers.add_to_cart import CartAddToCartController
 from api.carts.controllers.create import CartCreateController
 from api.carts.controllers.delete import CartDeleteController
 from api.carts.controllers.read import CartReadController
+from api.carts.controllers.remove_from_cart import CartRemoveFromCartController
 from api.carts.controllers.search import CartSearchController
 from api.carts.controllers.update import CartUpdateController
 from api.carts.database.core import CartDatabaseRepository
@@ -11,6 +12,7 @@ from api.carts.schemas.requests import (
     CartCreateRequest,
     CartUpdateRequest,
 )
+from api.endpoints import Endpoints
 
 
 class CartEndpoints(Endpoints):
@@ -21,6 +23,16 @@ class CartEndpoints(Endpoints):
         self.route("get /<cart_id>", self.read, CartReadController)
         self.route("patch /<cart_id>", self.update, CartUpdateController)
         self.route("delete /<cart_id>", self.delete, CartDeleteController)
+        self.route(
+            "put /<cart_id>/<item_id>",
+            self.add_to_cart,
+            CartAddToCartController,
+        )
+        self.route(
+            "delete /<cart_id>/<item_id>",
+            self.remove_from_cart,
+            CartRemoveFromCartController,
+        )
 
     @Endpoints.handler
     def create(self, controller: CartCreateController):
@@ -41,6 +53,21 @@ class CartEndpoints(Endpoints):
     @Endpoints.handler
     def delete(self, controller: CartDeleteController, cart_id: int):
         return controller.run(cart_id)
+
+    @Endpoints.handler
+    def add_to_cart(
+        self, controller: CartAddToCartController, cart_id: int, item_id: int
+    ):
+        return controller.run(int(cart_id), int(item_id))
+
+    @Endpoints.handler
+    def remove_from_cart(
+        self,
+        controller: CartRemoveFromCartController,
+        cart_id: int,
+        item_id: int,
+    ):
+        return controller.run(int(cart_id), int(item_id))
 
 
 endpoints = CartEndpoints()

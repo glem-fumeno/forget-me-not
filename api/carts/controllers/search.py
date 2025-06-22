@@ -9,7 +9,7 @@ class CartSearchController(CartController):
         self.validate_access()
         carts = self.repository.select_carts(self.issuer.user_id)
         return CartListResponse(
-            [CartResponse.from_model(model) for model in carts.values()],
+            [CartResponse.from_model(model, None) for model in carts.values()],
             count=len(carts)
         )
 

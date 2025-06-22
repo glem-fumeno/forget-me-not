@@ -10,7 +10,7 @@ class CartCreateController(CartController):
         self.validate_access()
         model = request.to_model()
         self.repository.insert_cart(self.issuer.user_id, model)
-        return CartResponse.from_model(model)
+        return CartResponse.from_model(model, [])
 
     @classmethod
     def get_docs(cls):

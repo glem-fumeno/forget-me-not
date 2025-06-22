@@ -17,12 +17,12 @@ docs = [
 def openapi():
     response = {
         "openapi": "3.1.0",
-        "info": {"title": "Sample API"},
+        "info": {"title": "forget me not"},
         "paths": {},
     }
     for endpoint_info in docs:
         method, endpoint = endpoint_info["endpoint"].split(" ")
-        _, tag, _ = endpoint.split("/", 3)
+        _, tag, *_ = endpoint.split("/")
 
         if endpoint not in response["paths"]:
             response["paths"][endpoint] = {}

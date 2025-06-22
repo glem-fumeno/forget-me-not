@@ -40,6 +40,22 @@ class CartTestRepository:
             return
         return result.copy()
 
+    def insert_cart_item(self, cart_id: int, item_id: int):
+        if cart_id not in self.cart_item_map:
+            self.cart_item_map[cart_id] = set()
+        self.cart_item_map[cart_id].add(item_id)
+
+    def select_cart_items(self, cart_id: int) -> list[ItemModel]:
+        return [
+            self.item_map[item_id] for item_id in self.cart_item_map[cart_id]
+        ]
+
+    def delete_cart_item(self, cart_id: int, item_id: int):
+        self.cart_item_map[cart_id].discard(item_id)
+
+    def select_items(self) -> dict[int, ItemModel]:
+        return self.item_map
+
     def select_carts(self, user_id: int) -> dict[int, CartModel]:
         return {
             cart_id: self.cart_map[cart_id]
@@ -103,7 +119,7 @@ class CartTestRepository:
         self.cart_map: dict[int, CartModel] = {}
         self.cart_name_map: dict[tuple[int, str], int] = {}
         self.user_cart_map: dict[int, list[int]] = {}
-        self.cart_item_map: dict[int, list[int]] = {}
+        self.cart_item_map: dict[int, set[int]] = {}
 
         self.__insert_cart(
             "alice.anderson@example.com",
@@ -170,5 +186,5 @@ class CartTestRepository:
         cart_id = self.cart_name_map[user_id, cart]
         item_id = self.item_name_map[item]
         if cart_id not in self.cart_item_map:
-            self.cart_item_map[cart_id] = []
-        self.cart_item_map[cart_id].append(item_id)
+            self.cart_item_map[cart_id] = set()
+        self.cart_item_map[cart_id].add(item_id)

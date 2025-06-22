@@ -11,8 +11,9 @@ class CartDeleteController(CartController):
         model = self.repository.select_cart(self.issuer.user_id, cart_id)
         if model is None:
             raise CartNotFoundError
+        cart_items = self.repository.select_cart_items(cart_id)
         self.repository.delete_cart(cart_id)
-        return CartResponse.from_model(model)
+        return CartResponse.from_model(model, cart_items)
 
     @classmethod
     def get_docs(cls):

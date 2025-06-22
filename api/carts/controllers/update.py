@@ -20,7 +20,9 @@ class CartUpdateController(CartController):
         self.update_icon()
 
         self.repository.update_cart(self.model)
-        return CartResponse.from_model(model)
+        return CartResponse.from_model(
+            model, self.repository.select_cart_items(self.cart_id)
+        )
 
     def update_name(self):
         if self.request.name is None:
