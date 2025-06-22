@@ -60,5 +60,10 @@ class UserUpdateController(UserController):
             path={"user_id": "integer"},
             body=UserUpdateRequest,
             responses=UserResponse,
-            errors=[UserNotFoundError, UserExistsError],
+            errors=[
+                LoggedOut,
+                Inaccessible,
+                UserNotFoundError,
+                UserExistsError,
+            ],
         )

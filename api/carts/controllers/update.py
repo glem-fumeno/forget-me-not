@@ -3,6 +3,7 @@ from api.carts.schemas.errors import CartNotFoundError
 from api.carts.schemas.requests import CartUpdateRequest
 from api.carts.schemas.responses import CartResponse
 from api.docs.models import EndpointDict
+from api.errors import LoggedOut
 
 
 class CartUpdateController(CartController):
@@ -38,5 +39,5 @@ class CartUpdateController(CartController):
             path={"cart_id": "integer"},
             body=CartUpdateRequest,
             responses=CartResponse,
-            errors=[CartNotFoundError],
+            errors=[CartNotFoundError, LoggedOut],
         )

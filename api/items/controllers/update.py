@@ -1,4 +1,5 @@
 from api.docs.models import EndpointDict
+from api.errors import Inaccessible, LoggedOut
 from api.items.controllers.core import ItemController
 from api.items.schemas.errors import ItemExistsError, ItemNotFoundError
 from api.items.schemas.requests import ItemUpdateRequest
@@ -41,5 +42,5 @@ class ItemUpdateController(ItemController):
             path={"item_id": "integer"},
             body=ItemUpdateRequest,
             responses=ItemResponse,
-            errors=[ItemNotFoundError, ItemExistsError],
+            errors=[LoggedOut, Inaccessible, ItemNotFoundError, ItemExistsError],
         )

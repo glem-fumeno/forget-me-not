@@ -1,6 +1,7 @@
 from api.docs.models import EndpointDict
 from api.carts.controllers.core import CartController
 from api.carts.schemas.responses import CartListResponse, CartResponse
+from api.errors import LoggedOut
 
 
 class CartSearchController(CartController):
@@ -17,5 +18,5 @@ class CartSearchController(CartController):
         return EndpointDict(
             endpoint="get /carts/search",
             responses=CartListResponse,
-            errors=[],
+            errors=[LoggedOut],
         )

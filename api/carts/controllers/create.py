@@ -2,6 +2,7 @@ from api.carts.controllers.core import CartController
 from api.carts.schemas.requests import CartCreateRequest
 from api.carts.schemas.responses import CartResponse
 from api.docs.models import EndpointDict
+from api.errors import LoggedOut
 
 
 class CartCreateController(CartController):
@@ -17,5 +18,5 @@ class CartCreateController(CartController):
             endpoint="post /carts/new",
             body=CartCreateRequest,
             responses=CartResponse,
-            errors=[],
+            errors=[LoggedOut],
         )

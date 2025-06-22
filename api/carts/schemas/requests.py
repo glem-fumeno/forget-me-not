@@ -16,17 +16,17 @@ class CartCreateRequest(Request):
     @classmethod
     def get_examples(cls) -> dict[str, Any]:
         return {
-            "milk": {
-                "name": "milk",
-                "icon": "https://img.icons8.com/pulsar-line/96/milk.png",
+            "groceries": {
+                "name": "groceries",
+                "icon": "https://img.icons8.com/pulsar-line/96/shopping-cart.png",
             },
-            "rice": {
-                "name": "rice",
-                "icon": "https://img.icons8.com/pulsar-line/96/rice-bowl.png",
+            "christmas": {
+                "name": "christmas",
+                "icon": "https://img.icons8.com/pulsar-line/96/christmas-tree.png",
             },
-            "soap": {
-                "name": "soap",
-                "icon": "https://img.icons8.com/pulsar-line/96/soap.png",
+            "shopping": {
+                "name": "shopping",
+                "icon": "https://img.icons8.com/pulsar-line/96/shopping-trolley.png",
             },
         }
 
@@ -39,10 +39,10 @@ class CartUpdateRequest(Request):
     @classmethod
     def get_examples(cls) -> dict[str, Any]:
         return {
-            "milk": {
-                "icon": "https://img.icons8.com/pulsar-line/96/milk-carton.png",
+            "groceries": {
+                "icon": "https://img.icons8.com/pulsar-line/96/fast-moving-consumer-goods.png",
             },
-            "rice": {
-                "name": "rice-bowl",
+            "christmas": {
+                "name": "x-mas",
             },
         }

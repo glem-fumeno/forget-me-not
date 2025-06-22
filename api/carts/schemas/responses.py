@@ -19,8 +19,8 @@ class CartResponse(Response):
     def get_example(cls) -> dict:
         return {
             "cart_id": 15,
-            "name": "milk",
-            "icon": "https://img.icons8.com/pulsar-line/96/milk.png",
+            "name": "groceries",
+            "icon": "https://img.icons8.com/pulsar-line/96/shopping-cart.png",
         }
 
 
@@ -34,16 +34,16 @@ class CartListResponse(Response):
         return {
             "carts": [
                 {
-                    "name": "milk",
-                    "icon": "https://img.icons8.com/pulsar-line/96/milk.png",
+                    "name": "groceries",
+                    "icon": "https://img.icons8.com/pulsar-line/96/shopping-cart.png",
                 },
                 {
-                    "name": "rice",
-                    "icon": "https://img.icons8.com/pulsar-line/96/rice-bowl.png",
+                    "name": "christmas",
+                    "icon": "https://img.icons8.com/pulsar-line/96/christmas-tree.png",
                 },
                 {
-                    "name": "soap",
-                    "icon": "https://img.icons8.com/pulsar-line/96/soap.png",
+                    "name": "shopping",
+                    "icon": "https://img.icons8.com/pulsar-line/96/shopping-trolley.png",
                 },
             ],
             "count": 3,

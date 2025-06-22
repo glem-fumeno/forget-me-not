@@ -2,6 +2,7 @@ from api.docs.models import EndpointDict
 from api.carts.controllers.core import CartController
 from api.carts.schemas.errors import CartNotFoundError
 from api.carts.schemas.responses import CartResponse
+from api.errors import LoggedOut
 
 
 class CartReadController(CartController):
@@ -18,5 +19,5 @@ class CartReadController(CartController):
             endpoint="get /carts/{cart_id}",
             path={"cart_id": "integer"},
             responses=CartResponse,
-            errors=[CartNotFoundError],
+            errors=[LoggedOut, CartNotFoundError],
         )

@@ -29,5 +29,5 @@ class UserDeleteController(UserController):
             endpoint="delete /users/{user_id}",
             path={"user_id": "integer"},
             responses=UserResponse,
-            errors=[UserNotFoundError],
+            errors=[LoggedOut, Inaccessible, UserNotFoundError],
         )

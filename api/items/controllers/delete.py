@@ -1,4 +1,5 @@
 from api.docs.models import EndpointDict
+from api.errors import Inaccessible, LoggedOut
 from api.items.controllers.core import ItemController
 from api.items.schemas.errors import ItemNotFoundError
 from api.items.schemas.responses import ItemResponse
@@ -19,5 +20,5 @@ class ItemDeleteController(ItemController):
             endpoint="delete /items/{item_id}",
             path={"item_id": "integer"},
             responses=ItemResponse,
-            errors=[ItemNotFoundError],
+            errors=[LoggedOut, Inaccessible, ItemNotFoundError],
         )

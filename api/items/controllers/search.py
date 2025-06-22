@@ -1,4 +1,5 @@
 from api.docs.models import EndpointDict
+from api.errors import LoggedOut
 from api.items.controllers.core import ItemController
 from api.items.schemas.responses import ItemListResponse, ItemResponse
 
@@ -17,5 +18,5 @@ class ItemSearchController(ItemController):
         return EndpointDict(
             endpoint="get /items/search",
             responses=ItemListResponse,
-            errors=[],
+            errors=[LoggedOut],
         )

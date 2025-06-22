@@ -1,4 +1,5 @@
 from api.docs.models import EndpointDict
+from api.errors import Inaccessible, LoggedOut
 from api.items.controllers.core import ItemController
 from api.items.schemas.errors import ItemExistsError
 from api.items.schemas.requests import ItemCreateRequest
@@ -21,5 +22,5 @@ class ItemCreateController(ItemController):
             endpoint="post /items/new",
             body=ItemCreateRequest,
             responses=ItemResponse,
-            errors=[ItemExistsError],
+            errors=[LoggedOut, Inaccessible, ItemExistsError],
         )
