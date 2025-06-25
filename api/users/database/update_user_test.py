@@ -1,5 +1,6 @@
 import unittest
 
+from api.context import Context
 from api.users.common import get_hash
 from api.users.database.core_test import UserDatabaseTestRepository
 from api.users.schemas.models import UserModel
@@ -7,7 +8,7 @@ from api.users.schemas.models import UserModel
 
 class TestUpdateUser(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = UserDatabaseTestRepository("test.db")
+        self.repository = UserDatabaseTestRepository(Context(), "test.db")
         self.repository.connect()
         self.repository.initialize_test_cases()
 

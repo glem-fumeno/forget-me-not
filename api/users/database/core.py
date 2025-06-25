@@ -18,25 +18,27 @@ from api.users.schemas.models import UserModel, UserSessionModel
 
 class UserDatabaseRepository(DatabaseRepository):
     def insert_user(self, model: UserModel):
-        return UserInsertUserOperation(self.cursor).run(model)
+        return UserInsertUserOperation(self.ctx, self.cursor).run(model)
 
     def insert_user_session(self, model: UserSessionModel):
-        return UserInsertUserSessionOperation(self.cursor).run(model)
+        return UserInsertUserSessionOperation(self.ctx, self.cursor).run(model)
 
     def select_user(self, user_id: int) -> UserModel | None:
-        return UserSelectUserOperation(self.cursor).run(user_id)
+        return UserSelectUserOperation(self.ctx, self.cursor).run(user_id)
 
     def select_users(self) -> dict[int, UserModel]:
-        return UserSelectUsersOperation(self.cursor).run()
+        return UserSelectUsersOperation(self.ctx, self.cursor).run()
 
     def select_user_id_by_email(self, email: str) -> int | None:
-        return UserSelectUserIdByEmailOperation(self.cursor).run(email)
+        return UserSelectUserIdByEmailOperation(self.ctx, self.cursor).run(
+            email
+        )
 
     def select_user_by_token(self, token: str) -> UserModel | None:
-        return UserSelectUserByTokenOperation(self.cursor).run(token)
+        return UserSelectUserByTokenOperation(self.ctx, self.cursor).run(token)
 
     def update_user(self, model: UserModel):
-        return UserUpdateUserOperation(self.cursor).run(model)
+        return UserUpdateUserOperation(self.ctx, self.cursor).run(model)
 
     def delete_user(self, user_id: int):
-        return UserDeleteUserOperation(self.cursor).run(user_id)
+        return UserDeleteUserOperation(self.ctx, self.cursor).run(user_id)

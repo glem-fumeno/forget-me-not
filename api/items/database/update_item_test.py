@@ -1,12 +1,13 @@
 import unittest
 
+from api.context import Context
 from api.items.database.core_test import ItemDatabaseTestRepository
 from api.items.schemas.models import ItemModel
 
 
 class TestUpdateItem(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = ItemDatabaseTestRepository("test.db")
+        self.repository = ItemDatabaseTestRepository(Context(), "test.db")
         self.repository.connect()
         self.repository.initialize_test_cases()
 

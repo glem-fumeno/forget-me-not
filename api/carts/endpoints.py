@@ -14,7 +14,7 @@ from api.endpoints import Endpoints
 
 class CartEndpoints(Endpoints):
     def __init__(self) -> None:
-        super().__init__("carts", "/carts", CartDatabaseRepository())
+        super().__init__("carts", "/carts", CartDatabaseRepository)
         self.route("post /new", self.create)
         self.route("get /search", self.search)
         self.route("get /<cart_id>", self.read)

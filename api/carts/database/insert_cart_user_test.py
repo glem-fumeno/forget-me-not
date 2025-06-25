@@ -2,11 +2,12 @@ import unittest
 
 from api.carts.database.core_test import CartDatabaseTestRepository
 from api.carts.schemas.models import CartUserModel
+from api.context import Context
 
 
 class TestInsertCartUser(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = CartDatabaseTestRepository("test.db")
+        self.repository = CartDatabaseTestRepository(Context(), "test.db")
         self.repository.connect()
         self.repository.initialize_test_cases()
 

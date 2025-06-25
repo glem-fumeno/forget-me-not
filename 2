@@ -62,20 +62,15 @@ class Endpoints:
                 for k, v in kwargs.items()
             }
             try:
-                with (
-                    self.Repository(ctx) as r,
-                    logger.catch(exclude=APIError, reraise=True),
-                ):
+                with self.Repository(ctx) as r, logger.catch(reraise=True):
                     result = func(self, controller(ctx, r), *args, **kwargs)
-                    code = 200
+                    logger.info(f"200: {(time() - start) * 1000:.2f}ms")
             except APIError as error:
+                logger.info(f"{error.CODE}: {(time() - start) * 1000:.2f}ms")
                 logger.debug(error.MESSAGE)
                 result = make_response({"error": error.MESSAGE}, error.CODE)
-                code = error.CODE
             except Exception:
-                result = make_response({"error": "internal server error"}, 500)
-                code = 500
-            logger.info(f"{code}: {(time() - start) * 1000:.2f}ms")
+                return make_response({"error": "internal server error"}, 500)
             if isinstance(result, FlaskResponse):
                 return result
             if isinstance(result, Response):

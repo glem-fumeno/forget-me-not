@@ -13,7 +13,7 @@ from api.users.schemas.requests import UserLoginRequest, UserUpdateRequest
 
 class UserEndpoints(Endpoints):
     def __init__(self) -> None:
-        super().__init__("users", "/users", UserDatabaseRepository())
+        super().__init__("users", "/users", UserDatabaseRepository)
         self.route("post /login", self.login)
         self.route("post /register", self.register)
         self.route("get /search", self.search)

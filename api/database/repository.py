@@ -1,11 +1,13 @@
 import sqlite3
 
+from api.context import Context
 from api.database.migrator import DatabaseMigrator
 from config import get_config
 
 
 class DatabaseRepository:
-    def __init__(self, database_path: str | None = None):
+    def __init__(self, ctx: Context, database_path: str | None = None):
+        self.ctx = ctx
         self.config = get_config()
         self.database_path = self.config.DB_PATH
         if database_path is not None:

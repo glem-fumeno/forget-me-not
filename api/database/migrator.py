@@ -1,6 +1,8 @@
 import os
 import sqlite3
 
+from loguru import logger
+
 from api.singleton import Singleton
 
 
@@ -8,21 +10,22 @@ class DatabaseMigrator(metaclass=Singleton):
     def __init__(self):
         self.migrations_directory = "api/database/migrations"
         self.applied = False
+        self.logger = logger
 
     def migrate(self, database_path: str):
         if self.applied:
             return
-        print("Migrating")
+        self.logger.debug("Migrating")
         self.connection = sqlite3.connect(database_path)
         self.cursor = self.connection.cursor()
         self.cursor.execute("BEGIN")
-        print("Connected")
+        self.logger.debug("Connected")
         try:
             self._ensure_migrations_table()
             applied_versions = self._get_applied_versions()
             files = sorted(os.listdir(self.migrations_directory))
 
-            print(f"Found {files=}")
+            self.logger.debug(f"Found {files=}")
             for filename in files:
                 version = filename.split("_")[0]
                 if version in applied_versions:
@@ -31,11 +34,11 @@ class DatabaseMigrator(metaclass=Singleton):
                 with open(path, "r", encoding="utf-8") as f:
                     sql = f.read()
                 self._apply_migration(version, sql)
-                print(f"Applied migration {version}")
+                self.logger.debug(f"Applied migration {version}")
             self.connection.commit()
             self.applied = True
         except Exception as e:
-            print(f"Exception occured: {e}")
+            self.logger.critical(f"Exception occured: {e}")
             self.connection.rollback()
         self.connection.close()
 

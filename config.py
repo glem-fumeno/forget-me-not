@@ -8,6 +8,8 @@ class Config(BaseSettings):
     PORT: int = 5000
     SALT: str = "e7c04613-2a6c-423e-987c-624d14de8a8e"
     DB_PATH: str = "app.db"
+    LOG_FILE: str = ""
+    LOG_LEVEL: str = "INFO"
 
     model_config = SettingsConfigDict(
         env_file_encoding="utf-8", env_file=".env"

@@ -17,25 +17,25 @@ from api.users.schemas.models import UserModel
 
 class ItemDatabaseRepository(DatabaseRepository):
     def insert_item(self, model: ItemModel):
-        return ItemInsertItemOperation(self.cursor).run(model)
+        return ItemInsertItemOperation(self.ctx, self.cursor).run(model)
 
     def insert_item_user(self, model: ItemUserModel):
-        return ItemInsertItemUserOperation(self.cursor).run(model)
+        return ItemInsertItemUserOperation(self.ctx, self.cursor).run(model)
 
     def select_items(self) -> dict[int, ItemModel]:
-        return ItemSelectItemsOperation(self.cursor).run()
+        return ItemSelectItemsOperation(self.ctx, self.cursor).run()
 
     def select_item(self, item_id: int) -> ItemModel | None:
-        return ItemSelectItemOperation(self.cursor).run(item_id)
+        return ItemSelectItemOperation(self.ctx, self.cursor).run(item_id)
 
     def select_user_by_token(self, token: str) -> UserModel | None:
-        return UserSelectUserByTokenOperation(self.cursor).run(token)
+        return UserSelectUserByTokenOperation(self.ctx, self.cursor).run(token)
 
     def select_item_by_name(self, name: str) -> int | None:
-        return ItemSelectItemByNameOperation(self.cursor).run(name)
+        return ItemSelectItemByNameOperation(self.ctx, self.cursor).run(name)
 
     def update_item(self, model: ItemModel):
-        return ItemUpdateItemOperation(self.cursor).run(model)
+        return ItemUpdateItemOperation(self.ctx, self.cursor).run(model)
 
     def delete_item(self, item_id: int):
-        return ItemDeleteItemOperation(self.cursor).run(item_id)
+        return ItemDeleteItemOperation(self.ctx, self.cursor).run(item_id)
