@@ -1,3 +1,4 @@
+import inspect
 import random
 from functools import wraps
 from typing import Callable
@@ -23,12 +24,9 @@ class Endpoints:
         self.prefix = prefix
         self.controllers: dict[str, type[Controller]] = {}
 
-    def route(
-        self, endpoint: str, func: Callable, controller: type[Controller]
-    ):
+    def route(self, endpoint: str, func: Callable):
         method, path = endpoint.split(" ")
         self.blueprint.route(path, methods=[method.upper()])(func)
-        self.controllers[func.__name__] = controller
 
     @property
     def docs(self) -> list[EndpointDict]:
@@ -38,6 +36,17 @@ class Endpoints:
 
     @staticmethod
     def handler(func: Callable):
+        signature = inspect.signature(func)
+        expected_types = {
+            key: parameter.annotation
+            for key, parameter in signature.parameters.items()
+        }
+        if "controller" not in expected_types:
+            raise KeyError("Controller not found")
+        controller = expected_types["controller"]
+        if not issubclass(controller, Controller):
+            raise TypeError("Controller is not a subclass of Controller")
+
         @wraps(func)
         def wrapper(self, *args, **kwargs):
             with self.repository as r:
@@ -45,9 +54,12 @@ class Endpoints:
                 ctx = ctx.add("hash", f"{random.getrandbits(32):08x}")
                 if "token" in request.cookies:
                     ctx = ctx.add("token", request.cookies["token"])
-                c = self.controllers[func.__name__](ctx, r)
+                kwargs = {
+                    k: expected_types[k](v) if k in expected_types else v
+                    for k, v in kwargs.items()
+                }
                 try:
-                    result = func(self, c, *args, **kwargs)
+                    result = func(self, controller(ctx, r), *args, **kwargs)
                 except APIError as error:
                     return make_response({"error": error.MESSAGE}, error.CODE)
             if isinstance(result, FlaskResponse):

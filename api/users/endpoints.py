@@ -14,12 +14,12 @@ from api.users.schemas.requests import UserLoginRequest, UserUpdateRequest
 class UserEndpoints(Endpoints):
     def __init__(self) -> None:
         super().__init__("users", "/users", UserDatabaseRepository())
-        self.route("post /login", self.login, UserLoginController)
-        self.route("post /register", self.register, UserRegisterController)
-        self.route("get /search", self.search, UserSearchController)
-        self.route("get /<user_id>", self.read, UserReadController)
-        self.route("patch /<user_id>", self.update, UserUpdateController)
-        self.route("delete /<user_id>", self.delete, UserDeleteController)
+        self.route("post /login", self.login)
+        self.route("post /register", self.register)
+        self.route("get /search", self.search)
+        self.route("get /<user_id>", self.read)
+        self.route("patch /<user_id>", self.update)
+        self.route("delete /<user_id>", self.delete)
 
     @Endpoints.handler
     def register(self, controller: UserRegisterController):

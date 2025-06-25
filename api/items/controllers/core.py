@@ -21,7 +21,7 @@ class ItemRepository(Repository, Protocol):
 class ItemController(Controller):
     def __init__(self, ctx: Context, repository: ItemRepository) -> None:
         self.repository = repository
-        super().__init__(ctx)
+        super().__init__(ctx, repository)
 
     def validate_access(self, admin: bool = True):
         issuer = self.repository.select_user_by_token(

@@ -10,7 +10,8 @@ class Repository(Protocol): ...
 
 
 class Controller(ABC):
-    def __init__(self, ctx: Context) -> None:
+    def __init__(self, ctx: Context, repository: Repository) -> None:
+        self.repository = repository
         self.broker = Broker()
         self.ctx = ctx
 

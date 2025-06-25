@@ -13,11 +13,11 @@ from api.items.schemas.requests import ItemCreateRequest, ItemUpdateRequest
 class ItemEndpoints(Endpoints):
     def __init__(self) -> None:
         super().__init__("items", "/items", ItemDatabaseRepository())
-        self.route("post /new", self.create, ItemCreateController)
-        self.route("get /search", self.search, ItemSearchController)
-        self.route("get /<item_id>", self.read, ItemReadController)
-        self.route("patch /<item_id>", self.update, ItemUpdateController)
-        self.route("delete /<item_id>", self.delete, ItemDeleteController)
+        self.route("post /new", self.create)
+        self.route("get /search", self.search)
+        self.route("get /<item_id>", self.read)
+        self.route("patch /<item_id>", self.update)
+        self.route("delete /<item_id>", self.delete)
 
     @Endpoints.handler
     def create(self, controller: ItemCreateController):

@@ -25,7 +25,7 @@ class CartRepository(Repository, Protocol):
 class CartController(Controller):
     def __init__(self, ctx: Context, repository: CartRepository) -> None:
         self.repository = repository
-        super().__init__(ctx)
+        super().__init__(ctx, repository)
 
     def validate_access(self):
         issuer = self.repository.select_user_by_token(

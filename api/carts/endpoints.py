@@ -15,21 +15,13 @@ from api.endpoints import Endpoints
 class CartEndpoints(Endpoints):
     def __init__(self) -> None:
         super().__init__("carts", "/carts", CartDatabaseRepository())
-        self.route("post /new", self.create, CartCreateController)
-        self.route("get /search", self.search, CartSearchController)
-        self.route("get /<cart_id>", self.read, CartReadController)
-        self.route("patch /<cart_id>", self.update, CartUpdateController)
-        self.route("delete /<cart_id>", self.delete, CartDeleteController)
-        self.route(
-            "put /<cart_id>/<item_id>",
-            self.add_to_cart,
-            CartAddToCartController,
-        )
-        self.route(
-            "delete /<cart_id>/<item_id>",
-            self.remove_from_cart,
-            CartRemoveFromCartController,
-        )
+        self.route("post /new", self.create)
+        self.route("get /search", self.search)
+        self.route("get /<cart_id>", self.read)
+        self.route("patch /<cart_id>", self.update)
+        self.route("delete /<cart_id>", self.delete)
+        self.route("put /<cart_id>/<item_id>", self.add_to_cart)
+        self.route("delete /<cart_id>/<item_id>", self.remove_from_cart)
 
     @Endpoints.handler
     def create(self, controller: CartCreateController):
@@ -55,7 +47,7 @@ class CartEndpoints(Endpoints):
     def add_to_cart(
         self, controller: CartAddToCartController, cart_id: int, item_id: int
     ):
-        return controller.run(int(cart_id), int(item_id))
+        return controller.run(cart_id, item_id)
 
     @Endpoints.handler
     def remove_from_cart(
@@ -64,7 +56,7 @@ class CartEndpoints(Endpoints):
         cart_id: int,
         item_id: int,
     ):
-        return controller.run(int(cart_id), int(item_id))
+        return controller.run(cart_id, item_id)
 
 
 endpoints = CartEndpoints()

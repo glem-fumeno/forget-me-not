@@ -19,4 +19,4 @@ class UserRepository(Repository, Protocol):
 class UserController(Controller):
     def __init__(self, ctx: Context, repository: UserRepository) -> None:
         self.repository = repository
-        super().__init__(ctx)
+        super().__init__(ctx, repository)
