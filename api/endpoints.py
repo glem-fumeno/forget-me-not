@@ -10,8 +10,8 @@ from api.context import Context
 from api.controller import Controller
 from api.database.repository import DatabaseRepository
 from api.docs.models import EndpointDict
-from api.schemas import Response
 from api.errors import APIError
+from api.schemas import Response
 
 
 class Endpoints:

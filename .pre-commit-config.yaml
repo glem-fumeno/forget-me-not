@@ -1,0 +1,37 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        args:
+          - --line-length=79
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: [ "--profile", "black", "--line-width", "79"]
+  - repo: local
+    hooks:
+      - id: docformatter
+        name: docformatter
+        description: Formats docstrings to follow PEP 257.
+        entry: python -Im docformatter
+        additional_dependencies:
+          - docformatter == 1.7.5
+        args: [
+          --in-place,
+          --wrap-summaries,
+          "79",
+          --wrap-descriptions,
+          "79",
+          --pre-summary-newline,
+        ]
+        language: python
+        types:
+          - python

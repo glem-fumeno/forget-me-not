@@ -1,9 +1,7 @@
 from api.database.repository import DatabaseRepository
 from api.items.database.delete_item import ItemDeleteItemOperation
 from api.items.database.insert_item import ItemInsertItemOperation
-from api.items.database.insert_item_user import (
-    ItemInsertItemUserOperation,
-)
+from api.items.database.insert_item_user import ItemInsertItemUserOperation
 from api.items.database.select_by_name_item import (
     ItemSelectItemByNameOperation,
 )

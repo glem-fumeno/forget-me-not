@@ -15,7 +15,7 @@ class DatabaseMigrator(metaclass=Singleton):
         print("Migrating")
         self.connection = sqlite3.connect(database_path)
         self.cursor = self.connection.cursor()
-        self.cursor.execute('BEGIN')
+        self.cursor.execute("BEGIN")
         print("Connected")
         try:
             self._ensure_migrations_table()

@@ -1,5 +1,5 @@
-from api.database.operation import DatabaseOperation
 from api.carts.schemas.models import CartUserModel
+from api.database.operation import DatabaseOperation
 
 
 class CartInsertCartUserOperation(DatabaseOperation):

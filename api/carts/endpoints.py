@@ -8,10 +8,7 @@ from api.carts.controllers.remove_from_cart import CartRemoveFromCartController
 from api.carts.controllers.search import CartSearchController
 from api.carts.controllers.update import CartUpdateController
 from api.carts.database.core import CartDatabaseRepository
-from api.carts.schemas.requests import (
-    CartCreateRequest,
-    CartUpdateRequest,
-)
+from api.carts.schemas.requests import CartCreateRequest, CartUpdateRequest
 from api.endpoints import Endpoints
 
 

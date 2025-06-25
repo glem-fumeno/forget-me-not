@@ -7,10 +7,7 @@ from api.items.controllers.read import ItemReadController
 from api.items.controllers.search import ItemSearchController
 from api.items.controllers.update import ItemUpdateController
 from api.items.database.core import ItemDatabaseRepository
-from api.items.schemas.requests import (
-    ItemCreateRequest,
-    ItemUpdateRequest,
-)
+from api.items.schemas.requests import ItemCreateRequest, ItemUpdateRequest
 
 
 class ItemEndpoints(Endpoints):

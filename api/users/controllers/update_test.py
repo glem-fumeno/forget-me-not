@@ -3,7 +3,12 @@ import unittest
 from api.context import Context
 from api.users.controllers.core_test import UserTestRepository
 from api.users.controllers.update import UserUpdateController
-from api.users.schemas.errors import Inaccessible, LoggedOut, UserExistsError, UserNotFoundError
+from api.users.schemas.errors import (
+    Inaccessible,
+    LoggedOut,
+    UserExistsError,
+    UserNotFoundError,
+)
 from api.users.schemas.requests import UserUpdateRequest
 
 

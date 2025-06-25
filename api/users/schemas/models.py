@@ -4,6 +4,7 @@ from api.schemas import Model
 
 RoleLiteral = Literal["new", "user", "admin"]
 
+
 class UserModel(Model):
     user_id: int
     username: str

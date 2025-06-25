@@ -7,4 +7,3 @@ while [[ $exit_code -ne 0 ]]; do
     uv run main.py
     exit_code=$?
 done
-

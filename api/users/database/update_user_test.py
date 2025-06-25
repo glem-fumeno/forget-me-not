@@ -22,7 +22,7 @@ class TestUpdateUser(unittest.TestCase):
             username="copperc",
             email="charlie.cooper@example.com",
             password=get_hash("CoffeeLover#1"),
-            role="new"
+            role="new",
         )
         self.repository.update_user(model)
         result = self.repository.cursor.execute(

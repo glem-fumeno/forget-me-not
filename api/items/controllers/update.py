@@ -42,5 +42,10 @@ class ItemUpdateController(ItemController):
             path={"item_id": "integer"},
             body=ItemUpdateRequest,
             responses=ItemResponse,
-            errors=[LoggedOut, Inaccessible, ItemNotFoundError, ItemExistsError],
+            errors=[
+                LoggedOut,
+                Inaccessible,
+                ItemNotFoundError,
+                ItemExistsError,
+            ],
         )

@@ -4,10 +4,7 @@ from api.context import Context
 from api.errors import Inaccessible, LoggedOut
 from api.items.controllers.core_test import ItemTestRepository
 from api.items.controllers.update import ItemUpdateController
-from api.items.schemas.errors import (
-    ItemExistsError,
-    ItemNotFoundError,
-)
+from api.items.schemas.errors import ItemExistsError, ItemNotFoundError
 from api.items.schemas.requests import ItemUpdateRequest
 
 

@@ -1,7 +1,7 @@
-from api.docs.models import EndpointDict
 from api.carts.controllers.core import CartController
 from api.carts.schemas.errors import CartNotFoundError
 from api.carts.schemas.responses import CartResponse
+from api.docs.models import EndpointDict
 from api.errors import LoggedOut
 
 

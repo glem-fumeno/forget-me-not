@@ -10,7 +10,7 @@ class ItemSearchController(ItemController):
         items = self.repository.select_items()
         return ItemListResponse(
             items=[ItemResponse.from_model(model) for model in items.values()],
-            count=len(items)
+            count=len(items),
         )
 
     @classmethod

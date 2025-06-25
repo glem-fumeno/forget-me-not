@@ -2,9 +2,7 @@ from api.carts.database.delete_cart import CartDeleteCartOperation
 from api.carts.database.delete_cart_item import CartDeleteCartItemOperation
 from api.carts.database.insert_cart import CartInsertCartOperation
 from api.carts.database.insert_cart_item import CartInsertCartItemOperation
-from api.carts.database.insert_cart_user import (
-    CartInsertCartUserOperation,
-)
+from api.carts.database.insert_cart_user import CartInsertCartUserOperation
 from api.carts.database.select_cart import CartSelectCartOperation
 from api.carts.database.select_cart_items import CartSelectCartItemsOperation
 from api.carts.database.select_carts import CartSelectCartsOperation

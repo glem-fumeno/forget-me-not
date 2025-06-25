@@ -6,7 +6,10 @@ class ItemSelectItemsOperation(DatabaseOperation):
     def run(self) -> dict[int, ItemModel]:
         result = self.cursor.execute(self.query)
         results = result.fetchall()
-        return {columns[0]: ItemModel.from_db(result.description, columns) for columns in results}
+        return {
+            columns[0]: ItemModel.from_db(result.description, columns)
+            for columns in results
+        }
 
     @property
     def query(self) -> str:

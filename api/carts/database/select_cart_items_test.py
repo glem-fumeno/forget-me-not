@@ -20,9 +20,9 @@ class TestSelectCartItems(unittest.TestCase):
         self.assertEqual(len(result), 2)
         self.assertEqual(
             self.repository.item_map[self.repository.item_name_map["milk"]],
-            result[0]
+            result[0],
         )
         self.assertEqual(
             self.repository.item_map[self.repository.item_name_map["rice"]],
-            result[1]
+            result[1],
         )

@@ -17,4 +17,3 @@ DROP TABLE carts_old_;
 COMMIT;
 
 PRAGMA foreign_keys=on;
-

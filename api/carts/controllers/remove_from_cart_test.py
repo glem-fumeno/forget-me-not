@@ -2,10 +2,7 @@ import unittest
 
 from api.carts.controllers.core_test import CartTestRepository
 from api.carts.controllers.remove_from_cart import CartRemoveFromCartController
-from api.carts.schemas.errors import (
-    CartNotFoundError,
-    ItemNotFoundError,
-)
+from api.carts.schemas.errors import CartNotFoundError, ItemNotFoundError
 from api.context import Context
 from api.errors import LoggedOut
 
@@ -15,7 +12,9 @@ class TestRemoveFromCart(unittest.TestCase):
         self.repository = CartTestRepository()
         self.user_id = self.repository.email_map["alice.anderson@example.com"]
         self.ctx = Context().add("token", self.repository.login(self.user_id))
-        self.controller = CartRemoveFromCartController(self.ctx, self.repository)
+        self.controller = CartRemoveFromCartController(
+            self.ctx, self.repository
+        )
 
     def test_raises_error_if_not_found(self):
         with self.assertRaises(CartNotFoundError):

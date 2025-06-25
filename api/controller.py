@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
 from typing import Protocol
+
 from api.broker import Broker
 from api.context import Context
-
 from api.docs.models import EndpointDict
 
 
 class Repository(Protocol): ...
+
 
 class Controller(ABC):
     def __init__(self, ctx: Context) -> None:

@@ -2,6 +2,7 @@ import unittest
 
 from api.singleton import Singleton
 
+
 class TestSingleton(unittest.TestCase):
 
     def test_singleton_inheritees_have_one_instance(self):

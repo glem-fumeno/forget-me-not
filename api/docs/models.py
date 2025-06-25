@@ -14,5 +14,5 @@ EndpointDict = TypedDict(
         "body": NotRequired[type[Request]],
         "responses": type[Response],
         "errors": list[type[APIError]],
-    }
+    },
 )
