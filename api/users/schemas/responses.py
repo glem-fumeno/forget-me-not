@@ -1,11 +1,9 @@
-from dataclasses import dataclass
 from typing import Self
 
 from api.schemas import Response
 from api.users.schemas.models import RoleLiteral, UserModel
 
 
-@dataclass
 class UserResponse(Response):
     user_id: int
     username: str
@@ -14,7 +12,12 @@ class UserResponse(Response):
 
     @classmethod
     def from_model(cls, model: UserModel) -> Self:
-        return cls(model.user_id, model.username, model.email, model.role)
+        return cls(
+            user_id=model.user_id,
+            username=model.username,
+            email=model.email,
+            role=model.role,
+        )
 
     @classmethod
     def get_example(cls) -> dict:
@@ -25,7 +28,7 @@ class UserResponse(Response):
             "role": "admin",
         }
 
-@dataclass
+
 class UserListResponse(Response):
     users: list[UserResponse]
     count: int
@@ -45,13 +48,12 @@ class UserListResponse(Response):
                     "username": "bob",
                     "email": "bob.martin@example.com",
                     "role": "user",
-                }
+                },
             ],
-            "count": 2
+            "count": 2,
         }
 
 
-@dataclass
 class UserTokenResponse(Response):
     user_id: int
     username: str
@@ -62,7 +64,11 @@ class UserTokenResponse(Response):
     @classmethod
     def from_model(cls, model: UserModel, token: str) -> Self:
         return cls(
-            model.user_id, model.username, model.email, model.role, token
+            user_id=model.user_id,
+            username=model.username,
+            email=model.email,
+            role=model.role,
+            token=token,
         )
 
     @classmethod

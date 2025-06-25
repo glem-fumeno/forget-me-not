@@ -3,7 +3,6 @@ from flask import Blueprint, send_file
 from api.users.endpoints import endpoints as users
 from api.items.endpoints import endpoints as items
 from api.carts.endpoints import endpoints as carts
-from config import CONFIG
 
 blueprint = Blueprint("docs", "docs", url_prefix="/docs")
 docs = [
@@ -78,27 +77,21 @@ def openapi():
 
 @blueprint.get("/")
 def swagger():
-    url = f"{CONFIG['PROTOCOL']}://{CONFIG['HOST']}:{CONFIG['PORT']}"
-    return f"""
+    return """
       <!doctype html>
       <html>
         <head>
-          <script src="{url}/docs/swagger.js"></script>
-          <script src="{url}/docs/tags.js"></script> 
-          <link rel="stylesheet" type="text/css" href="{url}/docs/style.css" />
+          <script src="/docs/swagger.js"></script>
+          <link rel="stylesheet" type="text/css" href="/docs/style.css" />
           <script>
-            window.onload = function() {{
-              SwaggerUIBundle({{
-                url: "{url}/docs/openapi.json",
+            window.onload = function() {
+              SwaggerUIBundle({
+                url: "/docs/openapi.json",
                 dom_id: "#swagger",
-                plugins: [
-                  HierarchicalTagsPlugin
-                ],
                 tryItOutEnabled: true,
                 docExpansion: "none",
-                hierarchicalTagSeparator: /[:|]/
-              }})
-            }}
+              })
+            }
           </script>
         </head>
         <body><div id="swagger"></div></body>

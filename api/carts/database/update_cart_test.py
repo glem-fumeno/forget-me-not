@@ -18,9 +18,9 @@ class TestUpdateCart(unittest.TestCase):
         user_id = self.repository.email_map["alice.anderson@example.com"]
         cart_id = self.repository.cart_name_map[user_id, "groceries"]
         model = CartModel(
-            cart_id,
-            "shopping",
-            "https://img.icons8.com/pulsar-line/96/shopping-trolley.png",
+            cart_id=cart_id,
+            name="shopping",
+            icon="https://img.icons8.com/pulsar-line/96/shopping-trolley.png",
         )
         self.repository.update_cart(model)
         result = self.repository.cursor.execute(
@@ -29,5 +29,5 @@ class TestUpdateCart(unittest.TestCase):
             """,
             (cart_id,),
         )
-        new_model = CartModel(*result.fetchone())
+        new_model = CartModel.from_db(result.description, result.fetchone())
         self.assertEqual(model, new_model)

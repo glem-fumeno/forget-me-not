@@ -89,14 +89,18 @@ class ItemTestRepository:
     ):
         self.max_user_id += 1
         self.user_map[self.max_user_id] = UserModel(
-            self.max_user_id, username, email, get_hash(password), role
+            user_id=self.max_user_id,
+            username=username,
+            email=email,
+            password=get_hash(password),
+            role=role,
         )
         self.email_map[email] = self.max_user_id
 
     def __insert_item(self, name: str, icon: str):
         self.max_item_id += 1
         self.item_map[self.max_item_id] = ItemModel(
-            self.max_item_id, name, icon
+            item_id=self.max_item_id, name=name, icon=icon
         )
         self.item_name_map[name] = self.max_item_id
 

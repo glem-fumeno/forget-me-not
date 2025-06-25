@@ -17,7 +17,7 @@ class UserLoginController(UserController):
         assert model is not None
         if model.password != request.password:
             raise InvalidCredentialsError
-        session = UserSessionModel(user_id, get_uuid())
+        session = UserSessionModel(user_id=user_id, token=get_uuid())
         self.repository.insert_user_session(session)
         return UserTokenResponse.from_model(model, session.token)
 

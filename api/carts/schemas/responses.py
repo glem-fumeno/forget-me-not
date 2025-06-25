@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Self
 
 from api.carts.schemas.models import CartModel
@@ -7,7 +6,6 @@ from api.items.schemas.responses import ItemResponse
 from api.schemas import Response
 
 
-@dataclass
 class CartResponse(Response):
     cart_id: int
     name: str
@@ -19,10 +17,10 @@ class CartResponse(Response):
         cls, model: CartModel, items: list[ItemModel] | None
     ) -> Self:
         return cls(
-            model.cart_id,
-            model.name,
-            model.icon,
-            (
+            cart_id=model.cart_id,
+            name=model.name,
+            icon=model.icon,
+            items=(
                 [ItemResponse.from_model(item) for item in items]
                 if items is not None
                 else None
@@ -48,7 +46,6 @@ class CartResponse(Response):
         }
 
 
-@dataclass
 class CartListResponse(Response):
     carts: list[CartResponse]
     count: int

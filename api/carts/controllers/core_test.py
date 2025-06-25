@@ -152,14 +152,18 @@ class CartTestRepository:
     ):
         self.max_user_id += 1
         self.user_map[self.max_user_id] = UserModel(
-            self.max_user_id, username, email, get_hash(password), role
+            user_id=self.max_user_id,
+            username=username,
+            email=email,
+            password=get_hash(password),
+            role=role,
         )
         self.email_map[email] = self.max_user_id
 
     def __insert_item(self, name: str, icon: str):
         self.max_item_id += 1
         self.item_map[self.max_item_id] = ItemModel(
-            self.max_item_id, name, icon
+            item_id=self.max_item_id, name=name, icon=icon
         )
         self.item_name_map[name] = self.max_item_id
 
@@ -167,7 +171,7 @@ class CartTestRepository:
         user_id = self.email_map[owner]
         self.max_cart_id += 1
         self.cart_map[self.max_cart_id] = CartModel(
-            self.max_cart_id, name, icon
+            cart_id=self.max_cart_id, name=name, icon=icon
         )
         self.cart_name_map[user_id, name] = self.max_cart_id
         self.__insert_cart_user(owner, name, owner)

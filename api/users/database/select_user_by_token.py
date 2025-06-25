@@ -8,7 +8,7 @@ class UserSelectUserByTokenOperation(DatabaseOperation):
         columns = result.fetchone()
         if columns is None:
             return
-        return UserModel(*columns)
+        return UserModel.from_db(result.description, columns)
 
     @property
     def query(self) -> str:

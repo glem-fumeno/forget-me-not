@@ -1,17 +1,21 @@
-from dataclasses import dataclass
 from typing import Any
 
 from api.schemas import Request
 from api.users.schemas.models import UserModel
 
 
-@dataclass
 class UserLoginRequest(Request):
     email: str
     password: str
 
     def to_model(self) -> UserModel:
-        return UserModel(-1, self.email, self.email, self.password, "new")
+        return UserModel(
+            user_id=-1,
+            username=self.email,
+            email=self.email,
+            password=self.password,
+            role="new",
+        )
 
     @classmethod
     def get_examples(cls) -> dict[str, Any]:
@@ -27,10 +31,10 @@ class UserLoginRequest(Request):
             "charlie": {
                 "email": "charlie.adams@example.com",
                 "password": "Password3!",
-            }
+            },
         }
 
-@dataclass
+
 class UserUpdateRequest(Request):
     username: str | None = None
     email: str | None = None
@@ -47,5 +51,5 @@ class UserUpdateRequest(Request):
             },
             "charlie": {
                 "password": "SunsetDrive@34",
-            }
+            },
         }

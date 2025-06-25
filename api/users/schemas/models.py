@@ -1,11 +1,9 @@
-from dataclasses import dataclass
 from typing import Literal
 
 from api.schemas import Model
 
 RoleLiteral = Literal["new", "user", "admin"]
 
-@dataclass
 class UserModel(Model):
     user_id: int
     username: str
@@ -18,7 +16,6 @@ class UserModel(Model):
         return (self.username, self.email, self.password, self.role)
 
 
-@dataclass
 class UserSessionModel(Model):
     user_id: int
     token: str

@@ -16,17 +16,24 @@ class TestRegister(unittest.TestCase):
     def test_register_email_exists_raises_error(self):
         with self.assertRaises(UserExistsError):
             self.controller.run(
-                UserLoginRequest("alice.anderson@example.com", "CoffeeLover#1")
+                UserLoginRequest(
+                    email="alice.anderson@example.com",
+                    password="CoffeeLover#1",
+                )
             )
 
     def test_register_new_email_creates_user(self):
         self.controller.run(
-            UserLoginRequest("charlie.cooper@example.com", "CoffeeLover#1"),
+            UserLoginRequest(
+                email="charlie.cooper@example.com", password="CoffeeLover#1"
+            ),
         )
         self.assertIn("charlie.cooper@example.com", self.repository.email_map)
 
     def test_register_creates_session(self):
         response = self.controller.run(
-            UserLoginRequest("charlie.cooper@example.com", "CoffeeLover#1"),
+            UserLoginRequest(
+                email="charlie.cooper@example.com", password="CoffeeLover#1"
+            ),
         )
         self.assertIn(response.token, self.repository.user_login_map)

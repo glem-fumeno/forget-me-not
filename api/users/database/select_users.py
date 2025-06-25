@@ -6,7 +6,10 @@ class UserSelectUsersOperation(DatabaseOperation):
     def run(self) -> dict[int, UserModel]:
         result = self.cursor.execute(self.query)
         results = result.fetchall()
-        return {columns[0]: UserModel(*columns) for columns in results}
+        return {
+            columns[0]: UserModel.from_db(result.description, columns)
+            for columns in results
+        }
 
     @property
     def query(self) -> str:

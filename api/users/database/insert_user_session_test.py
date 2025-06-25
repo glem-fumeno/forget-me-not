@@ -17,7 +17,7 @@ class TestInsertUserSession(unittest.TestCase):
 
     def test_inserts_user_session_to_db(self):
         user_id = self.repository.email_map["bob.baker@example.com"]
-        model = UserSessionModel(user_id, get_uuid())
+        model = UserSessionModel(user_id=user_id, token=get_uuid())
         self.repository.insert_user_session(model)
         result = self.repository.cursor.execute(
             """

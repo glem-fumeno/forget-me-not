@@ -1,12 +1,15 @@
-from api.database.operation import DatabaseOperation
 from api.carts.schemas.models import CartModel
+from api.database.operation import DatabaseOperation
 
 
 class CartSelectCartsOperation(DatabaseOperation):
     def run(self, user_id: int) -> dict[int, CartModel]:
         result = self.cursor.execute(self.query, (user_id,))
         results = result.fetchall()
-        return {columns[0]: CartModel(*columns) for columns in results}
+        return {
+            columns[0]: CartModel.from_db(result.description, columns)
+            for columns in results
+        }
 
     @property
     def query(self) -> str:

@@ -1,11 +1,9 @@
-from dataclasses import dataclass
 from typing import Self
 
 from api.items.schemas.models import ItemModel
 from api.schemas import Response
 
 
-@dataclass
 class ItemResponse(Response):
     item_id: int
     name: str
@@ -13,7 +11,7 @@ class ItemResponse(Response):
 
     @classmethod
     def from_model(cls, model: ItemModel) -> Self:
-        return cls(model.item_id, model.name, model.icon)
+        return cls(item_id=model.item_id, name=model.name, icon=model.icon)
 
     @classmethod
     def get_example(cls) -> dict:
@@ -24,7 +22,6 @@ class ItemResponse(Response):
         }
 
 
-@dataclass
 class ItemListResponse(Response):
     items: list[ItemResponse]
     count: int

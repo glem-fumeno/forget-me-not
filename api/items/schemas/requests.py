@@ -1,17 +1,15 @@
-from dataclasses import dataclass
 from typing import Any
 
 from api.items.schemas.models import ItemModel
 from api.schemas import Request
 
 
-@dataclass
 class ItemCreateRequest(Request):
     name: str
     icon: str
 
     def to_model(self) -> ItemModel:
-        return ItemModel(-1, self.name, self.icon)
+        return ItemModel(item_id=-1, name=self.name, icon=self.icon)
 
     @classmethod
     def get_examples(cls) -> dict[str, Any]:
@@ -31,7 +29,6 @@ class ItemCreateRequest(Request):
         }
 
 
-@dataclass
 class ItemUpdateRequest(Request):
     name: str | None = None
     icon: str | None = None

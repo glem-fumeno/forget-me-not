@@ -8,7 +8,7 @@ class CartSelectCartOperation(DatabaseOperation):
         columns = result.fetchone()
         if columns is None:
             return
-        return CartModel(*columns)
+        return CartModel.from_db(result.description, columns)
 
     @property
     def query(self) -> str:

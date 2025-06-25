@@ -9,7 +9,7 @@ class ItemSearchController(ItemController):
         self.validate_access(admin=False)
         items = self.repository.select_items()
         return ItemListResponse(
-            [ItemResponse.from_model(model) for model in items.values()],
+            items=[ItemResponse.from_model(model) for model in items.values()],
             count=len(items)
         )
 

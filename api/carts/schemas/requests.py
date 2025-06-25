@@ -1,17 +1,15 @@
-from dataclasses import dataclass
 from typing import Any
 
 from api.carts.schemas.models import CartModel
 from api.schemas import Request
 
 
-@dataclass
 class CartCreateRequest(Request):
     name: str
     icon: str
 
     def to_model(self) -> CartModel:
-        return CartModel(-1, self.name, self.icon)
+        return CartModel(cart_id=-1, name=self.name, icon=self.icon)
 
     @classmethod
     def get_examples(cls) -> dict[str, Any]:
@@ -31,7 +29,6 @@ class CartCreateRequest(Request):
         }
 
 
-@dataclass
 class CartUpdateRequest(Request):
     name: str | None = None
     icon: str | None = None

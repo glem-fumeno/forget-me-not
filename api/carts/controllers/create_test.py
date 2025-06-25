@@ -17,8 +17,8 @@ class TestCreate(unittest.TestCase):
     def test_new_name_creates_cart(self):
         result = self.controller.run(
             CartCreateRequest(
-                "office supplies",
-                "https://img.icons8.com/pulsar-line/96/length-1.png",
+                name="office supplies",
+                icon="https://img.icons8.com/pulsar-line/96/length-1.png",
             )
         )
         self.assertIn(result.cart_id, self.repository.cart_map)
@@ -28,7 +28,7 @@ class TestCreate(unittest.TestCase):
         with self.assertRaises(LoggedOut):
             self.controller.run(
                 CartCreateRequest(
-                    "office supplies",
-                    "https://img.icons8.com/pulsar-line/96/length-1.png",
+                    name="office supplies",
+                    icon="https://img.icons8.com/pulsar-line/96/length-1.png",
                 )
             )

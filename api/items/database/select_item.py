@@ -8,7 +8,7 @@ class ItemSelectItemOperation(DatabaseOperation):
         columns = result.fetchone()
         if columns is None:
             return
-        return ItemModel(*columns)
+        return ItemModel.from_db(result.description, columns)
 
     @property
     def query(self) -> str:

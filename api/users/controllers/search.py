@@ -9,7 +9,7 @@ class UserSearchController(UserController):
         self.validate_access()
         users = self.repository.select_users()
         return UserListResponse(
-            [UserResponse.from_model(model) for model in users.values()],
+            users=[UserResponse.from_model(model) for model in users.values()],
             count=len(users),
         )
 

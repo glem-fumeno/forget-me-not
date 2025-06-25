@@ -64,7 +64,13 @@ class CartDatabaseTestRepository(CartDatabaseRepository):
     def __insert_user(
         self, username: str, email: str, password: str, role: RoleLiteral
     ):
-        model = UserModel(-1, username, email, get_hash(password), role)
+        model = UserModel(
+            user_id=-1,
+            username=username,
+            email=email,
+            password=get_hash(password),
+            role=role,
+        )
         result = self.cursor.execute(self.__user_query, model.parameters)
         assert result.lastrowid is not None
         model.user_id = result.lastrowid
@@ -79,7 +85,7 @@ class CartDatabaseTestRepository(CartDatabaseRepository):
         """
 
     def __insert_item(self, name: str, icon: str):
-        model = ItemModel(-1, name, icon)
+        model = ItemModel(item_id=-1, name=name, icon=icon)
         result = self.cursor.execute(self.__item_query, model.parameters)
         assert result.lastrowid is not None
         model.item_id = result.lastrowid
@@ -95,7 +101,7 @@ class CartDatabaseTestRepository(CartDatabaseRepository):
 
     def __insert_cart(self, user: str, name: str, icon: str):
         user_id = self.email_map[user]
-        model = CartModel(-1, name, icon)
+        model = CartModel(cart_id=-1, name=name, icon=icon)
         result = self.cursor.execute(self.__cart_query, model.parameters)
         assert result.lastrowid is not None
         model.cart_id = result.lastrowid

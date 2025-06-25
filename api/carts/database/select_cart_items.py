@@ -6,7 +6,10 @@ class CartSelectCartItemsOperation(DatabaseOperation):
     def run(self, cart_id: int) -> list[ItemModel]:
         result = self.cursor.execute(self.query, (cart_id,))
         results = result.fetchall()
-        return [ItemModel(*columns) for columns in results]
+        return [
+            ItemModel.from_db(result.description, columns)
+            for columns in results
+        ]
 
     @property
     def query(self) -> str:

@@ -1,9 +1,6 @@
-from dataclasses import dataclass
-
 from api.schemas import Model
 
 
-@dataclass
 class CartModel(Model):
     cart_id: int
     name: str
@@ -13,7 +10,7 @@ class CartModel(Model):
     def parameters(self) -> tuple[str, str]:
         return (self.name, self.icon)
 
-@dataclass
+
 class CartUserModel(Model):
     cart_id: int
     user_id: int

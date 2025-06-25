@@ -16,14 +16,14 @@ class TestInsertItem(unittest.TestCase):
 
     def test_changes_item_id(self):
         model = ItemModel(
-            -1, "soap", "https://img.icons8.com/pulsar-line/96/soap.png"
+            item_id=-1, name="soap", icon="https://img.icons8.com/pulsar-line/96/soap.png"
         )
         self.repository.insert_item(model)
         self.assertNotEqual(model.item_id, -1)
 
     def test_inserts_item_to_db(self):
         model = ItemModel(
-            -1, "soap", "https://img.icons8.com/pulsar-line/96/soap.png"
+            item_id=-1, name="soap", icon="https://img.icons8.com/pulsar-line/96/soap.png"
         )
         self.repository.insert_item(model)
         result = self.repository.cursor.execute(

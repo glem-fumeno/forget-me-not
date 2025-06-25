@@ -16,9 +16,9 @@ class TestInsertCart(unittest.TestCase):
 
     def test_changes_cart_id(self):
         model = CartModel(
-            -1,
-            "office supplies",
-            "https://img.icons8.com/pulsar-line/96/length-1.png",
+            cart_id=-1,
+            name="office supplies",
+            icon="https://img.icons8.com/pulsar-line/96/length-1.png",
         )
         user_id = self.repository.email_map["alice.anderson@example.com"]
         self.repository.insert_cart(user_id, model)
@@ -26,9 +26,9 @@ class TestInsertCart(unittest.TestCase):
 
     def test_inserts_cart_to_db(self):
         model = CartModel(
-            -1,
-            "office supplies",
-            "https://img.icons8.com/pulsar-line/96/length-1.png",
+            cart_id=-1,
+            name="office supplies",
+            icon="https://img.icons8.com/pulsar-line/96/length-1.png",
         )
         user_id = self.repository.email_map["alice.anderson@example.com"]
         self.repository.insert_cart(user_id, model)

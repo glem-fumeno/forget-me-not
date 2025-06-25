@@ -19,15 +19,16 @@ class TestCreate(unittest.TestCase):
         with self.assertRaises(ItemExistsError):
             self.controller.run(
                 ItemCreateRequest(
-                    "milk",
-                    "https://img.icons8.com/pulsar-line/96/milk-carton.png",
+                    name="milk",
+                    icon="https://img.icons8.com/pulsar-line/96/milk-carton.png",
                 )
             )
 
     def test_new_name_creates_item(self):
         self.controller.run(
             ItemCreateRequest(
-                "soap", "https://img.icons8.com/pulsar-line/96/soap.png"
+                name="soap",
+                icon="https://img.icons8.com/pulsar-line/96/soap.png",
             )
         )
         self.assertIn("soap", self.repository.item_name_map)
@@ -37,7 +38,8 @@ class TestCreate(unittest.TestCase):
         with self.assertRaises(LoggedOut):
             self.controller.run(
                 ItemCreateRequest(
-                    "soap", "https://img.icons8.com/pulsar-line/96/soap.png"
+                    name="soap",
+                    icon="https://img.icons8.com/pulsar-line/96/soap.png",
                 )
             )
 
@@ -49,6 +51,7 @@ class TestCreate(unittest.TestCase):
         with self.assertRaises(Inaccessible):
             self.controller.run(
                 ItemCreateRequest(
-                    "soap", "https://img.icons8.com/pulsar-line/96/soap.png"
+                    name="soap",
+                    icon="https://img.icons8.com/pulsar-line/96/soap.png",
                 )
             )

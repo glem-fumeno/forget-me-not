@@ -22,7 +22,13 @@ class UserDatabaseTestRepository(UserDatabaseRepository):
     def __insert_user(
         self, username: str, email: str, password: str, role: RoleLiteral
     ):
-        model = UserModel(-1, username, email, get_hash(password), role)
+        model = UserModel(
+            user_id=-1,
+            username=username,
+            email=email,
+            password=get_hash(password),
+            role=role,
+        )
         result = self.cursor.execute(self.__user_query, model.parameters)
         assert result.lastrowid is not None
         model.user_id = result.lastrowid
@@ -37,7 +43,7 @@ class UserDatabaseTestRepository(UserDatabaseRepository):
         """
 
     def __insert_session(self, email: str, token: str):
-        model = UserSessionModel(self.email_map[email], token)
+        model = UserSessionModel(user_id=self.email_map[email], token=token)
         self.cursor.execute(self.__session_query, model.parameters)
 
     @property

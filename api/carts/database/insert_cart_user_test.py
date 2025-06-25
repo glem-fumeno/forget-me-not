@@ -18,7 +18,7 @@ class TestInsertCartUser(unittest.TestCase):
         owner_id = self.repository.email_map["alice.anderson@example.com"]
         user_id = self.repository.email_map["bob.baker@example.com"]
         cart_id = self.repository.cart_name_map[owner_id, "gift for bob"]
-        model = CartUserModel(cart_id, user_id)
+        model = CartUserModel(cart_id=cart_id, user_id=user_id)
         self.repository.insert_cart_user(model)
         result = self.repository.cursor.execute(
             """

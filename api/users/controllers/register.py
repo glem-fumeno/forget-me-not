@@ -15,7 +15,7 @@ class UserRegisterController(UserController):
             raise UserExistsError
         model = request.to_model()
         self.repository.insert_user(model)
-        session = UserSessionModel(model.user_id, get_uuid())
+        session = UserSessionModel(user_id=model.user_id, token=get_uuid())
         self.repository.insert_user_session(session)
         return UserTokenResponse.from_model(model, session.token)
 

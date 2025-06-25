@@ -1,13 +1,13 @@
 import unittest
 
-from api.context import Context
-from api.errors import Inaccessible, LoggedOut
 from api.carts.controllers.core_test import CartTestRepository
 from api.carts.controllers.update import CartUpdateController
 from api.carts.schemas.errors import (
     CartNotFoundError,
 )
 from api.carts.schemas.requests import CartUpdateRequest
+from api.context import Context
+from api.errors import LoggedOut
 
 
 class TestUpdate(unittest.TestCase):

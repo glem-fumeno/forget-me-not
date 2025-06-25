@@ -17,9 +17,9 @@ class TestUpdateItem(unittest.TestCase):
     def test_updates_item_in_db(self):
         item_id = self.repository.item_name_map["milk"]
         model = ItemModel(
-            item_id,
-            "milk carton",
-            "https://img.icons8.com/pulsar-line/96/milk-carton.png",
+            item_id=item_id,
+            name="milk carton",
+            icon="https://img.icons8.com/pulsar-line/96/milk-carton.png",
         )
         self.repository.update_item(model)
         result = self.repository.cursor.execute(
@@ -28,5 +28,5 @@ class TestUpdateItem(unittest.TestCase):
             """,
             (item_id,),
         )
-        new_model = ItemModel(*result.fetchone())
+        new_model = ItemModel.from_db(result.description, result.fetchone())
         self.assertEqual(model, new_model)

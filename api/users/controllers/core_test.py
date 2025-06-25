@@ -30,7 +30,11 @@ class UserTestRepository:
     ):
         self.max_user_id += 1
         self.user_map[self.max_user_id] = UserModel(
-            self.max_user_id, username, email, get_hash(password), role
+            user_id=self.max_user_id,
+            username=username,
+            email=email,
+            password=get_hash(password),
+            role=role,
         )
         self.email_map[email] = self.max_user_id
 
