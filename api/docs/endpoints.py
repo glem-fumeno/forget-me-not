@@ -1,4 +1,5 @@
 from flask import Blueprint, send_file
+from loguru import logger
 
 from api.carts.endpoints import endpoints as carts
 from api.items.endpoints import endpoints as items
@@ -10,7 +11,6 @@ docs = [
     *items.docs,
     *carts.docs,
 ]
-
 
 @blueprint.route("/openapi.json")
 def openapi():

@@ -16,6 +16,7 @@ from api.docs.models import EndpointDict
 from api.errors import APIError
 from api.schemas import Response
 
+controllers: dict[str, type[Controller]] = {}
 
 class Endpoints:
     def __init__(
@@ -24,7 +25,6 @@ class Endpoints:
         self.Repository = repository
         self.blueprint = Blueprint(name, name, url_prefix=prefix)
         self.prefix = prefix
-        self.controllers: dict[str, type[Controller]] = {}
 
     def route(self, endpoint: str, func: Callable):
         method, path = endpoint.split(" ")
@@ -33,7 +33,7 @@ class Endpoints:
     @property
     def docs(self) -> list[EndpointDict]:
         return [
-            controller.get_docs() for controller in self.controllers.values()
+            controller.get_docs() for controller in controllers.values()
         ]
 
     @staticmethod
@@ -48,6 +48,7 @@ class Endpoints:
         controller = expected_types["controller"]
         if not issubclass(controller, Controller):
             raise TypeError("Controller is not a subclass of Controller")
+        controllers[controller.__name__] = controller
 
         @wraps(func)
         def wrapper(self: Self, *args, **kwargs):

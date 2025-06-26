@@ -21,4 +21,6 @@ config = get_config()
 
 
 if __name__ == "__main__":
-    app.run(host=config.HOST, port=config.PORT, debug=True)
+    app.run(
+        host=config.HOST, port=config.PORT, debug=True, ssl_context="adhoc"
+    )
