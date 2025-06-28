@@ -3,6 +3,7 @@ from loguru import logger
 
 from api.carts.endpoints import endpoints as carts
 from api.items.endpoints import endpoints as items
+from api.recipes.endpoints import endpoints as recipes
 from api.users.endpoints import endpoints as users
 
 blueprint = Blueprint("docs", "docs", url_prefix="/docs")
@@ -10,7 +11,9 @@ docs = [
     *users.docs,
     *items.docs,
     *carts.docs,
+    *recipes.docs,
 ]
+
 
 @blueprint.route("/openapi.json")
 def openapi():
