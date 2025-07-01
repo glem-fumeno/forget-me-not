@@ -14,7 +14,11 @@ init_logger()
 config = get_config()
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": config.FRONTEND_URL}})
+CORS(
+    app,
+    resources={r"/*": {"origins": config.FRONTEND_URL}},
+    supports_credentials=True,
+)
 logging.getLogger("werkzeug").setLevel(logging.ERROR)
 app.register_blueprint(blueprint)
 app.register_blueprint(users.blueprint)

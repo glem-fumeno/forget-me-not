@@ -4,6 +4,7 @@ from api.endpoints import Endpoints
 from api.users.controllers.delete import UserDeleteController
 from api.users.controllers.login import UserLoginController
 from api.users.controllers.read import UserReadController
+from api.users.controllers.read_me import UserReadMeController
 from api.users.controllers.register import UserRegisterController
 from api.users.controllers.search import UserSearchController
 from api.users.controllers.update import UserUpdateController
@@ -17,6 +18,7 @@ class UserEndpoints(Endpoints):
         self.route("post /login", self.login)
         self.route("post /register", self.register)
         self.route("get /search", self.search)
+        self.route("get /me", self.read_me)
         self.route("get /<user_id>", self.read)
         self.route("patch /<user_id>", self.update)
         self.route("delete /<user_id>", self.delete)
@@ -42,6 +44,10 @@ class UserEndpoints(Endpoints):
     @Endpoints.handler
     def read(self, controller: UserReadController, user_id: int):
         return controller.run(user_id)
+
+    @Endpoints.handler
+    def read_me(self, controller: UserReadMeController):
+        return controller.run()
 
     @Endpoints.handler
     def update(self, controller: UserUpdateController, user_id: int):
