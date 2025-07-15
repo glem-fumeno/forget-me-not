@@ -31,14 +31,17 @@ class ItemListResponse(Response):
         return {
             "items": [
                 {
+                    "item_id": 1,
                     "name": "milk",
                     "icon": "https://img.icons8.com/pulsar-line/96/milk.png",
                 },
                 {
+                    "item_id": 2,
                     "name": "rice",
                     "icon": "https://img.icons8.com/pulsar-line/96/rice-bowl.png",
                 },
                 {
+                    "item_id": 3,
                     "name": "soap",
                     "icon": "https://img.icons8.com/pulsar-line/96/soap.png",
                 },

@@ -6,6 +6,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Config(BaseSettings):
     HOST: str = "localhost"
     PORT: int = 5000
+    DEV_MODE: bool = False
+    SSL_KEY_PATH: str | None = None
+    SSL_CRT_PATH: str | None = None
     FRONTEND_URL: str = "http://localhost:8080"
     SALT: str = "e7c04613-2a6c-423e-987c-624d14de8a8e"
     DB_PATH: str = "app.db"

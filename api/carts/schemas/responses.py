@@ -35,10 +35,12 @@ class CartResponse(Response):
             "icon": "https://img.icons8.com/pulsar-line/96/shopping-cart.png",
             "items": [
                 {
+                    "item_id": 1,
                     "name": "milk",
                     "icon": "https://img.icons8.com/pulsar-line/96/milk.png",
                 },
                 {
+                    "item_id": 2,
                     "name": "rice",
                     "icon": "https://img.icons8.com/pulsar-line/96/rice-bowl.png",
                 },
@@ -55,14 +57,17 @@ class CartListResponse(Response):
         return {
             "carts": [
                 {
+                    "cart_id": 1,
                     "name": "groceries",
                     "icon": "https://img.icons8.com/pulsar-line/96/shopping-cart.png",
                 },
                 {
+                    "cart_id": 2,
                     "name": "christmas",
                     "icon": "https://img.icons8.com/pulsar-line/96/christmas-tree.png",
                 },
                 {
+                    "cart_id": 3,
                     "name": "shopping",
                     "icon": "https://img.icons8.com/pulsar-line/96/shopping-trolley.png",
                 },

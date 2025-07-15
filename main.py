@@ -2,6 +2,7 @@ import logging
 
 from flask import Flask
 from flask_cors import CORS
+from asgiref.wsgi import WsgiToAsgi
 
 from api.carts.endpoints import endpoints as carts
 from api.docs.endpoints import blueprint
@@ -27,8 +28,4 @@ app.register_blueprint(items.blueprint)
 app.register_blueprint(carts.blueprint)
 app.register_blueprint(recipes.blueprint)
 
-
-if __name__ == "__main__":
-    app.run(
-        host=config.HOST, port=config.PORT, debug=True, ssl_context="adhoc"
-    )
+asgi = WsgiToAsgi(app)

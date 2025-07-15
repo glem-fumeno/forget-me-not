@@ -14,17 +14,17 @@ class RecipeCreateRequest(Request):
     @classmethod
     def get_examples(cls) -> dict[str, Any]:
         return {
-            "groceries": {
-                "name": "groceries",
-                "icon": "https://img.icons8.com/pulsar-line/96/shopping-recipe.png",
+            "pancakes": {
+                "name": "pancakes",
+                "icon": "https://img.icons8.com/pulsar-line/96/pancake.png",
             },
-            "christmas": {
-                "name": "christmas",
-                "icon": "https://img.icons8.com/pulsar-line/96/christmas-tree.png",
+            "omlette": {
+                "name": "omlette",
+                "icon": "https://img.icons8.com/pulsar-line/96/omlette.png",
             },
-            "shopping": {
-                "name": "shopping",
-                "icon": "https://img.icons8.com/pulsar-line/96/shopping-trolley.png",
+            "scrambled eggs": {
+                "name": "scrambled eggs",
+                "icon": "https://img.icons8.com/pulsar-line/96/sunny-side-up-eggs.png",
             },
         }
 
@@ -36,10 +36,10 @@ class RecipeUpdateRequest(Request):
     @classmethod
     def get_examples(cls) -> dict[str, Any]:
         return {
-            "groceries": {
-                "icon": "https://img.icons8.com/pulsar-line/96/fast-moving-consumer-goods.png",
+            "name": {
+                "name": "pancake stack",
             },
-            "christmas": {
-                "name": "x-mas",
+            "icon": {
+                "icon": "https://img.icons8.com/pulsar-line/96/american-pancakes.png",
             },
         }

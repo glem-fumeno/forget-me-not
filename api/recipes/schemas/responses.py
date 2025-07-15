@@ -31,14 +31,16 @@ class RecipeResponse(Response):
     def get_example(cls) -> dict:
         return {
             "recipe_id": 15,
-            "name": "groceries",
-            "icon": "https://img.icons8.com/pulsar-line/96/shopping-recipe.png",
+            "name": "pancakes",
+            "icon": "https://img.icons8.com/pulsar-line/96/pancake.png",
             "items": [
                 {
+                    "item_id": 1,
                     "name": "milk",
                     "icon": "https://img.icons8.com/pulsar-line/96/milk.png",
                 },
                 {
+                    "item_id": 2,
                     "name": "rice",
                     "icon": "https://img.icons8.com/pulsar-line/96/rice-bowl.png",
                 },
@@ -55,16 +57,19 @@ class RecipeListResponse(Response):
         return {
             "recipes": [
                 {
-                    "name": "groceries",
-                    "icon": "https://img.icons8.com/pulsar-line/96/shopping-recipe.png",
+                    "recipe_id": 13,
+                    "name": "pancakes",
+                    "icon": "https://img.icons8.com/pulsar-line/96/pancake.png",
                 },
                 {
-                    "name": "christmas",
-                    "icon": "https://img.icons8.com/pulsar-line/96/christmas-tree.png",
+                    "recipe_id": 14,
+                    "name": "omlette",
+                    "icon": "https://img.icons8.com/pulsar-line/96/omlette.png",
                 },
                 {
-                    "name": "shopping",
-                    "icon": "https://img.icons8.com/pulsar-line/96/shopping-trolley.png",
+                    "recipe_id": 15,
+                    "name": "scrambled eggs",
+                    "icon": "https://img.icons8.com/pulsar-line/96/sunny-side-up-eggs.png",
                 },
             ],
             "count": 3,
