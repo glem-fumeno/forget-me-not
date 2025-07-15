@@ -1,10 +1,9 @@
 from flask import Blueprint, send_file
-from loguru import logger
 
-from api.carts.endpoints import endpoints as carts
-from api.items.endpoints import endpoints as items
-from api.recipes.endpoints import endpoints as recipes
-from api.users.endpoints import endpoints as users
+from api.endpoints.carts import endpoints as carts
+from api.endpoints.items import endpoints as items
+from api.endpoints.recipes import endpoints as recipes
+from api.endpoints.users import endpoints as users
 
 blueprint = Blueprint("docs", "docs", url_prefix="/docs")
 docs = [

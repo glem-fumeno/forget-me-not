@@ -1,0 +1,30 @@
+import unittest
+
+from api.database.carts.core_test import CartDatabaseTestRepository
+from api.context import Context
+
+
+class TestInsertCartItem(unittest.TestCase):
+    def setUp(self) -> None:
+        self.repository = CartDatabaseTestRepository(Context(), "test.db")
+        self.repository.connect()
+        self.repository.initialize_test_cases()
+
+    def tearDown(self) -> None:
+        self.repository.connection.rollback()
+        self.repository.connection.close()
+
+    def test_inserts_cart_item_to_db(self):
+        user_id = self.repository.email_map["alice.anderson@example.com"]
+        cart_id = self.repository.cart_name_map[user_id, "groceries"]
+        item_id = self.repository.item_name_map["soap"]
+        self.repository.insert_cart_item(cart_id, item_id)
+        result = self.repository.cursor.execute(
+            """
+            SELECT cart_id_
+            FROM carts_items_
+            WHERE cart_id_ = ? AND item_id_ = ?
+            """,
+            (cart_id, item_id),
+        )
+        self.assertEqual(cart_id, result.fetchone()[0])
