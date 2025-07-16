@@ -1,6 +1,6 @@
+from api.controllers.items.controller import ItemController
 from api.docs.models import EndpointDict
 from api.errors import Inaccessible, LoggedOut
-from api.controllers.items.core import ItemController
 from api.models.items.errors import ItemExistsError, ItemNotFoundError
 from api.models.items.requests import ItemUpdateRequest
 from api.models.items.responses import ItemResponse

@@ -1,14 +1,14 @@
 import unittest
 
 from api.context import Context
-from api.errors import LoggedOut
-from api.controllers.recipes.core_test import RecipeTestRepository
+from api.controllers.mock_repository import MockRepository
 from api.controllers.recipes.search import RecipeSearchController
+from api.errors import LoggedOut
 
 
 class TestSearch(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = RecipeTestRepository()
+        self.repository = MockRepository()
         user_id = self.repository.email_map["alice.anderson@example.com"]
         self.ctx = Context().add("token", self.repository.login(user_id))
         self.controller = RecipeSearchController(self.ctx, self.repository)

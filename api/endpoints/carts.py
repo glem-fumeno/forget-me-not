@@ -7,14 +7,13 @@ from api.controllers.carts.read import CartReadController
 from api.controllers.carts.remove_from_cart import CartRemoveFromCartController
 from api.controllers.carts.search import CartSearchController
 from api.controllers.carts.update import CartUpdateController
-from api.database.carts.core import CartDatabaseRepository
-from api.models.carts.requests import CartCreateRequest, CartUpdateRequest
 from api.endpoints.endpoints import Endpoints
+from api.models.carts.requests import CartCreateRequest, CartUpdateRequest
 
 
 class CartEndpoints(Endpoints):
     def __init__(self) -> None:
-        super().__init__("carts", "/carts", CartDatabaseRepository)
+        super().__init__("carts", "/carts")
         self.route("post /new", self.create)
         self.route("get /search", self.search)
         self.route("get /<cart_id>", self.read)

@@ -1,5 +1,5 @@
+from api.controllers.users.controller import UserController
 from api.docs.models import EndpointDict
-from api.controllers.users.core import UserController
 from api.models.users.errors import LoggedOut, UserNotFoundError
 from api.models.users.responses import UserResponse
 

@@ -1,18 +1,15 @@
 import unittest
 
-from api.database.carts.core_test import CartDatabaseTestRepository
 from api.context import Context
+from api.database.test_repository import DatabaseTestRepository
 
 
 class TestDeleteCart(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = CartDatabaseTestRepository(Context(), "test.db")
-        self.repository.connect()
+        self.repository = DatabaseTestRepository(Context(), "test.db")
+        self.repository.__enter__()
+        self.addCleanup(self.repository.__exit__, 1, None, None)
         self.repository.initialize_test_cases()
-
-    def tearDown(self) -> None:
-        self.repository.connection.rollback()
-        self.repository.connection.close()
 
     def test_returns_cart_when_found(self):
         user_id = self.repository.email_map["alice.anderson@example.com"]

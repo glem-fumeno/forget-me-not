@@ -1,4 +1,4 @@
-from api.controllers.repository import Controller
+from api.controllers.controller import Controller
 from api.errors import Inaccessible, LoggedOut
 
 

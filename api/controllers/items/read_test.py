@@ -1,15 +1,15 @@
 import unittest
 
 from api.context import Context
-from api.errors import LoggedOut
-from api.controllers.items.core_test import ItemTestRepository
 from api.controllers.items.read import ItemReadController
+from api.controllers.mock_repository import MockRepository
+from api.errors import LoggedOut
 from api.models.items.errors import ItemNotFoundError
 
 
 class TestRead(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = ItemTestRepository()
+        self.repository = MockRepository()
         user_id = self.repository.email_map["alice.anderson@example.com"]
         self.ctx = Context().add("token", self.repository.login(user_id))
         self.controller = ItemReadController(self.ctx, self.repository)

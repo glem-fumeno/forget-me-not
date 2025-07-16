@@ -1,7 +1,7 @@
 import unittest
 
 from api.context import Context
-from api.controllers.users.core_test import UserTestRepository
+from api.controllers.mock_repository import MockRepository
 from api.controllers.users.login import UserLoginController
 from api.models.users.errors import InvalidCredentialsError
 from api.models.users.requests import UserLoginRequest
@@ -10,7 +10,7 @@ from api.models.users.requests import UserLoginRequest
 class TestLogin(unittest.TestCase):
     def setUp(self) -> None:
         self.ctx = Context()
-        self.repository = UserTestRepository()
+        self.repository = MockRepository()
         self.controller = UserLoginController(self.ctx, self.repository)
 
     def test_login_credentials_not_found_raises_error(self):

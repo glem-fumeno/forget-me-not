@@ -1,10 +1,10 @@
+from api.controllers.users.controller import UserController
 from api.docs.models import EndpointDict
-from api.security import get_hash, get_uuid
-from api.controllers.users.core import UserController
 from api.models.users.errors import InvalidCredentialsError
 from api.models.users.models import UserSessionModel
 from api.models.users.requests import UserLoginRequest
 from api.models.users.responses import UserTokenResponse
+from api.security import get_hash, get_uuid
 
 
 class UserLoginController(UserController):

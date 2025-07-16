@@ -1,7 +1,7 @@
 import unittest
 
 from api.context import Context
-from api.controllers.users.core_test import UserTestRepository
+from api.controllers.mock_repository import MockRepository
 from api.controllers.users.register import UserRegisterController
 from api.models.users.errors import UserExistsError
 from api.models.users.requests import UserLoginRequest
@@ -10,7 +10,7 @@ from api.models.users.requests import UserLoginRequest
 class TestRegister(unittest.TestCase):
     def setUp(self) -> None:
         self.ctx = Context()
-        self.repository = UserTestRepository()
+        self.repository = MockRepository()
         self.controller = UserRegisterController(self.ctx, self.repository)
 
     def test_register_email_exists_raises_error(self):

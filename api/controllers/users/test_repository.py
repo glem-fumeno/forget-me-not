@@ -1,42 +1,18 @@
-from api.security import get_hash, get_uuid
-from api.models.users.models import RoleLiteral, UserModel, UserSessionModel
+from api.models.users.models import UserModel, UserSessionModel
+from api.security import get_uuid
 
 
 class UserTestRepository:
-    def __init__(self) -> None:
-        super().__init__()
-        self.init_users()
-
     def init_users(self):
         self.max_user_id: int = 0
         self.user_map: dict[int, UserModel] = {}
         self.email_map: dict[str, int] = {}
         self.user_login_map: dict[str, int] = {}
 
-        self.__insert_user(
-            "aanderson", "alice.anderson@example.com", "A1ice_89rocks", "admin"
-        )
-        self.__insert_user(
-            "b.baker92", "bob.baker@example.com", "SunsetDrive@34", "user"
-        )
-
     def login(self, user_id: int):
         token = get_uuid()
         self.user_login_map[token] = user_id
         return token
-
-    def __insert_user(
-        self, username: str, email: str, password: str, role: RoleLiteral
-    ):
-        self.max_user_id += 1
-        self.user_map[self.max_user_id] = UserModel(
-            user_id=self.max_user_id,
-            username=username,
-            email=email,
-            password=get_hash(password),
-            role=role,
-        )
-        self.email_map[email] = self.max_user_id
 
     def insert_user(self, model: UserModel):
         self.max_user_id += 1

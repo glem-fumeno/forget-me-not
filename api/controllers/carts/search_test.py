@@ -1,14 +1,14 @@
 import unittest
 
-from api.controllers.carts.core_test import CartTestRepository
-from api.controllers.carts.search import CartSearchController
 from api.context import Context
+from api.controllers.carts.search import CartSearchController
+from api.controllers.mock_repository import MockRepository
 from api.errors import LoggedOut
 
 
 class TestSearch(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = CartTestRepository()
+        self.repository = MockRepository()
         user_id = self.repository.email_map["alice.anderson@example.com"]
         self.ctx = Context().add("token", self.repository.login(user_id))
         self.controller = CartSearchController(self.ctx, self.repository)

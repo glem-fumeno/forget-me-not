@@ -1,15 +1,15 @@
 import unittest
 
-from api.controllers.carts.core_test import CartTestRepository
-from api.controllers.carts.delete import CartDeleteController
-from api.models.carts.errors import CartNotFoundError
 from api.context import Context
+from api.controllers.carts.delete import CartDeleteController
+from api.controllers.mock_repository import MockRepository
 from api.errors import LoggedOut
+from api.models.carts.errors import CartNotFoundError
 
 
 class TestDelete(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = CartTestRepository()
+        self.repository = MockRepository()
         self.user_id = self.repository.email_map["alice.anderson@example.com"]
         self.ctx = Context().add("token", self.repository.login(self.user_id))
         self.controller = CartDeleteController(self.ctx, self.repository)

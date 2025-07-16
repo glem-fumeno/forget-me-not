@@ -1,20 +1,17 @@
 import unittest
 
 from api.context import Context
-from api.security import get_uuid
-from api.database.users.core_test import UserDatabaseTestRepository
+from api.database.test_repository import DatabaseTestRepository
 from api.models.users.models import UserSessionModel
+from api.security import get_uuid
 
 
 class TestInsertUserSession(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = UserDatabaseTestRepository(Context(), "test.db")
-        self.repository.connect()
+        self.repository = DatabaseTestRepository(Context(), "test.db")
+        self.repository.__enter__()
+        self.addCleanup(self.repository.__exit__, 1, None, None)
         self.repository.initialize_test_cases()
-
-    def tearDown(self) -> None:
-        self.repository.connection.rollback()
-        self.repository.connection.close()
 
     def test_inserts_user_session_to_db(self):
         user_id = self.repository.email_map["bob.baker@example.com"]

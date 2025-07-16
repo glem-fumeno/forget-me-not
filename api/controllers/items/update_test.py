@@ -1,16 +1,16 @@
 import unittest
 
 from api.context import Context
-from api.errors import Inaccessible, LoggedOut
-from api.controllers.items.core_test import ItemTestRepository
 from api.controllers.items.update import ItemUpdateController
+from api.controllers.mock_repository import MockRepository
+from api.errors import Inaccessible, LoggedOut
 from api.models.items.errors import ItemExistsError, ItemNotFoundError
 from api.models.items.requests import ItemUpdateRequest
 
 
 class TestUpdate(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = ItemTestRepository()
+        self.repository = MockRepository()
         user_id = self.repository.email_map["alice.anderson@example.com"]
         self.ctx = Context().add("token", self.repository.login(user_id))
         self.controller = ItemUpdateController(self.ctx, self.repository)

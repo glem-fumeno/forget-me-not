@@ -1,6 +1,6 @@
+from api.controllers.recipes.controller import RecipeController
 from api.docs.models import EndpointDict
 from api.errors import LoggedOut
-from api.controllers.recipes.core import RecipeController
 from api.models.recipes.requests import RecipeCreateRequest
 from api.models.recipes.responses import RecipeResponse
 

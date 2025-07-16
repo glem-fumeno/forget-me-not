@@ -1,19 +1,16 @@
 import unittest
 
-from api.database.carts.core_test import CartDatabaseTestRepository
-from api.models.carts.models import CartUserModel
 from api.context import Context
+from api.database.test_repository import DatabaseTestRepository
+from api.models.carts.models import CartUserModel
 
 
 class TestInsertCartUser(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = CartDatabaseTestRepository(Context(), "test.db")
-        self.repository.connect()
+        self.repository = DatabaseTestRepository(Context(), "test.db")
+        self.repository.__enter__()
+        self.addCleanup(self.repository.__exit__, 1, None, None)
         self.repository.initialize_test_cases()
-
-    def tearDown(self) -> None:
-        self.repository.connection.rollback()
-        self.repository.connection.close()
 
     def test_inserts_cart_session_to_db(self):
         owner_id = self.repository.email_map["alice.anderson@example.com"]

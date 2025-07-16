@@ -1,8 +1,8 @@
-from api.controllers.carts.core import CartController
-from api.models.carts.errors import CartNotFoundError
-from api.models.carts.responses import CartResponse
+from api.controllers.carts.controller import CartController
 from api.docs.models import EndpointDict
 from api.errors import LoggedOut
+from api.models.carts.errors import CartNotFoundError
+from api.models.carts.responses import CartResponse
 
 
 class CartReadController(CartController):
@@ -11,8 +11,10 @@ class CartReadController(CartController):
         model = self.repository.select_cart(self.issuer.user_id, cart_id)
         if model is None:
             raise CartNotFoundError
+        items = self.repository.select_items()
+        cart_items = self.repository.select_cart_items(cart_id)
         return CartResponse.from_model(
-            model, self.repository.select_cart_items(cart_id)
+            model, [items[item] for item in cart_items]
         )
 
     @classmethod

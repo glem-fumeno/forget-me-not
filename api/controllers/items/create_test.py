@@ -1,16 +1,16 @@
 import unittest
 
 from api.context import Context
-from api.errors import Inaccessible, LoggedOut
-from api.controllers.items.core_test import ItemTestRepository
 from api.controllers.items.create import ItemCreateController
+from api.controllers.mock_repository import MockRepository
+from api.errors import Inaccessible, LoggedOut
 from api.models.items.errors import ItemExistsError
 from api.models.items.requests import ItemCreateRequest
 
 
 class TestCreate(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = ItemTestRepository()
+        self.repository = MockRepository()
         user_id = self.repository.email_map["alice.anderson@example.com"]
         self.ctx = Context().add("token", self.repository.login(user_id))
         self.controller = ItemCreateController(self.ctx, self.repository)
@@ -27,19 +27,19 @@ class TestCreate(unittest.TestCase):
     def test_new_name_creates_item(self):
         self.controller.run(
             ItemCreateRequest(
-                name="soap",
-                icon="https://img.icons8.com/pulsar-line/96/soap.png",
+                name="needle",
+                icon="https://img.icons8.com/pulsar-line/96/needle.png",
             )
         )
-        self.assertIn("soap", self.repository.item_name_map)
+        self.assertIn("needle", self.repository.item_name_map)
 
     def test_user_logged_out_raises_error(self):
         self.controller.ctx = self.controller.ctx.add("token", "")
         with self.assertRaises(LoggedOut):
             self.controller.run(
                 ItemCreateRequest(
-                    name="soap",
-                    icon="https://img.icons8.com/pulsar-line/96/soap.png",
+                    name="needle",
+                    icon="https://img.icons8.com/pulsar-line/96/needle.png",
                 )
             )
 
@@ -51,7 +51,7 @@ class TestCreate(unittest.TestCase):
         with self.assertRaises(Inaccessible):
             self.controller.run(
                 ItemCreateRequest(
-                    name="soap",
-                    icon="https://img.icons8.com/pulsar-line/96/soap.png",
+                    name="needle",
+                    icon="https://img.icons8.com/pulsar-line/96/needle.png",
                 )
             )

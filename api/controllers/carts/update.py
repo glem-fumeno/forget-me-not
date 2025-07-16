@@ -1,9 +1,9 @@
-from api.controllers.carts.core import CartController
+from api.controllers.carts.controller import CartController
+from api.docs.models import EndpointDict
+from api.errors import LoggedOut
 from api.models.carts.errors import CartNotFoundError
 from api.models.carts.requests import CartUpdateRequest
 from api.models.carts.responses import CartResponse
-from api.docs.models import EndpointDict
-from api.errors import LoggedOut
 
 
 class CartUpdateController(CartController):
@@ -20,8 +20,10 @@ class CartUpdateController(CartController):
         self.update_icon()
 
         self.repository.update_cart(self.model)
+        items = self.repository.select_items()
+        cart_items = self.repository.select_cart_items(cart_id)
         return CartResponse.from_model(
-            model, self.repository.select_cart_items(self.cart_id)
+            model, [items[item] for item in cart_items]
         )
 
     def update_name(self):

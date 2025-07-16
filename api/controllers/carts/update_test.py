@@ -1,16 +1,16 @@
 import unittest
 
-from api.controllers.carts.core_test import CartTestRepository
+from api.context import Context
 from api.controllers.carts.update import CartUpdateController
+from api.controllers.mock_repository import MockRepository
+from api.errors import LoggedOut
 from api.models.carts.errors import CartNotFoundError
 from api.models.carts.requests import CartUpdateRequest
-from api.context import Context
-from api.errors import LoggedOut
 
 
 class TestUpdate(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = CartTestRepository()
+        self.repository = MockRepository()
         self.user_id = self.repository.email_map["alice.anderson@example.com"]
         self.ctx = Context().add("token", self.repository.login(self.user_id))
         self.controller = CartUpdateController(self.ctx, self.repository)

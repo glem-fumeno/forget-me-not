@@ -1,18 +1,17 @@
 from flask import request
 
-from api.endpoints.endpoints import Endpoints
 from api.controllers.items.create import ItemCreateController
 from api.controllers.items.delete import ItemDeleteController
 from api.controllers.items.read import ItemReadController
 from api.controllers.items.search import ItemSearchController
 from api.controllers.items.update import ItemUpdateController
-from api.database.items.core import ItemDatabaseRepository
+from api.endpoints.endpoints import Endpoints
 from api.models.items.requests import ItemCreateRequest, ItemUpdateRequest
 
 
 class ItemEndpoints(Endpoints):
     def __init__(self) -> None:
-        super().__init__("items", "/items", ItemDatabaseRepository)
+        super().__init__("items", "/items")
         self.route("post /new", self.create)
         self.route("get /search", self.search)
         self.route("get /<item_id>", self.read)

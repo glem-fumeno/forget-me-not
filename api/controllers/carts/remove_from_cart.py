@@ -1,8 +1,8 @@
-from api.controllers.carts.core import CartController
-from api.models.carts.errors import CartNotFoundError, ItemNotFoundError
-from api.models.carts.responses import CartResponse
+from api.controllers.carts.controller import CartController
 from api.docs.models import EndpointDict
 from api.errors import LoggedOut
+from api.models.carts.errors import CartNotFoundError, ItemNotFoundError
+from api.models.carts.responses import CartResponse
 
 
 class CartRemoveFromCartController(CartController):
@@ -16,8 +16,9 @@ class CartRemoveFromCartController(CartController):
             raise ItemNotFoundError
 
         self.repository.delete_cart_item(cart_id, item_id)
+        cart_items = self.repository.select_cart_items(cart_id)
         return CartResponse.from_model(
-            model, self.repository.select_cart_items(cart_id)
+            model, [items[item] for item in cart_items]
         )
 
     @classmethod

@@ -1,6 +1,5 @@
 from flask import request
 
-from api.endpoints.endpoints import Endpoints
 from api.controllers.recipes.add_to_recipe import RecipeAddToRecipeController
 from api.controllers.recipes.create import RecipeCreateController
 from api.controllers.recipes.delete import RecipeDeleteController
@@ -10,7 +9,7 @@ from api.controllers.recipes.remove_from_recipe import (
 )
 from api.controllers.recipes.search import RecipeSearchController
 from api.controllers.recipes.update import RecipeUpdateController
-from api.database.recipes.core import RecipeDatabaseRepository
+from api.endpoints.endpoints import Endpoints
 from api.models.recipes.requests import (
     RecipeCreateRequest,
     RecipeUpdateRequest,
@@ -19,7 +18,7 @@ from api.models.recipes.requests import (
 
 class RecipeEndpoints(Endpoints):
     def __init__(self) -> None:
-        super().__init__("recipes", "/recipes", RecipeDatabaseRepository)
+        super().__init__("recipes", "/recipes")
         self.route("post /new", self.create)
         self.route("get /search", self.search)
         self.route("get /<recipe_id>", self.read)

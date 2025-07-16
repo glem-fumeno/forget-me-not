@@ -1,6 +1,6 @@
+from api.controllers.items.controller import ItemController
 from api.docs.models import EndpointDict
 from api.errors import LoggedOut
-from api.controllers.items.core import ItemController
 from api.models.items.responses import ItemListResponse, ItemResponse
 
 

@@ -10,7 +10,7 @@ from flask import Response as FlaskResponse
 from flask import make_response, request
 
 from api.context import Context
-from api.controllers.repository import Controller
+from api.controllers.controller import Controller
 from api.database.repository import DatabaseRepository
 from api.docs.models import EndpointDict
 from api.errors import APIError
@@ -18,11 +18,9 @@ from api.schemas import Response
 
 controllers: dict[str, type[Controller]] = {}
 
+
 class Endpoints:
-    def __init__(
-        self, name: str, prefix: str, repository: type[DatabaseRepository]
-    ) -> None:
-        self.Repository = repository
+    def __init__(self, name: str, prefix: str) -> None:
         self.blueprint = Blueprint(name, name, url_prefix=prefix)
         self.prefix = prefix
 
@@ -32,9 +30,7 @@ class Endpoints:
 
     @property
     def docs(self) -> list[EndpointDict]:
-        return [
-            controller.get_docs() for controller in controllers.values()
-        ]
+        return [controller.get_docs() for controller in controllers.values()]
 
     @staticmethod
     def handler(func: Callable):
@@ -46,8 +42,6 @@ class Endpoints:
         if "controller" not in expected_types:
             raise KeyError("Controller not found")
         controller = expected_types["controller"]
-        if not issubclass(controller, Controller):
-            raise TypeError("Controller is not a subclass of Controller")
         controllers[controller.__name__] = controller
 
         @wraps(func)
@@ -64,7 +58,7 @@ class Endpoints:
             }
             try:
                 with (
-                    self.Repository(ctx) as r,
+                    DatabaseRepository(ctx) as r,
                     logger.catch(exclude=APIError, reraise=True),
                 ):
                     result = func(self, controller(ctx, r), *args, **kwargs)

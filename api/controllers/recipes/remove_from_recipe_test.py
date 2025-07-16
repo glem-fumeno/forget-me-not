@@ -1,17 +1,17 @@
 import unittest
 
 from api.context import Context
-from api.errors import LoggedOut
-from api.controllers.recipes.core_test import RecipeTestRepository
+from api.controllers.mock_repository import MockRepository
 from api.controllers.recipes.remove_from_recipe import (
     RecipeRemoveFromRecipeController,
 )
+from api.errors import LoggedOut
 from api.models.recipes.errors import ItemNotFoundError, RecipeNotFoundError
 
 
 class TestRemoveFromRecipe(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = RecipeTestRepository()
+        self.repository = MockRepository()
         self.user_id = self.repository.email_map["alice.anderson@example.com"]
         self.ctx = Context().add("token", self.repository.login(self.user_id))
         self.controller = RecipeRemoveFromRecipeController(

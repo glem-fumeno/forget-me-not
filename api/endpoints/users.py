@@ -1,6 +1,5 @@
 from flask import make_response, request
 
-from api.endpoints.endpoints import Endpoints
 from api.controllers.users.delete import UserDeleteController
 from api.controllers.users.login import UserLoginController
 from api.controllers.users.read import UserReadController
@@ -8,13 +7,13 @@ from api.controllers.users.read_me import UserReadMeController
 from api.controllers.users.register import UserRegisterController
 from api.controllers.users.search import UserSearchController
 from api.controllers.users.update import UserUpdateController
-from api.database.users.core import UserDatabaseRepository
+from api.endpoints.endpoints import Endpoints
 from api.models.users.requests import UserLoginRequest, UserUpdateRequest
 
 
 class UserEndpoints(Endpoints):
     def __init__(self) -> None:
-        super().__init__("users", "/users", UserDatabaseRepository)
+        super().__init__("users", "/users")
         self.route("post /login", self.login)
         self.route("post /register", self.register)
         self.route("get /search", self.search)

@@ -1,15 +1,15 @@
 import unittest
 
 from api.context import Context
-from api.errors import LoggedOut
-from api.controllers.recipes.core_test import RecipeTestRepository
+from api.controllers.mock_repository import MockRepository
 from api.controllers.recipes.create import RecipeCreateController
+from api.errors import LoggedOut
 from api.models.recipes.requests import RecipeCreateRequest
 
 
 class TestCreate(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = RecipeTestRepository()
+        self.repository = MockRepository()
         user_id = self.repository.email_map["alice.anderson@example.com"]
         self.ctx = Context().add("token", self.repository.login(user_id))
         self.controller = RecipeCreateController(self.ctx, self.repository)

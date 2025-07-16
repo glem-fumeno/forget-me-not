@@ -1,7 +1,7 @@
-from api.controllers.carts.core import CartController
-from api.models.carts.responses import CartListResponse, CartResponse
+from api.controllers.carts.controller import CartController
 from api.docs.models import EndpointDict
 from api.errors import LoggedOut
+from api.models.carts.responses import CartListResponse, CartResponse
 
 
 class CartSearchController(CartController):

@@ -1,15 +1,15 @@
 import unittest
 
-from api.controllers.carts.core_test import CartTestRepository
-from api.controllers.carts.create import CartCreateController
-from api.models.carts.requests import CartCreateRequest
 from api.context import Context
+from api.controllers.carts.create import CartCreateController
+from api.controllers.mock_repository import MockRepository
 from api.errors import LoggedOut
+from api.models.carts.requests import CartCreateRequest
 
 
 class TestCreate(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = CartTestRepository()
+        self.repository = MockRepository()
         user_id = self.repository.email_map["alice.anderson@example.com"]
         self.ctx = Context().add("token", self.repository.login(user_id))
         self.controller = CartCreateController(self.ctx, self.repository)
