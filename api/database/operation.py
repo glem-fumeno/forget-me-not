@@ -11,3 +11,5 @@ class DatabaseOperation:
         self.ctx = ctx
         self.logger = logger.bind(hash=self.ctx.get("hash", "00000000"))
         self.logger.debug(f"Operation: {self.__class__.__name__}")
+
+    def run(self): ...
