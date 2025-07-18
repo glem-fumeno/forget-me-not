@@ -6,7 +6,8 @@ from api.controllers.recipes.remove_from_recipe import (
     RecipeRemoveFromRecipeController,
 )
 from api.errors import LoggedOut
-from api.models.recipes.errors import ItemNotFoundError, RecipeNotFoundError
+from api.models.items.errors import ItemNotFoundError
+from api.models.recipes.errors import RecipeNotFoundError
 
 
 class TestRemoveFromRecipe(unittest.TestCase):

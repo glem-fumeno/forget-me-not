@@ -3,20 +3,22 @@ from api.docs.models import EndpointDict
 from api.errors import LoggedOut
 from api.models.carts.errors import CartNotFoundError
 from api.models.carts.responses import CartResponse
-from api.models.items.errors import ItemNotFoundError
+from api.models.recipes.errors import RecipeNotFoundError
 
 
-class CartAddToCartController(CartController):
-    def run(self, cart_id: int, item_id: int) -> CartResponse:
+class CartAddRecipeToCartController(CartController):
+    def run(self, cart_id: int, recipe_id: int) -> CartResponse:
         self.validate_access()
         model = self.repository.select_cart(self.issuer.user_id, cart_id)
         if model is None:
             raise CartNotFoundError
-        items = self.repository.select_items()
-        if item_id not in items:
-            raise ItemNotFoundError
+        recipe = self.repository.select_recipe(self.issuer.user_id, recipe_id)
+        if recipe is None:
+            raise RecipeNotFoundError
+        item_ids = self.repository.select_recipe_items(recipe_id)
 
-        self.repository.insert_cart_items(cart_id, {item_id})
+        self.repository.insert_cart_items(cart_id, item_ids)
+        items = self.repository.select_items()
         cart_items = self.repository.select_cart_items(cart_id)
         return CartResponse.from_model(
             model, [items[item_id] for item_id in cart_items]
@@ -25,8 +27,8 @@ class CartAddToCartController(CartController):
     @classmethod
     def get_docs(cls):
         return EndpointDict(
-            endpoint="put /carts/{cart_id}/{item_id}",
-            path={"cart_id": "integer", "item_id": "integer"},
+            endpoint="put /carts/{cart_id}/recipes/{recipe_id}",
+            path={"cart_id": "integer", "recipe_id": "integer"},
             responses=CartResponse,
-            errors=[CartNotFoundError, ItemNotFoundError, LoggedOut],
+            errors=[CartNotFoundError, RecipeNotFoundError, LoggedOut],
         )

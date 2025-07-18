@@ -14,14 +14,24 @@ class TestInsertCartItem(unittest.TestCase):
     def test_inserts_cart_item_to_db(self):
         user_id = self.repository.email_map["alice.anderson@example.com"]
         cart_id = self.repository.cart_name_map[user_id, "groceries"]
-        item_id = self.repository.item_name_map["soap"]
-        self.repository.insert_cart_item(cart_id, item_id)
+        item_id_1 = self.repository.item_name_map["soap"]
+        item_id_2 = self.repository.item_name_map["rice"]
+        self.repository.insert_cart_items(cart_id, {item_id_1, item_id_2})
         result = self.repository.cursor.execute(
             """
             SELECT cart_id_
             FROM carts_items_
             WHERE cart_id_ = ? AND item_id_ = ?
             """,
-            (cart_id, item_id),
+            (cart_id, item_id_1),
+        )
+        self.assertEqual(cart_id, result.fetchone()[0])
+        result = self.repository.cursor.execute(
+            """
+            SELECT cart_id_
+            FROM carts_items_
+            WHERE cart_id_ = ? AND item_id_ = ?
+            """,
+            (cart_id, item_id_2),
         )
         self.assertEqual(cart_id, result.fetchone()[0])

@@ -4,7 +4,7 @@ from typing import Any
 from api.database.carts.delete_cart import CartDeleteCartOperation
 from api.database.carts.delete_cart_item import CartDeleteCartItemOperation
 from api.database.carts.insert_cart import CartInsertCartOperation
-from api.database.carts.insert_cart_item import CartInsertCartItemOperation
+from api.database.carts.insert_cart_items import CartInsertCartItemsOperation
 from api.database.carts.insert_cart_user import CartInsertCartUserOperation
 from api.database.carts.select_cart import CartSelectCartOperation
 from api.database.carts.select_cart_items import CartSelectCartItemsOperation
@@ -86,7 +86,7 @@ class DatabaseRepository(DatabaseConnector):
 
     insert_cart = CartInsertCartOperation.run
     insert_cart_user = CartInsertCartUserOperation.run
-    insert_cart_item = CartInsertCartItemOperation.run
+    insert_cart_items = CartInsertCartItemsOperation.run
     select_items = ItemSelectItemsOperation.run
     select_carts = CartSelectCartsOperation.run
     select_cart_items = CartSelectCartItemsOperation.run

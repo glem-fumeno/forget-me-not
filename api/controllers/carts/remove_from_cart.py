@@ -1,8 +1,9 @@
 from api.controllers.carts.controller import CartController
 from api.docs.models import EndpointDict
 from api.errors import LoggedOut
-from api.models.carts.errors import CartNotFoundError, ItemNotFoundError
+from api.models.carts.errors import CartNotFoundError
 from api.models.carts.responses import CartResponse
+from api.models.items.errors import ItemNotFoundError
 
 
 class CartRemoveFromCartController(CartController):

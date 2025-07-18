@@ -4,7 +4,8 @@ from api.context import Context
 from api.controllers.mock_repository import MockRepository
 from api.controllers.recipes.add_to_recipe import RecipeAddToRecipeController
 from api.errors import LoggedOut
-from api.models.recipes.errors import ItemNotFoundError, RecipeNotFoundError
+from api.models.items.errors import ItemNotFoundError
+from api.models.recipes.errors import RecipeNotFoundError
 
 
 class TestAddToRecipe(unittest.TestCase):

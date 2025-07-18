@@ -1,7 +1,8 @@
 from api.controllers.recipes.controller import RecipeController
 from api.docs.models import EndpointDict
 from api.errors import LoggedOut
-from api.models.recipes.errors import ItemNotFoundError, RecipeNotFoundError
+from api.models.items.errors import ItemNotFoundError
+from api.models.recipes.errors import RecipeNotFoundError
 from api.models.recipes.responses import RecipeResponse
 
 

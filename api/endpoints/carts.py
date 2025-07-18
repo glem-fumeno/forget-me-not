@@ -1,5 +1,8 @@
 from flask import request
 
+from api.controllers.carts.add_recipe_to_cart import (
+    CartAddRecipeToCartController,
+)
 from api.controllers.carts.add_to_cart import CartAddToCartController
 from api.controllers.carts.create import CartCreateController
 from api.controllers.carts.delete import CartDeleteController
@@ -19,6 +22,9 @@ class CartEndpoints(Endpoints):
         self.route("get /<cart_id>", self.read)
         self.route("patch /<cart_id>", self.update)
         self.route("delete /<cart_id>", self.delete)
+        self.route(
+            "put /<cart_id>/recipes/<recipe_id>", self.add_recipe_to_cart
+        )
         self.route("put /<cart_id>/<item_id>", self.add_to_cart)
         self.route("delete /<cart_id>/<item_id>", self.remove_from_cart)
 
@@ -47,6 +53,15 @@ class CartEndpoints(Endpoints):
         self, controller: CartAddToCartController, cart_id: int, item_id: int
     ):
         return controller.run(cart_id, item_id)
+
+    @Endpoints.handler
+    def add_recipe_to_cart(
+        self,
+        controller: CartAddRecipeToCartController,
+        cart_id: int,
+        recipe_id: int,
+    ):
+        return controller.run(cart_id, recipe_id)
 
     @Endpoints.handler
     def remove_from_cart(

@@ -4,7 +4,8 @@ from api.context import Context
 from api.controllers.carts.remove_from_cart import CartRemoveFromCartController
 from api.controllers.mock_repository import MockRepository
 from api.errors import LoggedOut
-from api.models.carts.errors import CartNotFoundError, ItemNotFoundError
+from api.models.carts.errors import CartNotFoundError
+from api.models.items.errors import ItemNotFoundError
 
 
 class TestRemoveFromCart(unittest.TestCase):

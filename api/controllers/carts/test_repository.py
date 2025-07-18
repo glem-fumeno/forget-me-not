@@ -26,10 +26,11 @@ class CartTestRepository:
             return
         return result.copy()
 
-    def insert_cart_item(self, cart_id: int, item_id: int):
+    def insert_cart_items(self, cart_id: int, item_ids: set[int]):
         if cart_id not in self.cart_item_map:
             self.cart_item_map[cart_id] = set()
-        self.cart_item_map[cart_id].add(item_id)
+        items = self.cart_item_map[cart_id].union(item_ids)
+        self.cart_item_map[cart_id] = items
 
     def select_cart_items(self, cart_id: int) -> set[int]:
         return self.cart_item_map[cart_id]

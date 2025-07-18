@@ -1,5 +1,3 @@
-from abc import ABC, abstractmethod
-
 from loguru import logger
 
 from api.broker import Broker
@@ -8,7 +6,7 @@ from api.controllers.repository import Repository
 from api.docs.models import EndpointDict
 
 
-class Controller(ABC):
+class Controller:
     def __init__(self, ctx: Context, repository: Repository) -> None:
         self.repository = repository
         self.broker = Broker()
@@ -20,5 +18,5 @@ class Controller(ABC):
         self.broker.publish(self.ctx, self.__class__.__name__, *args, **kwargs)
 
     @classmethod
-    @abstractmethod
-    def get_docs(cls) -> EndpointDict: ...
+    def get_docs(cls) -> EndpointDict:
+        raise NotImplemented
