@@ -1,21 +1,21 @@
 import logging
 
+from asgiref.wsgi import WsgiToAsgi
 from flask import Flask
 from flask_cors import CORS
-from asgiref.wsgi import WsgiToAsgi
 
-from api.endpoints.carts import endpoints as carts
 from api.docs.endpoints import blueprint
+from api.endpoints.carts import endpoints as carts
 from api.endpoints.items import endpoints as items
-from api.logger import init_logger
 from api.endpoints.recipes import endpoints as recipes
 from api.endpoints.users import endpoints as users
+from api.logger import init_logger
 from config import get_config
 
 init_logger()
 config = get_config()
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="icons", static_url_path="/icons")
 CORS(
     app,
     resources={r"/*": {"origins": config.FRONTEND_URL}},
