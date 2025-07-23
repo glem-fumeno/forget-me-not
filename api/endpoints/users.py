@@ -1,5 +1,7 @@
 from flask import make_response, request
 
+from api.controllers.carts.read_user_cart import CartReadUserCartController
+from api.controllers.carts.set_user_cart import CartSetUserCartController
 from api.controllers.users.delete import UserDeleteController
 from api.controllers.users.login import UserLoginController
 from api.controllers.users.read import UserReadController
@@ -21,6 +23,8 @@ class UserEndpoints(Endpoints):
         self.route("get /<user_id>", self.read)
         self.route("patch /<user_id>", self.update)
         self.route("delete /<user_id>", self.delete)
+        self.route("get /cart", self.read_cart)
+        self.route("put /cart/<cart_id>", self.put_cart)
 
     @Endpoints.handler
     def register(self, controller: UserRegisterController):
@@ -41,6 +45,10 @@ class UserEndpoints(Endpoints):
         return controller.run()
 
     @Endpoints.handler
+    def read_cart(self, controller: CartReadUserCartController):
+        return controller.run()
+
+    @Endpoints.handler
     def read(self, controller: UserReadController, user_id: int):
         return controller.run(user_id)
 
@@ -51,6 +59,10 @@ class UserEndpoints(Endpoints):
     @Endpoints.handler
     def update(self, controller: UserUpdateController, user_id: int):
         return controller.run(user_id, UserUpdateRequest.from_flask(request))
+
+    @Endpoints.handler
+    def put_cart(self, controller: CartSetUserCartController, cart_id: int):
+        return controller.run(cart_id)
 
     @Endpoints.handler
     def delete(self, controller: UserDeleteController, user_id: int):

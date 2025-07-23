@@ -67,9 +67,16 @@ class CartTestRepository:
         for user_id in to_pop:
             self.cart_name_map.pop((user_id, result.name), -1)
 
+    def update_user_cart(self, user_id: int, cart_id: int):
+        self.user_default_cart_map[user_id] = cart_id
+
+    def select_user_cart(self, user_id: int) -> int | None:
+        return self.user_default_cart_map.get(user_id)
+
     def init_carts(self):
         self.max_cart_id: int = 0
         self.cart_map: dict[int, CartModel] = {}
         self.cart_name_map: dict[tuple[int, str], int] = {}
         self.user_cart_map: dict[int, list[int]] = {}
+        self.user_default_cart_map: dict[int, int] = {}
         self.cart_item_map: dict[int, set[int]] = {}
