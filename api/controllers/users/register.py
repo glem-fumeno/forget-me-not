@@ -9,6 +9,7 @@ from api.security import get_hash, get_uuid
 
 class UserRegisterController(UserController):
     def run(self, request: UserLoginRequest) -> UserTokenResponse:
+        request = request.model_copy()
         request.password = get_hash(request.password)
         duplicate = self.repository.users.select_user_id_by_email(request.email)
         if duplicate is not None:

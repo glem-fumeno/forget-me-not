@@ -1,8 +1,8 @@
 import unittest
 
 from api.context import Context
+from api.controllers.controllers import Controllers
 from api.controllers.mock_repository import MockRepository
-from api.controllers.users.login import UserLoginController
 from api.models.users.errors import InvalidCredentialsError
 from api.models.users.requests import UserLoginRequest
 
@@ -10,37 +10,31 @@ from api.models.users.requests import UserLoginRequest
 class TestLogin(unittest.TestCase):
     def setUp(self) -> None:
         self.ctx = Context()
-        self.repository = MockRepository()
-        self.controller = UserLoginController(self.ctx, self.repository)
+        self.repository = MockRepository(True)
+        self.controllers = Controllers(self.ctx, self.repository)
+        self.request = UserLoginRequest(
+            email="alice.anderson@example.com", password="CoffeeLover#1"
+        )
 
     def test_login_credentials_not_found_raises_error(self):
-        requests = [
-            UserLoginRequest(
-                email="charlie.cooper@example.com", password="CoffeeLover#1"
-            ),
-            UserLoginRequest(
-                email="alice.anderson@example.com", password="CoffeeLover#1"
-            ),
-            UserLoginRequest(
-                email="charlie.cooper@example.com", password="SunsetDrive@34"
-            ),
-        ]
-        for request in requests:
-            with self.subTest(request=request):
-                with self.assertRaises(InvalidCredentialsError):
-                    self.controller.run(request)
+        with self.assertRaises(InvalidCredentialsError):
+            self.controllers.users.login(self.request)
+
+    def test_login_email_not_found_raises_error(self):
+        self.controllers.users.register(self.request)
+        self.request.email = "charlie.cooper@example.com"
+        with self.assertRaises(InvalidCredentialsError):
+            self.controllers.users.login(self.request)
+
+    def test_login_password_not_found_raises_error(self):
+        self.controllers.users.register(self.request)
+        self.request.password = "DifferentPassword$2"
+        with self.assertRaises(InvalidCredentialsError):
+            self.controllers.users.login(self.request)
 
     def test_login_credentials_found_creates_a_new_session(self):
-        response_1 = self.controller.run(
-            UserLoginRequest(
-                email="alice.anderson@example.com", password="A1ice_89rocks"
-            )
-        )
-        self.assertIn(response_1.token, self.repository.user_login_map)
-        response_2 = self.controller.run(
-            UserLoginRequest(
-                email="alice.anderson@example.com", password="A1ice_89rocks"
-            )
-        )
-        self.assertIn(response_2.token, self.repository.user_login_map)
+        response_1 = self.controllers.users.register(self.request)
+        response_2 = self.controllers.users.login(self.request)
         self.assertNotEqual(response_1.token, response_2.token)
+        self.controllers.ctx.add("token", response_2.token)
+        self.controllers.users.read(response_2.user_id)

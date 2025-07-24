@@ -16,6 +16,11 @@ class TestRegister(unittest.TestCase):
             email="alice.anderson@example.com", password="CoffeeLover#1"
         )
 
+    def test_register_does_not_change_request(self):
+        request = self.request.model_copy()
+        self.controllers.users.register(self.request)
+        self.assertEqual(request, self.request)
+
     def test_register_email_exists_raises_error(self):
         self.controllers.users.register(self.request)
         with self.assertRaises(UserExistsError):

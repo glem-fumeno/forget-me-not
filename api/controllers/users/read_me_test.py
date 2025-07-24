@@ -1,28 +1,29 @@
 import unittest
 
 from api.context import Context
+from api.controllers.controllers import Controllers
 from api.controllers.mock_repository import MockRepository
-from api.controllers.users.read_me import UserReadMeController
 from api.models.users.errors import LoggedOut
+from api.models.users.requests import UserLoginRequest
 
 
 class TestReadMe(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = MockRepository()
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        self.ctx = Context().add("token", self.repository.login(user_id))
-        self.controller = UserReadMeController(self.ctx, self.repository)
-
-    def test_returns_user_if_found(self):
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        model = self.repository.user_map[user_id]
-        result = self.controller.run()
-        self.assertEqual(result.user_id, user_id)
-        self.assertEqual(result.email, model.email)
-        self.assertEqual(result.username, model.username)
+        self.ctx = Context()
+        self.repository = MockRepository(True)
+        self.controllers = Controllers(self.ctx, self.repository)
+        self.request = UserLoginRequest(
+            email="alice.anderson@example.com", password="CoffeeLover#1"
+        )
+        self.user = self.controllers.users.register(self.request)
 
     def test_logged_out_raises_error(self):
-        self.controller.ctx = self.controller.ctx.add("token", "")
-
         with self.assertRaises(LoggedOut):
-            self.controller.run()
+            self.controllers.users.read_me()
+
+    def test_returns_user_if_found(self):
+        self.controllers.ctx.add("token", self.user.token)
+        result = self.controllers.users.read_me()
+        self.assertEqual(result.user_id, self.user.user_id)
+        self.assertEqual(result.email, self.user.email)
+        self.assertEqual(result.username, self.user.username)

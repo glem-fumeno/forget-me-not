@@ -9,6 +9,7 @@ from api.security import get_hash, get_uuid
 
 class UserLoginController(UserController):
     def run(self, request: UserLoginRequest) -> UserTokenResponse:
+        request = request.model_copy()
         request.password = get_hash(request.password)
         user_id = self.repository.users.select_user_id_by_email(request.email)
         if user_id is None:
