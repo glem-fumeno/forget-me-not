@@ -19,7 +19,7 @@ class TestUpdateItem(unittest.TestCase):
             name="milk carton",
             icon="https://img.icons8.com/pulsar-line/96/milk-carton.png",
         )
-        self.repository.update_item(model)
+        self.repository.items.update_item(model)
         result = self.repository.cursor.execute(
             """
             SELECT item_id_, name_, icon_ FROM items_ WHERE item_id_ = ?

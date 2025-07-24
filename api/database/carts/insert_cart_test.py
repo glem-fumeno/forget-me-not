@@ -19,7 +19,7 @@ class TestInsertCart(unittest.TestCase):
             icon="https://img.icons8.com/pulsar-line/96/length-1.png",
         )
         user_id = self.repository.email_map["alice.anderson@example.com"]
-        self.repository.insert_cart(user_id, model)
+        self.repository.carts.insert_cart(user_id, model)
         self.assertNotEqual(model.cart_id, -1)
 
     def test_inserts_cart_to_db(self):
@@ -29,7 +29,7 @@ class TestInsertCart(unittest.TestCase):
             icon="https://img.icons8.com/pulsar-line/96/length-1.png",
         )
         user_id = self.repository.email_map["alice.anderson@example.com"]
-        self.repository.insert_cart(user_id, model)
+        self.repository.carts.insert_cart(user_id, model)
         result = self.repository.cursor.execute(
             """
             SELECT cart_id_ FROM carts_ WHERE cart_id_ = ?

@@ -13,7 +13,7 @@ class TestDeleteItem(unittest.TestCase):
 
     def test_returns_item_when_found(self):
         item_id = self.repository.item_name_map["milk"]
-        self.repository.delete_item(item_id)
+        self.repository.items.delete_item(item_id)
         result = self.repository.cursor.execute(
             """
             SELECT item_id_ FROM items_ WHERE item_id_ = ?

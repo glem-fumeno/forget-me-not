@@ -16,7 +16,7 @@ class TestInsertItemUser(unittest.TestCase):
         user_id = self.repository.email_map["bob.baker@example.com"]
         item_id = self.repository.item_name_map["milk"]
         model = ItemUserModel(item_id=item_id, user_id=user_id)
-        self.repository.insert_item_user(model)
+        self.repository.items.insert_item_user(model)
         result = self.repository.cursor.execute(
             """
             SELECT item_id_

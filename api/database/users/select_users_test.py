@@ -12,7 +12,7 @@ class TestSelectUsers(unittest.TestCase):
         self.repository.initialize_test_cases()
 
     def test_returns(self):
-        result = self.repository.select_users()
+        result = self.repository.users.select_users()
         self.assertEqual(len(result), 2)
         self.assertIn(
             self.repository.email_map["alice.anderson@example.com"], result

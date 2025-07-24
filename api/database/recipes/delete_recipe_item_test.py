@@ -15,7 +15,7 @@ class TestDeleteRecipeItem(unittest.TestCase):
         user_id = self.repository.email_map["alice.anderson@example.com"]
         recipe_id = self.repository.recipe_name_map[user_id, "pancakes"]
         item_id = self.repository.item_name_map["eggs"]
-        self.repository.delete_recipe_item(recipe_id, item_id)
+        self.repository.recipes.delete_recipe_item(recipe_id, item_id)
         result = self.repository.cursor.execute(
             """
             SELECT recipe_id_

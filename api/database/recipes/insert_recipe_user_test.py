@@ -17,7 +17,7 @@ class TestInsertRecipeUser(unittest.TestCase):
         user_id = self.repository.email_map["bob.baker@example.com"]
         recipe_id = self.repository.recipe_name_map[owner_id, "omlette"]
         model = RecipeUserModel(recipe_id=recipe_id, user_id=user_id)
-        self.repository.insert_recipe_user(model)
+        self.repository.recipes.insert_recipe_user(model)
         result = self.repository.cursor.execute(
             """
             SELECT recipe_id_

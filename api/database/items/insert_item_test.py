@@ -18,7 +18,7 @@ class TestInsertItem(unittest.TestCase):
             name="needle",
             icon="https://img.icons8.com/pulsar-line/96/needle.png",
         )
-        self.repository.insert_item(model)
+        self.repository.items.insert_item(model)
         self.assertNotEqual(model.item_id, -1)
 
     def test_inserts_item_to_db(self):
@@ -27,7 +27,7 @@ class TestInsertItem(unittest.TestCase):
             name="needle",
             icon="https://img.icons8.com/pulsar-line/96/needle.png",
         )
-        self.repository.insert_item(model)
+        self.repository.items.insert_item(model)
         result = self.repository.cursor.execute(
             """
             SELECT item_id_ FROM items_ WHERE item_id_ = ?

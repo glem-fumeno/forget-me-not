@@ -2,7 +2,6 @@ import unittest
 
 from api.context import Context
 from api.database.test_repository import DatabaseTestRepository
-from api.models.carts.models import CartModel
 
 
 class TestUpdateUserCart(unittest.TestCase):
@@ -15,7 +14,7 @@ class TestUpdateUserCart(unittest.TestCase):
     def test_updates_cart_in_db(self):
         user_id = self.repository.email_map["alice.anderson@example.com"]
         cart_id = self.repository.cart_name_map[user_id, "groceries"]
-        self.repository.update_user_cart(user_id, cart_id)
+        self.repository.carts.update_user_cart(user_id, cart_id)
         result = self.repository.cursor.execute(
             """
             SELECT cart_id_ FROM users_ WHERE user_id_ = ?

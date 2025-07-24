@@ -12,12 +12,12 @@ class TestSelectUserByToken(unittest.TestCase):
         self.repository.initialize_test_cases()
 
     def test_returns_none_when_no_user(self):
-        result = self.repository.select_user_by_token("")
+        result = self.repository.users.select_user_by_token("")
         self.assertIsNone(result)
 
     def test_returns_user_when_found(self):
         user_id = self.repository.email_map["alice.anderson@example.com"]
-        result = self.repository.select_user_by_token(
+        result = self.repository.users.select_user_by_token(
             "f77e3ce3430c4aeba5cc273089075c81"
         )
         self.assertEqual(result, self.repository.user_map[user_id])

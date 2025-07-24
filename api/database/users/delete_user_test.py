@@ -13,7 +13,7 @@ class TestDeleteUser(unittest.TestCase):
 
     def test_returns_user_when_found(self):
         user_id = self.repository.email_map["alice.anderson@example.com"]
-        self.repository.delete_user(user_id)
+        self.repository.users.delete_user(user_id)
         result = self.repository.cursor.execute(
             """
             SELECT user_id_ FROM users_ WHERE user_id_ = ?

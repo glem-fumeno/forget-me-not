@@ -22,7 +22,7 @@ class TestUpdateUser(unittest.TestCase):
             password=get_hash("CoffeeLover#1"),
             role="new",
         )
-        self.repository.update_user(model)
+        self.repository.users.update_user(model)
         result = self.repository.cursor.execute(
             """
             SELECT user_id_, username_, email_, password_, role_

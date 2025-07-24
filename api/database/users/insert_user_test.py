@@ -20,7 +20,7 @@ class TestInsertUser(unittest.TestCase):
             password="CoffeeLover#1",
             role="new",
         )
-        self.repository.insert_user(model)
+        self.repository.users.insert_user(model)
         self.assertNotEqual(model.user_id, -1)
 
     def test_inserts_user_to_db(self):
@@ -31,7 +31,7 @@ class TestInsertUser(unittest.TestCase):
             password="CoffeeLover#1",
             role="new",
         )
-        self.repository.insert_user(model)
+        self.repository.users.insert_user(model)
         result = self.repository.cursor.execute(
             """
             SELECT user_id_ FROM users_ WHERE user_id_ = ?

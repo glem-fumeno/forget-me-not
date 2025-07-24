@@ -15,7 +15,7 @@ class TestDeleteCartItem(unittest.TestCase):
         user_id = self.repository.email_map["alice.anderson@example.com"]
         cart_id = self.repository.cart_name_map[user_id, "groceries"]
         item_id = self.repository.item_name_map["milk"]
-        self.repository.delete_cart_item(cart_id, item_id)
+        self.repository.carts.delete_cart_item(cart_id, item_id)
         result = self.repository.cursor.execute(
             """
             SELECT cart_id_

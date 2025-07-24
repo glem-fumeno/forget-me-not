@@ -12,10 +12,10 @@ class TestSelectUser(unittest.TestCase):
         self.repository.initialize_test_cases()
 
     def test_returns_none_when_no_user(self):
-        result = self.repository.select_user(-1)
+        result = self.repository.users.select_user(-1)
         self.assertIsNone(result)
 
     def test_returns_user_when_found(self):
         user_id = self.repository.email_map["alice.anderson@example.com"]
-        result = self.repository.select_user(user_id)
+        result = self.repository.users.select_user(user_id)
         self.assertEqual(result, self.repository.user_map[user_id])

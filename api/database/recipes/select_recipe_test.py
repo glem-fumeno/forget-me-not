@@ -15,11 +15,11 @@ class TestSelectRecipe(unittest.TestCase):
         user_id = self.repository.email_map["bob.baker@example.com"]
         owner_id = self.repository.email_map["alice.anderson@example.com"]
         recipe_id = self.repository.recipe_name_map[owner_id, "omlette"]
-        result = self.repository.select_recipe(user_id, recipe_id)
+        result = self.repository.recipes.select_recipe(user_id, recipe_id)
         self.assertIsNone(result)
 
     def test_returns_recipe_when_found(self):
         user_id = self.repository.email_map["alice.anderson@example.com"]
         recipe_id = self.repository.recipe_name_map[user_id, "omlette"]
-        result = self.repository.select_recipe(user_id, recipe_id)
+        result = self.repository.recipes.select_recipe(user_id, recipe_id)
         self.assertEqual(result, self.repository.recipe_map[recipe_id])

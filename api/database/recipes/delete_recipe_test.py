@@ -14,7 +14,7 @@ class TestDeleteRecipe(unittest.TestCase):
     def test_returns_recipe_when_found(self):
         user_id = self.repository.email_map["alice.anderson@example.com"]
         recipe_id = self.repository.recipe_name_map[user_id, "pancakes"]
-        self.repository.delete_recipe(recipe_id)
+        self.repository.recipes.delete_recipe(recipe_id)
         result = self.repository.cursor.execute(
             """
             SELECT recipe_id_ FROM recipes_ WHERE recipe_id_ = ?

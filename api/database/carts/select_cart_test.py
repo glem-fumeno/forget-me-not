@@ -15,11 +15,11 @@ class TestSelectCart(unittest.TestCase):
         user_id = self.repository.email_map["bob.baker@example.com"]
         owner_id = self.repository.email_map["alice.anderson@example.com"]
         cart_id = self.repository.cart_name_map[owner_id, "gift for bob"]
-        result = self.repository.select_cart(user_id, cart_id)
+        result = self.repository.carts.select_cart(user_id, cart_id)
         self.assertIsNone(result)
 
     def test_returns_cart_when_found(self):
         user_id = self.repository.email_map["alice.anderson@example.com"]
         cart_id = self.repository.cart_name_map[user_id, "groceries"]
-        result = self.repository.select_cart(user_id, cart_id)
+        result = self.repository.carts.select_cart(user_id, cart_id)
         self.assertEqual(result, self.repository.cart_map[cart_id])

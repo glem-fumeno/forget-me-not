@@ -20,7 +20,7 @@ class TestUpdateCart(unittest.TestCase):
             name="shopping",
             icon="https://img.icons8.com/pulsar-line/96/shopping-trolley.png",
         )
-        self.repository.update_cart(model)
+        self.repository.carts.update_cart(model)
         result = self.repository.cursor.execute(
             """
             SELECT cart_id_, name_, icon_ FROM carts_ WHERE cart_id_ = ?

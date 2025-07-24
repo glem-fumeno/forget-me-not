@@ -20,7 +20,7 @@ class TestUpdateRecipe(unittest.TestCase):
             name="scrambled eggs",
             icon="https://img.icons8.com/pulsar-line/96/sunny-side-up-eggs.png",
         )
-        self.repository.update_recipe(model)
+        self.repository.recipes.update_recipe(model)
         result = self.repository.cursor.execute(
             """
             SELECT recipe_id_, name_, icon_ FROM recipes_ WHERE recipe_id_ = ?

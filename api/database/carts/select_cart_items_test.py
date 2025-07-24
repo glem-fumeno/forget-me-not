@@ -14,7 +14,7 @@ class TestSelectCartItems(unittest.TestCase):
     def test_returns_all_cart_items(self):
         user_id = self.repository.email_map["alice.anderson@example.com"]
         cart_id = self.repository.cart_name_map[user_id, "groceries"]
-        result = self.repository.select_cart_items(cart_id)
+        result = self.repository.carts.select_cart_items(cart_id)
         self.assertEqual(len(result), 2)
         self.assertIn(self.repository.item_name_map["milk"], result)
         self.assertIn(self.repository.item_name_map["rice"], result)

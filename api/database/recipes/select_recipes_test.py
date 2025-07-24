@@ -13,7 +13,7 @@ class TestSelectRecipes(unittest.TestCase):
 
     def test_returns_all_recipes(self):
         user_id = self.repository.email_map["alice.anderson@example.com"]
-        result = self.repository.select_recipes(user_id)
+        result = self.repository.recipes.select_recipes(user_id)
         self.assertEqual(len(result), 2)
         self.assertIn(
             self.repository.recipe_name_map[user_id, "omlette"], result

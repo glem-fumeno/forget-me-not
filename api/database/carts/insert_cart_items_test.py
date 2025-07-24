@@ -16,7 +16,7 @@ class TestInsertCartItem(unittest.TestCase):
         cart_id = self.repository.cart_name_map[user_id, "groceries"]
         item_id_1 = self.repository.item_name_map["soap"]
         item_id_2 = self.repository.item_name_map["rice"]
-        self.repository.insert_cart_items(cart_id, {item_id_1, item_id_2})
+        self.repository.carts.insert_cart_items(cart_id, {item_id_1, item_id_2})
         result = self.repository.cursor.execute(
             """
             SELECT cart_id_

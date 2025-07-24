@@ -14,10 +14,10 @@ class TestReadUserCart(unittest.TestCase):
     def test_reads_cart_from_db(self):
         user_id = self.repository.email_map["alice.anderson@example.com"]
         cart_id = self.repository.cart_name_map[user_id, "groceries"]
-        self.repository.update_user_cart(user_id, cart_id)
-        result = self.repository.select_user_cart(user_id)
+        self.repository.carts.update_user_cart(user_id, cart_id)
+        result = self.repository.carts.select_user_cart(user_id)
         self.assertEqual(result, cart_id)
 
     def test_returns_none_if_not_found(self):
-        result = self.repository.select_user_cart(-1)
+        result = self.repository.carts.select_user_cart(-1)
         self.assertIsNone(result)
