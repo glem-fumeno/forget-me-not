@@ -9,7 +9,7 @@ from api.models.carts.responses import CartResponse
 class CartUpdateController(CartController):
     def run(self, cart_id: int, request: CartUpdateRequest) -> CartResponse:
         self.validate_access()
-        model = self.repository.select_cart(self.issuer.user_id, cart_id)
+        model = self.repository.carts.select_cart(self.issuer.user_id, cart_id)
         if model is None:
             raise CartNotFoundError
         self.model = model
@@ -19,9 +19,9 @@ class CartUpdateController(CartController):
         self.update_name()
         self.update_icon()
 
-        self.repository.update_cart(self.model)
-        items = self.repository.select_items()
-        cart_items = self.repository.select_cart_items(cart_id)
+        self.repository.carts.update_cart(self.model)
+        items = self.repository.items.select_items()
+        cart_items = self.repository.carts.select_cart_items(cart_id)
         return CartResponse.from_model(
             model, [items[item] for item in cart_items]
         )

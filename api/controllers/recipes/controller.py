@@ -5,7 +5,7 @@ from api.errors import LoggedOut
 class RecipeController(Controller):
 
     def validate_access(self):
-        issuer = self.repository.select_user_by_token(
+        issuer = self.repository.users.select_user_by_token(
             self.ctx.get("token", "")
         )
         if issuer is None:

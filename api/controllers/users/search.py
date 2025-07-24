@@ -7,14 +7,14 @@ from api.models.users.responses import UserListResponse, UserResponse
 class UserSearchController(UserController):
     def run(self) -> UserListResponse:
         self.validate_access()
-        users = self.repository.select_users()
+        users = self.repository.users.select_users()
         return UserListResponse(
             users=[UserResponse.from_model(model) for model in users.values()],
             count=len(users),
         )
 
     def validate_access(self):
-        issuer = self.repository.select_user_by_token(
+        issuer = self.repository.users.select_user_by_token(
             self.ctx.get("token", "")
         )
         if issuer is None:

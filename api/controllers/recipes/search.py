@@ -7,7 +7,7 @@ from api.models.recipes.responses import RecipeListResponse, RecipeResponse
 class RecipeSearchController(RecipeController):
     def run(self) -> RecipeListResponse:
         self.validate_access()
-        recipes = self.repository.select_recipes(self.issuer.user_id)
+        recipes = self.repository.recipes.select_recipes(self.issuer.user_id)
         return RecipeListResponse(
             recipes=[
                 RecipeResponse.from_model(model, None)

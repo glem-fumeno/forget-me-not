@@ -1,18 +1,13 @@
+from api.controllers.test_repository import TestRepository
 from api.models.users.models import UserModel, UserSessionModel
-from api.security import get_uuid
 
 
-class UserTestRepository:
+class UserTestRepository(TestRepository):
     def init_users(self):
         self.max_user_id: int = 0
         self.user_map: dict[int, UserModel] = {}
         self.email_map: dict[str, int] = {}
         self.user_login_map: dict[str, int] = {}
-
-    def login(self, user_id: int):
-        token = get_uuid()
-        self.user_login_map[token] = user_id
-        return token
 
     def insert_user(self, model: UserModel):
         self.max_user_id += 1

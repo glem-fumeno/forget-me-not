@@ -11,7 +11,9 @@ class RecipeUpdateController(RecipeController):
         self, recipe_id: int, request: RecipeUpdateRequest
     ) -> RecipeResponse:
         self.validate_access()
-        model = self.repository.select_recipe(self.issuer.user_id, recipe_id)
+        model = self.repository.recipes.select_recipe(
+            self.issuer.user_id, recipe_id
+        )
         if model is None:
             raise RecipeNotFoundError
         self.model = model
@@ -21,9 +23,11 @@ class RecipeUpdateController(RecipeController):
         self.update_name()
         self.update_icon()
 
-        self.repository.update_recipe(self.model)
-        items = self.repository.select_items()
-        recipe_items = self.repository.select_recipe_items(self.recipe_id)
+        self.repository.recipes.update_recipe(self.model)
+        items = self.repository.items.select_items()
+        recipe_items = self.repository.recipes.select_recipe_items(
+            self.recipe_id
+        )
         return RecipeResponse.from_model(
             model, [items[item] for item in recipe_items]
         )

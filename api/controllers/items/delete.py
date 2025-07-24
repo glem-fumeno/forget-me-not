@@ -8,10 +8,10 @@ from api.models.items.responses import ItemResponse
 class ItemDeleteController(ItemController):
     def run(self, item_id: int) -> ItemResponse:
         self.validate_access()
-        model = self.repository.select_item(item_id)
+        model = self.repository.items.select_item(item_id)
         if model is None:
             raise ItemNotFoundError
-        self.repository.delete_item(item_id)
+        self.repository.items.delete_item(item_id)
         return ItemResponse.from_model(model)
 
     @classmethod

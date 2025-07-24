@@ -7,7 +7,7 @@ from api.models.items.responses import ItemListResponse, ItemResponse
 class ItemSearchController(ItemController):
     def run(self) -> ItemListResponse:
         self.validate_access(admin=False)
-        items = self.repository.select_items()
+        items = self.repository.items.select_items()
         return ItemListResponse(
             items=[ItemResponse.from_model(model) for model in items.values()],
             count=len(items),

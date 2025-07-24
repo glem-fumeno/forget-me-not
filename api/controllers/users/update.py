@@ -15,7 +15,7 @@ class UserUpdateController(UserController):
         self.user_id = user_id
         self.validate_access()
         self.request = request
-        model = self.repository.select_user(user_id)
+        model = self.repository.users.select_user(user_id)
         if model is None:
             raise UserNotFoundError
         self.model = model
@@ -23,11 +23,11 @@ class UserUpdateController(UserController):
         self.update_username()
         self.update_password()
 
-        self.repository.update_user(self.model)
+        self.repository.users.update_user(self.model)
         return UserResponse.from_model(self.model)
 
     def validate_access(self):
-        issuer = self.repository.select_user_by_token(
+        issuer = self.repository.users.select_user_by_token(
             self.ctx.get("token", "")
         )
         if issuer is None:
@@ -38,7 +38,9 @@ class UserUpdateController(UserController):
     def update_email(self):
         if self.request.email is None:
             return
-        duplicate = self.repository.select_user_id_by_email(self.request.email)
+        duplicate = self.repository.users.select_user_id_by_email(
+            self.request.email
+        )
         if duplicate is not None and duplicate != self.user_id:
             raise UserExistsError
         self.model.email = self.request.email

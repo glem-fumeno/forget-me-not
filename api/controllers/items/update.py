@@ -9,7 +9,7 @@ from api.models.items.responses import ItemResponse
 class ItemUpdateController(ItemController):
     def run(self, item_id: int, request: ItemUpdateRequest) -> ItemResponse:
         self.validate_access()
-        model = self.repository.select_item(item_id)
+        model = self.repository.items.select_item(item_id)
         if model is None:
             raise ItemNotFoundError
         self.model = model
@@ -19,13 +19,13 @@ class ItemUpdateController(ItemController):
         self.update_name()
         self.update_icon()
 
-        self.repository.update_item(self.model)
+        self.repository.items.update_item(self.model)
         return ItemResponse.from_model(model)
 
     def update_name(self):
         if self.request.name is None:
             return
-        duplicate = self.repository.select_item_by_name(self.request.name)
+        duplicate = self.repository.items.select_item_by_name(self.request.name)
         if duplicate is not None and duplicate != self.item_id:
             raise ItemExistsError
         self.model.name = self.request.name

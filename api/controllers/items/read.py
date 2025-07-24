@@ -8,7 +8,7 @@ from api.models.items.responses import ItemResponse
 class ItemReadController(ItemController):
     def run(self, item_id: int) -> ItemResponse:
         self.validate_access(admin=False)
-        model = self.repository.select_item(item_id)
+        model = self.repository.items.select_item(item_id)
         if model is None:
             raise ItemNotFoundError
         return ItemResponse.from_model(model)

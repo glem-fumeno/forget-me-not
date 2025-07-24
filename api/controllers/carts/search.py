@@ -7,7 +7,7 @@ from api.models.carts.responses import CartListResponse, CartResponse
 class CartSearchController(CartController):
     def run(self) -> CartListResponse:
         self.validate_access()
-        carts = self.repository.select_carts(self.issuer.user_id)
+        carts = self.repository.carts.select_carts(self.issuer.user_id)
         return CartListResponse(
             carts=[
                 CartResponse.from_model(model, None)

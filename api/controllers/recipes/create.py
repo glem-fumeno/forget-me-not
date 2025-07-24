@@ -9,7 +9,7 @@ class RecipeCreateController(RecipeController):
     def run(self, request: RecipeCreateRequest) -> RecipeResponse:
         self.validate_access()
         model = request.to_model()
-        self.repository.insert_recipe(self.issuer.user_id, model)
+        self.repository.recipes.insert_recipe(self.issuer.user_id, model)
         return RecipeResponse.from_model(model, [])
 
     @classmethod

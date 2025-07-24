@@ -1,7 +1,8 @@
+from api.controllers.test_repository import TestRepository
 from api.models.items.models import ItemModel, ItemUserModel
 
 
-class ItemTestRepository:
+class ItemTestRepository(TestRepository):
 
     def insert_item(self, model: ItemModel):
         self.max_item_id += 1

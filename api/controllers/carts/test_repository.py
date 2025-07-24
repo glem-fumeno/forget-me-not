@@ -1,7 +1,8 @@
+from api.controllers.test_repository import TestRepository
 from api.models.carts.models import CartModel, CartUserModel
 
 
-class CartTestRepository:
+class CartTestRepository(TestRepository):
 
     def insert_cart(self, user_id: int, model: CartModel):
         self.max_cart_id += 1

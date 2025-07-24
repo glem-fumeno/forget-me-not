@@ -8,12 +8,12 @@ from api.models.recipes.responses import RecipeResponse
 class RecipeDeleteController(RecipeController):
     def run(self, recipe_id: int) -> RecipeResponse:
         self.validate_access()
-        model = self.repository.select_recipe(self.issuer.user_id, recipe_id)
+        model = self.repository.recipes.select_recipe(self.issuer.user_id, recipe_id)
         if model is None:
             raise RecipeNotFoundError
-        items = self.repository.select_items()
-        recipe_items = self.repository.select_recipe_items(recipe_id)
-        self.repository.delete_recipe(recipe_id)
+        items = self.repository.items.select_items()
+        recipe_items = self.repository.recipes.select_recipe_items(recipe_id)
+        self.repository.recipes.delete_recipe(recipe_id)
         return RecipeResponse.from_model(
             model, [items[item] for item in recipe_items]
         )

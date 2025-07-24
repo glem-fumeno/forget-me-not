@@ -7,7 +7,7 @@ from api.models.users.responses import UserResponse
 class UserReadMeController(UserController):
     def run(self) -> UserResponse:
         self.token = self.ctx.get("token", "")
-        model = self.repository.select_user_by_token(self.token)
+        model = self.repository.users.select_user_by_token(self.token)
         if model is None:
             raise LoggedOut
         return UserResponse.from_model(model)

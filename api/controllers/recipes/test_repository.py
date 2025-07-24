@@ -1,7 +1,8 @@
+from api.controllers.test_repository import TestRepository
 from api.models.recipes.models import RecipeModel, RecipeUserModel
 
 
-class RecipeTestRepository:
+class RecipeTestRepository(TestRepository):
 
     def insert_recipe(self, user_id: int, model: RecipeModel):
         self.max_recipe_id += 1

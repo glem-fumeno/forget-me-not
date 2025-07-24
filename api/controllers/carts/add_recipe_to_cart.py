@@ -9,17 +9,19 @@ from api.models.recipes.errors import RecipeNotFoundError
 class CartAddRecipeToCartController(CartController):
     def run(self, cart_id: int, recipe_id: int) -> CartResponse:
         self.validate_access()
-        model = self.repository.select_cart(self.issuer.user_id, cart_id)
+        model = self.repository.carts.select_cart(self.issuer.user_id, cart_id)
         if model is None:
             raise CartNotFoundError
-        recipe = self.repository.select_recipe(self.issuer.user_id, recipe_id)
+        recipe = self.repository.recipes.select_recipe(
+            self.issuer.user_id, recipe_id
+        )
         if recipe is None:
             raise RecipeNotFoundError
-        item_ids = self.repository.select_recipe_items(recipe_id)
+        item_ids = self.repository.recipes.select_recipe_items(recipe_id)
 
-        self.repository.insert_cart_items(cart_id, item_ids)
-        items = self.repository.select_items()
-        cart_items = self.repository.select_cart_items(cart_id)
+        self.repository.carts.insert_cart_items(cart_id, item_ids)
+        items = self.repository.items.select_items()
+        cart_items = self.repository.carts.select_cart_items(cart_id)
         return CartResponse.from_model(
             model, [items[item_id] for item_id in cart_items]
         )

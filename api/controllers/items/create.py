@@ -9,11 +9,11 @@ from api.models.items.responses import ItemResponse
 class ItemCreateController(ItemController):
     def run(self, request: ItemCreateRequest) -> ItemResponse:
         self.validate_access()
-        duplicate = self.repository.select_item_by_name(request.name)
+        duplicate = self.repository.items.select_item_by_name(request.name)
         if duplicate is not None:
             raise ItemExistsError
         model = request.to_model()
-        self.repository.insert_item(model)
+        self.repository.items.insert_item(model)
         return ItemResponse.from_model(model)
 
     @classmethod

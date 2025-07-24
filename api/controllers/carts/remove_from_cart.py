@@ -9,15 +9,15 @@ from api.models.items.errors import ItemNotFoundError
 class CartRemoveFromCartController(CartController):
     def run(self, cart_id: int, item_id: int) -> CartResponse:
         self.validate_access()
-        model = self.repository.select_cart(self.issuer.user_id, cart_id)
+        model = self.repository.carts.select_cart(self.issuer.user_id, cart_id)
         if model is None:
             raise CartNotFoundError
-        items = self.repository.select_items()
+        items = self.repository.items.select_items()
         if item_id not in items:
             raise ItemNotFoundError
 
-        self.repository.delete_cart_item(cart_id, item_id)
-        cart_items = self.repository.select_cart_items(cart_id)
+        self.repository.carts.delete_cart_item(cart_id, item_id)
+        cart_items = self.repository.carts.select_cart_items(cart_id)
         return CartResponse.from_model(
             model, [items[item] for item in cart_items]
         )

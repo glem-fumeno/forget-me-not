@@ -1,28 +1,36 @@
 from api.controllers.carts.test_repository import CartTestRepository
 from api.controllers.items.test_repository import ItemTestRepository
 from api.controllers.recipes.test_repository import RecipeTestRepository
+from api.controllers.test_repository import TestRepository
 from api.controllers.users.test_repository import UserTestRepository
 from api.models.carts.models import CartModel
 from api.models.items.models import ItemModel
 from api.models.recipes.models import RecipeModel
 from api.models.users.models import RoleLiteral, UserModel
-from api.security import get_hash
+from api.security import get_hash, get_uuid
 
 
-class MockRepository(
-    UserTestRepository,
-    RecipeTestRepository,
-    ItemTestRepository,
-    CartTestRepository,
-):
+class MockRepository(TestRepository):
     def __init__(self):
+        super().__init__(None)
+
+        self.users = UserTestRepository(self)
+        self.recipes = RecipeTestRepository(self)
+        self.items = ItemTestRepository(self)
+        self.carts = CartTestRepository(self)
+
         self.init_users()
         self.init_items()
         self.init_recipes()
         self.init_carts()
 
+    def login(self, user_id: int):
+        token = get_uuid()
+        self.user_login_map[token] = user_id
+        return token
+
     def init_users(self):
-        super().init_users()
+        self.users.init_users()
         self.__insert_user(
             "aanderson", "alice.anderson@example.com", "A1ice_89rocks", "admin"
         )
@@ -31,7 +39,7 @@ class MockRepository(
         )
 
     def init_items(self):
-        super().init_items()
+        self.items.init_items()
         self.__insert_item(
             "milk", "https://img.icons8.com/pulsar-line/96/milk.png"
         )
@@ -53,7 +61,7 @@ class MockRepository(
         self.__insert_item_user("rice", "bob.baker@example.com")
 
     def init_recipes(self):
-        super().init_recipes()
+        self.recipes.init_recipes()
 
         self.__insert_recipe(
             "alice.anderson@example.com",
@@ -80,7 +88,7 @@ class MockRepository(
         )
 
     def init_carts(self):
-        super().init_carts()
+        self.carts.init_carts()
 
         self.__insert_cart(
             "alice.anderson@example.com",

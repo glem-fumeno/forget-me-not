@@ -17,6 +17,7 @@ class DatabaseRepository(DatabaseConnector):
         self.items = ItemRepository(self.ctx, self.cursor)
         self.recipes = RecipeRepository(self.ctx, self.cursor)
         self.carts = CartRepository(self.ctx, self.cursor)
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         del self.carts, self.recipes, self.items, self.users

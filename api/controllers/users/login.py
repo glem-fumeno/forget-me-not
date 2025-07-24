@@ -10,15 +10,15 @@ from api.security import get_hash, get_uuid
 class UserLoginController(UserController):
     def run(self, request: UserLoginRequest) -> UserTokenResponse:
         request.password = get_hash(request.password)
-        user_id = self.repository.select_user_id_by_email(request.email)
+        user_id = self.repository.users.select_user_id_by_email(request.email)
         if user_id is None:
             raise InvalidCredentialsError
-        model = self.repository.select_user(user_id)
+        model = self.repository.users.select_user(user_id)
         assert model is not None
         if model.password != request.password:
             raise InvalidCredentialsError
         session = UserSessionModel(user_id=user_id, token=get_uuid())
-        self.repository.insert_user_session(session)
+        self.repository.users.insert_user_session(session)
         return UserTokenResponse.from_model(model, session.token)
 
     @classmethod

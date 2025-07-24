@@ -9,7 +9,7 @@ class CartCreateController(CartController):
     def run(self, request: CartCreateRequest) -> CartResponse:
         self.validate_access()
         model = request.to_model()
-        self.repository.insert_cart(self.issuer.user_id, model)
+        self.repository.carts.insert_cart(self.issuer.user_id, model)
         return CartResponse.from_model(model, [])
 
     @classmethod
