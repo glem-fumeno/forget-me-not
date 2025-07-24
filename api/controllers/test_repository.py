@@ -9,8 +9,7 @@ class TestRepository:
         parent = object.__getattribute__(self, "parent")
         try:
             field = object.__getattribute__(self, name)
-        except Exception as e:
-            print(e)
+        except Exception:
             field = object.__getattribute__(parent, name)
         return field
 

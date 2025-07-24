@@ -7,9 +7,11 @@ T = TypeVar("T", bound=ContextStorable)
 
 
 class Context:
-    __store: dict[str, ContextStorable]
-
-    def __init__(self, store: dict[str, ContextStorable] = {}) -> None:
+    def __init__(
+        self, store: dict[str, ContextStorable] | None = None
+    ) -> None:
+        if store is None:
+            store = {}
         self.__store = store
 
     def get(self, key: str, default: T) -> T:
@@ -21,6 +23,5 @@ class Context:
         return result
 
     def add(self, key: str, value: ContextStorable) -> Context:
-        new_store = self.__store.copy()
-        new_store[key] = value
-        return Context(new_store)
+        self.__store[key] = value
+        return self

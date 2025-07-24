@@ -11,13 +11,20 @@ from api.security import get_hash, get_uuid
 
 
 class MockRepository(TestRepository):
-    def __init__(self):
+    def __init__(self, skip_init: bool = False):
         super().__init__(None)
 
         self.users = UserTestRepository(self)
-        self.recipes = RecipeTestRepository(self)
         self.items = ItemTestRepository(self)
+        self.recipes = RecipeTestRepository(self)
         self.carts = CartTestRepository(self)
+
+        self.users.init_users()
+        self.items.init_items()
+        self.recipes.init_recipes()
+        self.carts.init_carts()
+        if skip_init:
+            return
 
         self.init_users()
         self.init_items()
@@ -30,7 +37,6 @@ class MockRepository(TestRepository):
         return token
 
     def init_users(self):
-        self.users.init_users()
         self.__insert_user(
             "aanderson", "alice.anderson@example.com", "A1ice_89rocks", "admin"
         )
@@ -39,7 +45,6 @@ class MockRepository(TestRepository):
         )
 
     def init_items(self):
-        self.items.init_items()
         self.__insert_item(
             "milk", "https://img.icons8.com/pulsar-line/96/milk.png"
         )
@@ -61,8 +66,6 @@ class MockRepository(TestRepository):
         self.__insert_item_user("rice", "bob.baker@example.com")
 
     def init_recipes(self):
-        self.recipes.init_recipes()
-
         self.__insert_recipe(
             "alice.anderson@example.com",
             "pancakes",
@@ -88,8 +91,6 @@ class MockRepository(TestRepository):
         )
 
     def init_carts(self):
-        self.carts.init_carts()
-
         self.__insert_cart(
             "alice.anderson@example.com",
             "groceries",

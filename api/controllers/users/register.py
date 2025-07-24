@@ -14,6 +14,9 @@ class UserRegisterController(UserController):
         if duplicate is not None:
             raise UserExistsError
         model = request.to_model()
+        users = self.repository.users.select_users()
+        if len(users) < 1:
+            model.role = "admin"
         self.repository.users.insert_user(model)
         session = UserSessionModel(user_id=model.user_id, token=get_uuid())
         self.repository.users.insert_user_session(session)
