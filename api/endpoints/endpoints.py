@@ -2,7 +2,7 @@ import inspect
 import random
 from functools import wraps
 from time import time
-from typing import Callable, Self
+from typing import Any, Callable, Self
 
 import loguru
 from flask import Blueprint
@@ -17,6 +17,59 @@ from api.errors import APIError
 from api.schemas import Response
 
 controllers: dict[str, type[Controller]] = {}
+
+
+class Color:
+    WHITE = "\x1b[37;20m"
+    GRAY = "\x1b[90;20m"
+    GREEN = "\x1b[32;20m"
+    YELLOW = "\x1b[33;20m"
+    TEAL = "\x1b[36;20m"
+    BLUE = "\x1b[34;20m"
+    RED = "\x1b[31;20m"
+    BOLD_RED = "\x1b[31;1m"
+    RESET = "\x1b[0m"
+
+
+def colorize(text: Any, color: str) -> str:
+    return color + str(text) + Color.RESET
+
+
+def colorize_method(method: str) -> str:
+    method_text = f"{method:<8}"
+    match method:
+        case "GET":
+            return colorize(method_text, Color.BLUE)
+        case "POST":
+            return colorize(method_text, Color.GREEN)
+        case "PUT":
+            return colorize(method_text, Color.YELLOW)
+        case "PATCH":
+            return colorize(method_text, Color.TEAL)
+        case "DELETE":
+            return colorize(method_text, Color.RED)
+    return colorize(method, Color.GRAY)
+
+
+def colorize_code(status_code: int) -> str:
+    if status_code >= 400 and status_code < 500:
+        return colorize(status_code, Color.RED)
+    if status_code >= 300:
+        return colorize(status_code, Color.YELLOW)
+    if status_code >= 200:
+        return colorize(status_code, Color.GREEN)
+
+    return colorize(status_code, Color.BOLD_RED)
+
+
+def colorize_time(duration: float) -> str:
+    duration_ms = duration * 1000
+    duration_text = f"{duration_ms:.02f} ms"
+    if duration_ms > 1000:
+        return colorize(duration_text, Color.RED)
+    if duration_ms > 200:
+        return colorize(duration_text, Color.YELLOW)
+    return colorize(duration_text, Color.GREEN)
 
 
 class Endpoints:
@@ -70,7 +123,11 @@ class Endpoints:
             except Exception:
                 result = make_response({"error": "internal server error"}, 500)
                 code = 500
-            logger.info(f"{code}: {(time() - start) * 1000:.2f}ms")
+            logger.info(
+                f"{colorize_method(request.method)} {request.path}"
+                f" {colorize_code(code)}"
+                f" ({colorize_time(time() - start)})"
+            )
             if isinstance(result, FlaskResponse):
                 return result
             if isinstance(result, Response):
