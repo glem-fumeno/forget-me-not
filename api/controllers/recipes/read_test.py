@@ -1,36 +1,34 @@
 import unittest
 
 from api.context import Context
+from api.controllers.controllers import Controllers
 from api.controllers.mock_repository import MockRepository
-from api.controllers.recipes.read import RecipeReadController
 from api.errors import LoggedOut
 from api.models.recipes.errors import RecipeNotFoundError
 
 
 class TestRead(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = MockRepository()
-        self.user_id = self.repository.email_map["alice.anderson@example.com"]
-        self.ctx = Context().add("token", self.repository.login(self.user_id))
-        self.controller = RecipeReadController(self.ctx, self.repository)
+        self.ctx = Context()
+        self.repository = MockRepository(True)
+        self.controllers = Controllers(self.ctx, self.repository)
+        self.login = self.repository.faker.login
+        self.user = self.controllers.users.register(self.login)
+        self.controllers.ctx.add("token", self.user.token)
+        self.recipe = self.repository.faker.recipe
 
     def test_raises_error_if_not_found(self):
         with self.assertRaises(RecipeNotFoundError):
-            self.controller.run(-1)
+            self.controllers.recipes.read(-1)
 
     def test_returns_recipe_if_found(self):
-        user_id = self.repository.email_map["bob.baker@example.com"]
-        self.controller.ctx = self.controller.ctx.add(
-            "token", self.repository.login(user_id)
-        )
-        recipe_id = self.repository.recipe_name_map[self.user_id, "pancakes"]
-        model = self.repository.recipe_map[recipe_id]
-        result = self.controller.run(recipe_id)
-        self.assertEqual(result.recipe_id, recipe_id)
-        self.assertEqual(result.name, model.name)
-        self.assertEqual(result.icon, model.icon)
+        recipe = self.controllers.recipes.create(self.recipe)
+        result = self.controllers.recipes.read(recipe.recipe_id)
+        self.assertEqual(result.recipe_id, recipe.recipe_id)
+        self.assertEqual(result.name, recipe.name)
+        self.assertEqual(result.icon, recipe.icon)
 
     def test_user_logged_out_raises_error(self):
-        self.controller.ctx = self.controller.ctx.add("token", "")
+        self.controllers.ctx.add("token", "")
         with self.assertRaises(LoggedOut):
-            self.controller.run(-1)
+            self.controllers.recipes.read(-1)

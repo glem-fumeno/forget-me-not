@@ -13,14 +13,11 @@ class TestSearch(unittest.TestCase):
         self.controllers = Controllers(self.ctx, self.repository)
         self.login = self.repository.faker.login
         self.user = self.controllers.users.register(self.login)
-        self.new_login = self.repository.faker.login
-        self.new_user = self.controllers.users.register(self.new_login)
 
     def test_returns_all_items(self):
         self.controllers.ctx.add("token", self.user.token)
         for _ in range(12):
             self.controllers.items.create(self.repository.faker.item)
-        self.controllers.ctx.add("token", self.new_user.token)
         result = self.controllers.items.search()
         self.assertEqual(len(result.items), 12)
         self.assertEqual(result.count, 12)

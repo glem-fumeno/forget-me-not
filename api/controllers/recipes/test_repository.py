@@ -4,10 +4,18 @@ from api.models.recipes.models import RecipeModel, RecipeUserModel
 
 class RecipeTestRepository(TestRepository):
 
+    def init_recipes(self):
+        self.max_recipe_id: int = 0
+        self.recipe_map: dict[int, RecipeModel] = {}
+        self.recipe_name_map: dict[tuple[int, str], int] = {}
+        self.user_recipe_map: dict[int, list[int]] = {}
+        self.recipe_item_map: dict[int, set[int]] = {}
+
     def insert_recipe(self, user_id: int, model: RecipeModel):
         self.max_recipe_id += 1
         self.recipe_map[self.max_recipe_id] = model
         self.recipe_name_map[user_id, model.name] = self.max_recipe_id
+        self.recipe_item_map[self.max_recipe_id] = set()
         model.recipe_id = self.max_recipe_id
 
     def insert_recipe_user(self, model: RecipeUserModel):
@@ -68,10 +76,3 @@ class RecipeTestRepository(TestRepository):
                 to_pop.add(user_id)
         for user_id in to_pop:
             self.recipe_name_map.pop((user_id, result.name), -1)
-
-    def init_recipes(self):
-        self.max_recipe_id: int = 0
-        self.recipe_map: dict[int, RecipeModel] = {}
-        self.recipe_name_map: dict[tuple[int, str], int] = {}
-        self.user_recipe_map: dict[int, list[int]] = {}
-        self.recipe_item_map: dict[int, set[int]] = {}

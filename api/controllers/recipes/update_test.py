@@ -1,8 +1,8 @@
 import unittest
 
 from api.context import Context
+from api.controllers.controllers import Controllers
 from api.controllers.mock_repository import MockRepository
-from api.controllers.recipes.update import RecipeUpdateController
 from api.errors import LoggedOut
 from api.models.recipes.errors import RecipeNotFoundError
 from api.models.recipes.requests import RecipeUpdateRequest
@@ -10,49 +10,46 @@ from api.models.recipes.requests import RecipeUpdateRequest
 
 class TestUpdate(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = MockRepository()
-        self.user_id = self.repository.email_map["alice.anderson@example.com"]
-        self.ctx = Context().add("token", self.repository.login(self.user_id))
-        self.controller = RecipeUpdateController(self.ctx, self.repository)
+        self.ctx = Context()
+        self.repository = MockRepository(True)
+        self.controllers = Controllers(self.ctx, self.repository)
+        self.login = self.repository.faker.login
+        self.user = self.controllers.users.register(self.login)
+        self.controllers.ctx.add("token", self.user.token)
+        self.recipe = self.controllers.recipes.create(
+            self.repository.faker.recipe
+        )
+        self.request = RecipeUpdateRequest()
 
     def test_raises_error_if_not_found(self):
-        request = RecipeUpdateRequest()
         with self.assertRaises(RecipeNotFoundError):
-            self.controller.run(-1, request)
+            self.controllers.recipes.update(-1, self.request)
 
     def test_updates_name(self):
-        request = RecipeUpdateRequest(name="pancake stack")
-        recipe_id = self.repository.recipe_name_map[self.user_id, "pancakes"]
-        model = self.repository.recipe_map[recipe_id].copy()
-        result = self.controller.run(recipe_id, request)
-        new_model = self.repository.recipe_map[recipe_id].copy()
+        self.request.name = self.repository.faker.noun
+        result = self.controllers.recipes.update(
+            self.recipe.recipe_id, self.request
+        )
+        check = self.controllers.recipes.read(self.recipe.recipe_id)
+        self.assertEqual(result, check)
 
-        self.assertEqual(model.recipe_id, new_model.recipe_id)
-        self.assertNotEqual(model.name, new_model.name)
-        self.assertEqual(model.icon, new_model.icon)
-
-        self.assertEqual(result.recipe_id, recipe_id)
-        self.assertEqual(result.name, request.name)
-        self.assertEqual(result.icon, model.icon)
+        self.assertEqual(result.recipe_id, self.recipe.recipe_id)
+        self.assertEqual(result.name, self.request.name)
+        self.assertEqual(result.icon, self.recipe.icon)
 
     def test_updates_icon(self):
-        request = RecipeUpdateRequest(
-            icon="https://img.icons8.com/pulsar-line/96/american-pancakes.png"
+        self.request.icon = self.repository.faker.icon
+        result = self.controllers.recipes.update(
+            self.recipe.recipe_id, self.request
         )
-        recipe_id = self.repository.recipe_name_map[self.user_id, "pancakes"]
-        model = self.repository.recipe_map[recipe_id].copy()
-        result = self.controller.run(recipe_id, request)
-        new_model = self.repository.recipe_map[recipe_id].copy()
+        check = self.controllers.recipes.read(self.recipe.recipe_id)
+        self.assertEqual(result, check)
 
-        self.assertEqual(model.recipe_id, new_model.recipe_id)
-        self.assertEqual(model.name, new_model.name)
-        self.assertNotEqual(model.icon, new_model.icon)
-
-        self.assertEqual(result.recipe_id, recipe_id)
-        self.assertEqual(result.name, model.name)
-        self.assertEqual(result.icon, request.icon)
+        self.assertEqual(result.recipe_id, self.recipe.recipe_id)
+        self.assertEqual(result.name, self.recipe.name)
+        self.assertEqual(result.icon, self.request.icon)
 
     def test_user_logged_out_raises_error(self):
-        self.controller.ctx = self.controller.ctx.add("token", "")
+        self.controllers.ctx.add("token", "")
         with self.assertRaises(LoggedOut):
-            self.controller.run(-1, RecipeUpdateRequest())
+            self.controllers.recipes.update(-1, self.request)

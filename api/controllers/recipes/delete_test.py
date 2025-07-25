@@ -1,33 +1,36 @@
 import unittest
 
 from api.context import Context
+from api.controllers.controllers import Controllers
 from api.controllers.mock_repository import MockRepository
-from api.controllers.recipes.delete import RecipeDeleteController
 from api.errors import LoggedOut
 from api.models.recipes.errors import RecipeNotFoundError
 
 
 class TestDelete(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = MockRepository()
-        self.user_id = self.repository.email_map["alice.anderson@example.com"]
-        self.ctx = Context().add("token", self.repository.login(self.user_id))
-        self.controller = RecipeDeleteController(self.ctx, self.repository)
+        self.ctx = Context()
+        self.repository = MockRepository(True)
+        self.controllers = Controllers(self.ctx, self.repository)
+        self.login = self.repository.faker.login
+        self.user = self.controllers.users.register(self.login)
+        self.controllers.ctx.add("token", self.user.token)
+        self.recipe = self.repository.faker.recipe
 
     def test_raises_error_if_not_found(self):
         with self.assertRaises(RecipeNotFoundError):
-            self.controller.run(-1)
+            self.controllers.recipes.delete(-1)
 
     def test_found_removes_recipe(self):
-        recipe_id = self.repository.recipe_name_map[self.user_id, "omlette"]
-        recipe = self.repository.recipe_map[recipe_id]
-        result = self.controller.run(recipe_id)
-        self.assertNotIn(recipe_id, self.repository.recipe_map)
+        recipe = self.controllers.recipes.create(self.recipe)
+        result = self.controllers.recipes.delete(recipe.recipe_id)
         self.assertEqual(recipe.recipe_id, result.recipe_id)
         self.assertEqual(recipe.name, result.name)
         self.assertEqual(recipe.icon, result.icon)
+        with self.assertRaises(RecipeNotFoundError):
+            self.controllers.recipes.read(recipe.recipe_id)
 
     def test_user_logged_out_raises_error(self):
-        self.controller.ctx = self.controller.ctx.add("token", "")
+        self.controllers.ctx.add("token", "")
         with self.assertRaises(LoggedOut):
-            self.controller.run(-1)
+            self.controllers.recipes.delete(-1)

@@ -9,6 +9,7 @@ from api.models.carts.models import CartModel
 from api.models.items.models import ItemModel
 from api.models.items.requests import ItemCreateRequest
 from api.models.recipes.models import RecipeModel
+from api.models.recipes.requests import RecipeCreateRequest
 from api.models.users.models import RoleLiteral, UserModel
 from api.models.users.requests import UserLoginRequest
 from api.security import get_hash, get_uuid
@@ -17,6 +18,10 @@ from api.security import get_hash, get_uuid
 class Faker:
     def __init__(self) -> None:
         self.faker = faker.Faker()
+
+    @property
+    def recipe(self):
+        return RecipeCreateRequest(name=self.noun, icon=self.icon)
 
     @property
     def item(self):
