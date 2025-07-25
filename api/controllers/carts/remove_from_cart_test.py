@@ -1,7 +1,8 @@
 import unittest
 
 from api.context import Context
-from api.controllers.carts.remove_from_cart import CartRemoveFromCartController
+from api.controllers.controllers import Controllers
+from api.controllers.faker import Faker
 from api.controllers.mock_repository import MockRepository
 from api.errors import LoggedOut
 from api.models.carts.errors import CartNotFoundError
@@ -10,32 +11,40 @@ from api.models.items.errors import ItemNotFoundError
 
 class TestRemoveFromCart(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = MockRepository()
-        self.user_id = self.repository.email_map["alice.anderson@example.com"]
-        self.ctx = Context().add("token", self.repository.login(self.user_id))
-        self.controller = CartRemoveFromCartController(
-            self.ctx, self.repository
-        )
+        self.ctx = Context()
+        self.faker = Faker()
+        self.controllers = Controllers(self.ctx, MockRepository())
+        self.login = self.faker.login
+        self.user = self.controllers.users.register(self.login)
+        self.ctx.add("token", self.user.token)
+        self.cart = self.controllers.carts.create(self.faker.cart)
+        self.item = self.controllers.items.create(self.faker.item)
 
     def test_raises_error_if_not_found(self):
         with self.assertRaises(CartNotFoundError):
-            self.controller.run(-1, self.repository.item_name_map["soap"])
+            self.controllers.carts.remove_from_cart(-1, self.item.item_id)
 
     def test_raises_error_if_item_not_found(self):
         with self.assertRaises(ItemNotFoundError):
-            self.controller.run(
-                self.repository.cart_name_map[self.user_id, "groceries"], -1
-            )
+            self.controllers.carts.remove_from_cart(self.cart.cart_id, -1)
 
     def test_removes_item(self):
-        cart_id = self.repository.cart_name_map[self.user_id, "groceries"]
-        item_id = self.repository.item_name_map["milk"]
-        result = self.controller.run(cart_id, item_id)
+        for _ in range(5):
+            item = self.controllers.items.create(self.faker.item)
+            self.controllers.carts.add_to_cart(self.cart.cart_id, item.item_id)
+        self.controllers.carts.add_to_cart(
+            self.cart.cart_id, self.item.item_id
+        )
+        result = self.controllers.carts.remove_from_cart(
+            self.cart.cart_id, self.item.item_id
+        )
+        check = self.controllers.carts.read(self.cart.cart_id)
+        self.assertEqual(result, check)
 
         assert result.items is not None
-        self.assertEqual(len(result.items), 1)
+        self.assertEqual(len(result.items), 5)
 
     def test_user_logged_out_raises_error(self):
-        self.controller.ctx = self.controller.ctx.add("token", "")
+        self.ctx.add("token", "")
         with self.assertRaises(LoggedOut):
-            self.controller.run(-1, -1)
+            self.controllers.carts.remove_from_cart(-1, -1)

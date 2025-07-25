@@ -1,28 +1,28 @@
 import unittest
 
 from api.context import Context
-from api.controllers.carts.search import CartSearchController
+from api.controllers.controllers import Controllers
+from api.controllers.faker import Faker
 from api.controllers.mock_repository import MockRepository
 from api.errors import LoggedOut
 
 
 class TestSearch(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = MockRepository()
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        self.ctx = Context().add("token", self.repository.login(user_id))
-        self.controller = CartSearchController(self.ctx, self.repository)
+        self.ctx = Context()
+        self.faker = Faker()
+        self.controllers = Controllers(self.ctx, MockRepository())
+        self.login = self.faker.login
+        self.user = self.controllers.users.register(self.login)
 
     def test_returns_all_carts(self):
-        user_id = self.repository.email_map["bob.baker@example.com"]
-        self.controller.ctx = self.controller.ctx.add(
-            "token", self.repository.login(user_id)
-        )
-        result = self.controller.run()
-        self.assertEqual(len(result.carts), 1)
-        self.assertEqual(result.count, 1)
+        self.ctx.add("token", self.user.token)
+        for _ in range(12):
+            self.controllers.carts.create(self.faker.cart)
+        result = self.controllers.carts.search()
+        self.assertEqual(len(result.carts), 12)
+        self.assertEqual(result.count, 12)
 
     def test_user_logged_out_raises_error(self):
-        self.controller.ctx = self.controller.ctx.add("token", "")
         with self.assertRaises(LoggedOut):
-            self.controller.run()
+            self.controllers.carts.search()

@@ -2,6 +2,7 @@ import unittest
 
 from api.context import Context
 from api.controllers.controllers import Controllers
+from api.controllers.faker import Faker
 from api.controllers.mock_repository import MockRepository
 from api.models.users.errors import Inaccessible, LoggedOut, UserNotFoundError
 
@@ -9,25 +10,25 @@ from api.models.users.errors import Inaccessible, LoggedOut, UserNotFoundError
 class TestDelete(unittest.TestCase):
     def setUp(self) -> None:
         self.ctx = Context()
-        self.repository = MockRepository(True)
-        self.controllers = Controllers(self.ctx, self.repository)
-        self.login = self.repository.faker.login
+        self.faker = Faker()
+        self.controllers = Controllers(self.ctx, MockRepository())
+        self.login = self.faker.login
         self.user = self.controllers.users.register(self.login)
-        self.new_login = self.repository.faker.login
+        self.new_login = self.faker.login
         self.new_user = self.controllers.users.register(self.new_login)
 
     def test_raises_error_if_not_found(self):
-        self.controllers.ctx.add("token", self.user.token)
+        self.ctx.add("token", self.user.token)
         with self.assertRaises(UserNotFoundError):
             self.controllers.users.delete(-1)
 
     def test_found_removes_user(self):
-        self.controllers.ctx.add("token", self.new_user.token)
+        self.ctx.add("token", self.new_user.token)
         result = self.controllers.users.delete(self.new_user.user_id)
         self.assertEqual(self.new_user.user_id, result.user_id)
         self.assertEqual(self.new_user.email, result.email)
         self.assertEqual(self.new_user.username, result.username)
-        self.controllers.ctx.add("token", self.user.token)
+        self.ctx.add("token", self.user.token)
         with self.assertRaises(UserNotFoundError):
             self.controllers.users.read(self.new_user.user_id)
 
@@ -36,10 +37,10 @@ class TestDelete(unittest.TestCase):
             self.controllers.users.delete(self.user.user_id)
 
     def test_different_user_raises_error(self):
-        self.controllers.ctx.add("token", self.new_user.token)
+        self.ctx.add("token", self.new_user.token)
         with self.assertRaises(Inaccessible):
             self.controllers.users.delete(self.user.user_id)
 
     def test_admin_raises_no_error(self):
-        self.controllers.ctx.add("token", self.user.token)
+        self.ctx.add("token", self.user.token)
         self.controllers.users.delete(self.new_user.user_id)

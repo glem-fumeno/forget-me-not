@@ -4,10 +4,19 @@ from api.models.carts.models import CartModel, CartUserModel
 
 class CartTestRepository(TestRepository):
 
+    def init_carts(self):
+        self.max_cart_id: int = 0
+        self.cart_map: dict[int, CartModel] = {}
+        self.cart_name_map: dict[tuple[int, str], int] = {}
+        self.user_cart_map: dict[int, list[int]] = {}
+        self.user_default_cart_map: dict[int, int] = {}
+        self.cart_item_map: dict[int, set[int]] = {}
+
     def insert_cart(self, user_id: int, model: CartModel):
         self.max_cart_id += 1
         self.cart_map[self.max_cart_id] = model
         self.cart_name_map[user_id, model.name] = self.max_cart_id
+        self.cart_item_map[self.max_cart_id] = set()
         model.cart_id = self.max_cart_id
 
     def insert_cart_user(self, model: CartUserModel):
@@ -73,11 +82,3 @@ class CartTestRepository(TestRepository):
 
     def select_user_cart(self, user_id: int) -> int | None:
         return self.user_default_cart_map.get(user_id)
-
-    def init_carts(self):
-        self.max_cart_id: int = 0
-        self.cart_map: dict[int, CartModel] = {}
-        self.cart_name_map: dict[tuple[int, str], int] = {}
-        self.user_cart_map: dict[int, list[int]] = {}
-        self.user_default_cart_map: dict[int, int] = {}
-        self.cart_item_map: dict[int, set[int]] = {}

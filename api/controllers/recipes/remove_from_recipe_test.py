@@ -2,6 +2,7 @@ import unittest
 
 from api.context import Context
 from api.controllers.controllers import Controllers
+from api.controllers.faker import Faker
 from api.controllers.mock_repository import MockRepository
 from api.errors import LoggedOut
 from api.models.items.errors import ItemNotFoundError
@@ -11,15 +12,13 @@ from api.models.recipes.errors import RecipeNotFoundError
 class TestRemoveFromRecipe(unittest.TestCase):
     def setUp(self) -> None:
         self.ctx = Context()
-        self.repository = MockRepository(True)
-        self.controllers = Controllers(self.ctx, self.repository)
-        self.login = self.repository.faker.login
+        self.faker = Faker()
+        self.controllers = Controllers(self.ctx, MockRepository())
+        self.login = self.faker.login
         self.user = self.controllers.users.register(self.login)
-        self.controllers.ctx.add("token", self.user.token)
-        self.recipe = self.controllers.recipes.create(
-            self.repository.faker.recipe
-        )
-        self.item = self.controllers.items.create(self.repository.faker.item)
+        self.ctx.add("token", self.user.token)
+        self.recipe = self.controllers.recipes.create(self.faker.recipe)
+        self.item = self.controllers.items.create(self.faker.item)
 
     def test_raises_error_if_not_found(self):
         with self.assertRaises(RecipeNotFoundError):
@@ -33,7 +32,7 @@ class TestRemoveFromRecipe(unittest.TestCase):
 
     def test_removes_item(self):
         for _ in range(5):
-            item = self.controllers.items.create(self.repository.faker.item)
+            item = self.controllers.items.create(self.faker.item)
             self.controllers.recipes.add_to_recipe(
                 self.recipe.recipe_id, item.item_id
             )
@@ -50,6 +49,6 @@ class TestRemoveFromRecipe(unittest.TestCase):
         self.assertEqual(len(result.items), 5)
 
     def test_user_logged_out_raises_error(self):
-        self.controllers.ctx.add("token", "")
+        self.ctx.add("token", "")
         with self.assertRaises(LoggedOut):
             self.controllers.recipes.remove_from_recipe(-1, -1)

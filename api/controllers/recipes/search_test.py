@@ -2,6 +2,7 @@ import unittest
 
 from api.context import Context
 from api.controllers.controllers import Controllers
+from api.controllers.faker import Faker
 from api.controllers.mock_repository import MockRepository
 from api.errors import LoggedOut
 
@@ -9,15 +10,15 @@ from api.errors import LoggedOut
 class TestSearch(unittest.TestCase):
     def setUp(self) -> None:
         self.ctx = Context()
-        self.repository = MockRepository(True)
-        self.controllers = Controllers(self.ctx, self.repository)
-        self.login = self.repository.faker.login
+        self.faker = Faker()
+        self.controllers = Controllers(self.ctx, MockRepository())
+        self.login = self.faker.login
         self.user = self.controllers.users.register(self.login)
 
     def test_returns_all_recipes(self):
-        self.controllers.ctx.add("token", self.user.token)
+        self.ctx.add("token", self.user.token)
         for _ in range(12):
-            self.controllers.recipes.create(self.repository.faker.recipe)
+            self.controllers.recipes.create(self.faker.recipe)
         result = self.controllers.recipes.search()
         self.assertEqual(len(result.recipes), 12)
         self.assertEqual(result.count, 12)
