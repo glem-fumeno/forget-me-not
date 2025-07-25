@@ -22,10 +22,13 @@ def formatter(record):
         level = f"<g><b>{level}</b></g>"
     else:
         level = f"<level>{level}</level>"
-    return (
-        f"<lw>{record['extra']['hash']} {record['file'].path}:{record['line']}</lw>\n"
-        f"{level} : {message}\n"
-    )
+    extra = ""
+    if config.LOG_LEVEL == "DEBUG":
+        extra = (
+            f"<lw>{record['extra']['hash']}"
+            f"{record['file'].path}:{record['line']}</lw>\n"
+        )
+    return extra + f"{level} : {message}\n"
 
 
 def init_logger() -> None:
