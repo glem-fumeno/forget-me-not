@@ -1,3 +1,5 @@
+import faker
+
 from api.controllers.carts.test_repository import CartTestRepository
 from api.controllers.items.test_repository import ItemTestRepository
 from api.controllers.recipes.test_repository import RecipeTestRepository
@@ -7,12 +9,35 @@ from api.models.carts.models import CartModel
 from api.models.items.models import ItemModel
 from api.models.recipes.models import RecipeModel
 from api.models.users.models import RoleLiteral, UserModel
+from api.models.users.requests import UserLoginRequest
 from api.security import get_hash, get_uuid
+
+
+class Faker:
+    def __init__(self) -> None:
+        self.faker = faker.Faker()
+
+    @property
+    def email(self):
+        return self.faker.email()
+
+    @property
+    def username(self):
+        return self.faker.user_name()
+
+    @property
+    def password(self):
+        return self.faker.password()
+
+    @property
+    def login(self):
+        return UserLoginRequest(email=self.email, password=self.password)
 
 
 class MockRepository(TestRepository):
     def __init__(self, skip_init: bool = False):
         super().__init__(None)
+        self.faker = Faker()
 
         self.users = UserTestRepository(self)
         self.items = ItemTestRepository(self)

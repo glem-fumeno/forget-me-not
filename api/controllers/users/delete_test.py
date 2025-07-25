@@ -1,44 +1,45 @@
 import unittest
 
 from api.context import Context
+from api.controllers.controllers import Controllers
 from api.controllers.mock_repository import MockRepository
-from api.controllers.users.delete import UserDeleteController
 from api.models.users.errors import Inaccessible, LoggedOut, UserNotFoundError
 
 
 class TestDelete(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = MockRepository()
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        self.ctx = Context().add("token", self.repository.login(user_id))
-        self.controller = UserDeleteController(self.ctx, self.repository)
+        self.ctx = Context()
+        self.repository = MockRepository(True)
+        self.controllers = Controllers(self.ctx, self.repository)
+        self.login = self.repository.faker.login
+        self.user = self.controllers.users.register(self.login)
+        self.new_login = self.repository.faker.login
+        self.new_user = self.controllers.users.register(self.new_login)
 
     def test_raises_error_if_not_found(self):
+        self.controllers.ctx.add("token", self.user.token)
         with self.assertRaises(UserNotFoundError):
-            self.controller.run(-1)
+            self.controllers.users.delete(-1)
 
     def test_found_removes_user(self):
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        user = self.repository.user_map[user_id]
-        result = self.controller.run(user_id)
-        self.assertNotIn(user_id, self.repository.user_map)
-        self.assertEqual(user.user_id, result.user_id)
-        self.assertEqual(user.email, result.email)
-        self.assertEqual(user.username, result.username)
+        self.controllers.ctx.add("token", self.new_user.token)
+        result = self.controllers.users.delete(self.new_user.user_id)
+        self.assertEqual(self.new_user.user_id, result.user_id)
+        self.assertEqual(self.new_user.email, result.email)
+        self.assertEqual(self.new_user.username, result.username)
+        self.controllers.ctx.add("token", self.user.token)
+        with self.assertRaises(UserNotFoundError):
+            self.controllers.users.read(self.new_user.user_id)
 
     def test_logged_out_raises_error(self):
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        self.controller.ctx = self.controller.ctx.add("token", "")
-
         with self.assertRaises(LoggedOut):
-            self.controller.run(user_id)
+            self.controllers.users.delete(self.user.user_id)
 
     def test_different_user_raises_error(self):
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        requestee_id = self.repository.email_map["bob.baker@example.com"]
-        self.controller.ctx = self.controller.ctx.add(
-            "token", self.repository.login(requestee_id)
-        )
-
+        self.controllers.ctx.add("token", self.new_user.token)
         with self.assertRaises(Inaccessible):
-            self.controller.run(user_id)
+            self.controllers.users.delete(self.user.user_id)
+
+    def test_admin_raises_no_error(self):
+        self.controllers.ctx.add("token", self.user.token)
+        self.controllers.users.delete(self.new_user.user_id)

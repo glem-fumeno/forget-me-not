@@ -1,10 +1,11 @@
 import unittest
 
 from api.context import Context
+from api.controllers.controllers import Controllers
 from api.controllers.mock_repository import MockRepository
-from api.controllers.users.update import UserUpdateController
 from api.models.users.errors import (
     Inaccessible,
+    InvalidCredentialsError,
     LoggedOut,
     UserExistsError,
     UserNotFoundError,
@@ -14,90 +15,77 @@ from api.models.users.requests import UserUpdateRequest
 
 class TestUpdate(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = MockRepository()
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        self.ctx = Context().add("token", self.repository.login(user_id))
-        self.controller = UserUpdateController(self.ctx, self.repository)
+        self.ctx = Context()
+        self.repository = MockRepository(True)
+        self.controllers = Controllers(self.ctx, self.repository)
+        self.login = self.repository.faker.login
+        self.user = self.controllers.users.register(self.login)
+        self.new_login = self.repository.faker.login
+        self.new_user = self.controllers.users.register(self.new_login)
 
     def test_raises_error_if_not_found(self):
         request = UserUpdateRequest()
+        self.controllers.ctx.add("token", self.user.token)
         with self.assertRaises(UserNotFoundError):
-            self.controller.run(-1, request)
+            self.controllers.users.update(-1, request)
 
     def test_updates_email(self):
-        request = UserUpdateRequest(email="alice.adams@example.com")
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        model = self.repository.user_map[user_id].copy()
-        result = self.controller.run(user_id, request)
-        new_model = self.repository.user_map[user_id].copy()
+        self.controllers.ctx.add("token", self.new_user.token)
+        request = UserUpdateRequest(email=self.repository.faker.email)
+        result = self.controllers.users.update(self.new_user.user_id, request)
+        check = self.controllers.users.read(self.new_user.user_id)
 
-        self.assertEqual(model.user_id, new_model.user_id)
-        self.assertEqual(model.username, new_model.username)
-        self.assertNotEqual(model.email, new_model.email)
-        self.assertEqual(model.password, new_model.password)
+        self.assertEqual(result, check)
 
-        self.assertEqual(result.user_id, user_id)
-        self.assertEqual(result.email, request.email)
-        self.assertEqual(result.username, model.username)
+        self.assertEqual(self.new_user.user_id, result.user_id)
+        self.assertEqual(self.new_user.username, result.username)
+        self.assertEqual(request.email, result.email)
 
     def test_raises_error_if_email_taken(self):
-        request = UserUpdateRequest(email="bob.baker@example.com")
-        user_id = self.repository.email_map["alice.anderson@example.com"]
+        self.controllers.ctx.add("token", self.new_user.token)
+        request = UserUpdateRequest(email=self.user.email)
         with self.assertRaises(UserExistsError):
-            self.controller.run(user_id, request)
+            self.controllers.users.update(self.new_user.user_id, request)
 
     def test_raises_no_error_if_email_taken_is_self(self):
-        request = UserUpdateRequest(email="alice.anderson@example.com")
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        self.controller.run(user_id, request)
+        self.controllers.ctx.add("token", self.new_user.token)
+        request = UserUpdateRequest(email=self.new_user.email)
+        self.controllers.users.update(self.new_user.user_id, request)
 
     def test_updates_username(self):
-        request = UserUpdateRequest(username="alanderson")
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        model = self.repository.user_map[user_id].copy()
-        result = self.controller.run(user_id, request)
-        new_model = self.repository.user_map[user_id].copy()
+        self.controllers.ctx.add("token", self.new_user.token)
+        request = UserUpdateRequest(username=self.repository.faker.username)
+        result = self.controllers.users.update(self.new_user.user_id, request)
+        check = self.controllers.users.read(self.new_user.user_id)
 
-        self.assertEqual(model.user_id, new_model.user_id)
-        self.assertNotEqual(model.username, new_model.username)
-        self.assertEqual(model.email, new_model.email)
-        self.assertEqual(model.password, new_model.password)
+        self.assertEqual(result, check)
 
-        self.assertEqual(result.user_id, user_id)
-        self.assertEqual(result.email, model.email)
-        self.assertEqual(result.username, request.username)
+        self.assertEqual(self.new_user.user_id, result.user_id)
+        self.assertEqual(request.username, result.username)
+        self.assertEqual(self.new_user.email, result.email)
 
     def test_updates_password(self):
-        request = UserUpdateRequest(password="Cupcake$AreT4sty")
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        model = self.repository.user_map[user_id].copy()
-        result = self.controller.run(user_id, request)
-        new_model = self.repository.user_map[user_id].copy()
-
-        self.assertEqual(model.user_id, new_model.user_id)
-        self.assertEqual(model.username, new_model.username)
-        self.assertEqual(model.email, new_model.email)
-        self.assertNotEqual(model.password, new_model.password)
-
-        self.assertEqual(result.user_id, user_id)
-        self.assertEqual(result.email, model.email)
-        self.assertEqual(result.username, model.username)
+        self.controllers.ctx.add("token", self.new_user.token)
+        password = self.repository.faker.password
+        request = UserUpdateRequest(password=password)
+        self.controllers.users.update(self.new_user.user_id, request)
+        with self.assertRaises(InvalidCredentialsError):
+            self.controllers.users.login(self.new_login)
+        self.new_login.password = password
+        self.controllers.users.login(self.new_login)
 
     def test_logged_out_raises_error(self):
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        self.controller.ctx = self.controller.ctx.add("token", "")
-
         request = UserUpdateRequest()
         with self.assertRaises(LoggedOut):
-            self.controller.run(user_id, request)
+            self.controllers.users.update(self.new_user.user_id, request)
 
     def test_different_user_raises_error(self):
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        requestee_id = self.repository.email_map["bob.baker@example.com"]
-        self.controller.ctx = self.controller.ctx.add(
-            "token", self.repository.login(requestee_id)
-        )
-
+        self.controllers.ctx.add("token", self.new_user.token)
         request = UserUpdateRequest()
         with self.assertRaises(Inaccessible):
-            self.controller.run(user_id, request)
+            self.controllers.users.update(self.user.user_id, request)
+
+    def test_admin_raises_no_error(self):
+        self.controllers.ctx.add("token", self.user.token)
+        request = UserUpdateRequest()
+        self.controllers.users.update(self.new_user.user_id, request)

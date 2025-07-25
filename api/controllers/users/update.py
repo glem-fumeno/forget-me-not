@@ -8,6 +8,7 @@ from api.models.users.errors import (
 )
 from api.models.users.requests import UserUpdateRequest
 from api.models.users.responses import UserResponse
+from api.security import get_hash
 
 
 class UserUpdateController(UserController):
@@ -53,6 +54,7 @@ class UserUpdateController(UserController):
     def update_password(self):
         if self.request.password is None:
             return
+        self.request.password = get_hash(self.request.password)
         self.model.password = self.request.password
 
     @classmethod

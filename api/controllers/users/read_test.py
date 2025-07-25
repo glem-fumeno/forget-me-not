@@ -4,7 +4,6 @@ from api.context import Context
 from api.controllers.controllers import Controllers
 from api.controllers.mock_repository import MockRepository
 from api.models.users.errors import LoggedOut, UserNotFoundError
-from api.models.users.requests import UserLoginRequest
 
 
 class TestRead(unittest.TestCase):
@@ -12,9 +11,7 @@ class TestRead(unittest.TestCase):
         self.ctx = Context()
         self.repository = MockRepository(True)
         self.controllers = Controllers(self.ctx, self.repository)
-        self.request = UserLoginRequest(
-            email="alice.anderson@example.com", password="CoffeeLover#1"
-        )
+        self.request = self.repository.faker.login
         self.user = self.controllers.users.register(self.request)
 
     def test_logged_out_raises_error(self):
