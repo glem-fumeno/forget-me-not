@@ -12,7 +12,7 @@ class CartSetUserCartController(CartController):
         if model is None:
             raise CartNotFoundError
 
-        self.repository.carts.update_user_cart(cart_id, self.issuer.user_id)
+        self.repository.carts.update_user_cart(self.issuer.user_id, cart_id)
         items = self.repository.items.select_items()
         cart_items = self.repository.carts.select_cart_items(cart_id)
         return CartResponse.from_model(
