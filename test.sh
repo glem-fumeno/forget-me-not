@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-uv run -m unittest discover -p '*_test.py'
+LOG_LEVEL="WARNING" uv run test.py

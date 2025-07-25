@@ -1,57 +1,39 @@
 import unittest
 
 from api.context import Context
-from api.controllers.items.create import ItemCreateController
+from api.controllers.controllers import Controllers
 from api.controllers.mock_repository import MockRepository
 from api.errors import Inaccessible, LoggedOut
 from api.models.items.errors import ItemExistsError
-from api.models.items.requests import ItemCreateRequest
 
 
 class TestCreate(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = MockRepository()
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        self.ctx = Context().add("token", self.repository.login(user_id))
-        self.controller = ItemCreateController(self.ctx, self.repository)
+        self.ctx = Context()
+        self.repository = MockRepository(True)
+        self.controllers = Controllers(self.ctx, self.repository)
+        self.login = self.repository.faker.login
+        self.user = self.controllers.users.register(self.login)
+        self.request = self.repository.faker.item
 
     def test_name_exists_raises_error(self):
+        self.controllers.ctx.add("token", self.user.token)
+        self.controllers.items.create(self.request)
         with self.assertRaises(ItemExistsError):
-            self.controller.run(
-                ItemCreateRequest(
-                    name="milk",
-                    icon="https://img.icons8.com/pulsar-line/96/milk-carton.png",
-                )
-            )
+            self.controllers.items.create(self.request)
 
     def test_new_name_creates_item(self):
-        self.controller.run(
-            ItemCreateRequest(
-                name="needle",
-                icon="https://img.icons8.com/pulsar-line/96/needle.png",
-            )
-        )
-        self.assertIn("needle", self.repository.item_name_map)
+        self.controllers.ctx.add("token", self.user.token)
+        result = self.controllers.items.create(self.request)
+        check = self.controllers.items.read(result.item_id)
+        self.assertEqual(result, check)
 
     def test_user_logged_out_raises_error(self):
-        self.controller.ctx = self.controller.ctx.add("token", "")
         with self.assertRaises(LoggedOut):
-            self.controller.run(
-                ItemCreateRequest(
-                    name="needle",
-                    icon="https://img.icons8.com/pulsar-line/96/needle.png",
-                )
-            )
+            self.controllers.items.create(self.request)
 
     def test_user_role_raises_error(self):
-        user_id = self.repository.email_map["bob.baker@example.com"]
-        self.controller.ctx = self.controller.ctx.add(
-            "token", self.repository.login(user_id)
-        )
+        user = self.controllers.users.register(self.repository.faker.login)
+        self.controllers.ctx.add("token", user.token)
         with self.assertRaises(Inaccessible):
-            self.controller.run(
-                ItemCreateRequest(
-                    name="needle",
-                    icon="https://img.icons8.com/pulsar-line/96/needle.png",
-                )
-            )
+            self.controllers.items.create(self.request)

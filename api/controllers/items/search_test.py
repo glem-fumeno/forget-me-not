@@ -1,28 +1,30 @@
 import unittest
 
 from api.context import Context
-from api.controllers.items.search import ItemSearchController
+from api.controllers.controllers import Controllers
 from api.controllers.mock_repository import MockRepository
 from api.errors import LoggedOut
 
 
 class TestSearch(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = MockRepository()
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        self.ctx = Context().add("token", self.repository.login(user_id))
-        self.controller = ItemSearchController(self.ctx, self.repository)
+        self.ctx = Context()
+        self.repository = MockRepository(True)
+        self.controllers = Controllers(self.ctx, self.repository)
+        self.login = self.repository.faker.login
+        self.user = self.controllers.users.register(self.login)
+        self.new_login = self.repository.faker.login
+        self.new_user = self.controllers.users.register(self.new_login)
 
     def test_returns_all_items(self):
-        user_id = self.repository.email_map["bob.baker@example.com"]
-        self.controller.ctx = self.controller.ctx.add(
-            "token", self.repository.login(user_id)
-        )
-        result = self.controller.run()
-        self.assertEqual(len(result.items), 5)
-        self.assertEqual(result.count, 5)
+        self.controllers.ctx.add("token", self.user.token)
+        for _ in range(12):
+            self.controllers.items.create(self.repository.faker.item)
+        self.controllers.ctx.add("token", self.new_user.token)
+        result = self.controllers.items.search()
+        self.assertEqual(len(result.items), 12)
+        self.assertEqual(result.count, 12)
 
     def test_user_logged_out_raises_error(self):
-        self.controller.ctx = self.controller.ctx.add("token", "")
         with self.assertRaises(LoggedOut):
-            self.controller.run()
+            self.controllers.items.search()
