@@ -25,6 +25,7 @@ class Color:
     GREEN = "\x1b[32;20m"
     YELLOW = "\x1b[33;20m"
     TEAL = "\x1b[36;20m"
+    PURPLE = "\x1b[35;20m"
     BLUE = "\x1b[34;20m"
     RED = "\x1b[31;20m"
     BOLD_RED = "\x1b[31;1m"
@@ -33,6 +34,19 @@ class Color:
 
 def colorize(text: Any, color: str) -> str:
     return color + str(text) + Color.RESET
+
+
+def colorize_path(path: str) -> str:
+    modules = {
+        "/users": Color.BLUE,
+        "/items": Color.YELLOW,
+        "/recipes": Color.PURPLE,
+        "/carts": Color.TEAL,
+    }
+    for module, color in modules.items():
+        if path.startswith(module):
+            return colorize(module, color) + path.removeprefix(module)
+    return path
 
 
 def colorize_method(method: str) -> str:
@@ -124,7 +138,7 @@ class Endpoints:
                 result = make_response({"error": "internal server error"}, 500)
                 code = 500
             logger.info(
-                f"{colorize_method(request.method)} {request.path}"
+                f"{colorize_method(request.method)} {colorize_path(request.path)}"
                 f" {colorize_code(code)}"
                 f" ({colorize_time(time() - start)})"
             )
