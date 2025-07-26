@@ -6,9 +6,7 @@ from api.database.carts.insert_cart_user import CartInsertCartUserOperation
 from api.database.carts.select_cart import CartSelectCartOperation
 from api.database.carts.select_cart_items import CartSelectCartItemsOperation
 from api.database.carts.select_carts import CartSelectCartsOperation
-from api.database.carts.select_user_cart import CartSelectUserCartOperation
 from api.database.carts.update_cart import CartUpdateCartOperation
-from api.database.carts.update_user_cart import CartUpdateUserCartOperation
 from api.database.facade import Facade
 
 
@@ -19,8 +17,6 @@ class CartRepository(Facade):
     select_carts = CartSelectCartsOperation.run
     select_cart_items = CartSelectCartItemsOperation.run
     select_cart = CartSelectCartOperation.run
-    select_user_cart = CartSelectUserCartOperation.run
     update_cart = CartUpdateCartOperation.run
-    update_user_cart = CartUpdateUserCartOperation.run
     delete_cart = CartDeleteCartOperation.run
     delete_cart_item = CartDeleteCartItemOperation.run

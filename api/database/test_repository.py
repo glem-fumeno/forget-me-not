@@ -127,6 +127,7 @@ class DatabaseTestRepository(DatabaseRepository):
     ):
         model = UserModel(
             user_id=-1,
+            cart_id=None,
             username=username,
             email=email,
             password=get_hash(password),

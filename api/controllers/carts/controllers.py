@@ -5,10 +5,8 @@ from api.controllers.carts.add_to_cart import CartAddToCartController
 from api.controllers.carts.create import CartCreateController
 from api.controllers.carts.delete import CartDeleteController
 from api.controllers.carts.read import CartReadController
-from api.controllers.carts.read_user_cart import CartReadUserCartController
 from api.controllers.carts.remove_from_cart import CartRemoveFromCartController
 from api.controllers.carts.search import CartSearchController
-from api.controllers.carts.set_user_cart import CartSetUserCartController
 from api.controllers.carts.update import CartUpdateController
 from api.controllers.facade import Facade
 
@@ -19,8 +17,6 @@ class CartControllers(Facade):
     create = CartCreateController.run
     delete = CartDeleteController.run
     read = CartReadController.run
-    read_user_cart = CartReadUserCartController.run
     remove_from_cart = CartRemoveFromCartController.run
     search = CartSearchController.run
-    set_user_cart = CartSetUserCartController.run
     update = CartUpdateController.run

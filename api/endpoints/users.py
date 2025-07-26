@@ -1,13 +1,12 @@
 from flask import make_response, request
 
-from api.controllers.carts.read_user_cart import CartReadUserCartController
-from api.controllers.carts.set_user_cart import CartSetUserCartController
 from api.controllers.users.delete import UserDeleteController
 from api.controllers.users.login import UserLoginController
 from api.controllers.users.read import UserReadController
 from api.controllers.users.read_me import UserReadMeController
 from api.controllers.users.register import UserRegisterController
 from api.controllers.users.search import UserSearchController
+from api.controllers.users.set_user_cart import CartSetUserCartController
 from api.controllers.users.update import UserUpdateController
 from api.endpoints.endpoints import Endpoints
 from api.models.users.requests import UserLoginRequest, UserUpdateRequest
@@ -23,7 +22,6 @@ class UserEndpoints(Endpoints):
         self.route("get /<user_id>", self.read)
         self.route("patch /<user_id>", self.update)
         self.route("delete /<user_id>", self.delete)
-        self.route("get /cart", self.read_cart)
         self.route("put /cart/<cart_id>", self.put_cart)
 
     @Endpoints.handler
@@ -42,10 +40,6 @@ class UserEndpoints(Endpoints):
 
     @Endpoints.handler
     def search(self, controller: UserSearchController):
-        return controller.run()
-
-    @Endpoints.handler
-    def read_cart(self, controller: CartReadUserCartController):
         return controller.run()
 
     @Endpoints.handler

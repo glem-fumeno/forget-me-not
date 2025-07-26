@@ -47,3 +47,6 @@ class UserTestRepository(TestRepository):
         if result is None:
             return
         self.email_map.pop(result.email, None)
+
+    def update_user_cart(self, user_id: int, cart_id: int):
+        self.user_map[user_id].cart_id = cart_id

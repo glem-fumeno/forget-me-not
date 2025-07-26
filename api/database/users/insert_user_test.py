@@ -15,6 +15,7 @@ class TestInsertUser(unittest.TestCase):
     def test_changes_user_id(self):
         model = UserModel(
             user_id=-1,
+            cart_id=None,
             username="copperc",
             email="charlie.cooper@example.com",
             password="CoffeeLover#1",
@@ -26,6 +27,7 @@ class TestInsertUser(unittest.TestCase):
     def test_inserts_user_to_db(self):
         model = UserModel(
             user_id=-1,
+            cart_id=None,
             username="copperc",
             email="charlie.cooper@example.com",
             password="CoffeeLover#1",

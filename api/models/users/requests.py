@@ -1,7 +1,7 @@
 from typing import Any
 
-from api.schemas import Request
 from api.models.users.models import UserModel
+from api.schemas import Request
 
 
 class UserLoginRequest(Request):
@@ -11,6 +11,7 @@ class UserLoginRequest(Request):
     def to_model(self) -> UserModel:
         return UserModel(
             user_id=-1,
+            cart_id=None,
             username=self.email,
             email=self.email,
             password=self.password,

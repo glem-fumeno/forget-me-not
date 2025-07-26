@@ -13,6 +13,7 @@ from api.database.users.select_user_id_by_email import (
 )
 from api.database.users.select_users import UserSelectUsersOperation
 from api.database.users.update_user import UserUpdateUserOperation
+from api.database.users.update_user_cart import CartUpdateUserCartOperation
 
 
 class UserRepository(Facade):
@@ -24,3 +25,4 @@ class UserRepository(Facade):
     select_user_by_token = UserSelectUserByTokenOperation.run
     update_user = UserUpdateUserOperation.run
     delete_user = UserDeleteUserOperation.run
+    update_user_cart = CartUpdateUserCartOperation.run

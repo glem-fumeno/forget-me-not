@@ -17,6 +17,7 @@ class TestUpdateUser(unittest.TestCase):
         user_id = self.repository.email_map["bob.baker@example.com"]
         model = UserModel(
             user_id=user_id,
+            cart_id=None,
             username="copperc",
             email="charlie.cooper@example.com",
             password=get_hash("CoffeeLover#1"),
@@ -25,7 +26,7 @@ class TestUpdateUser(unittest.TestCase):
         self.repository.users.update_user(model)
         result = self.repository.cursor.execute(
             """
-            SELECT user_id_, username_, email_, password_, role_
+            SELECT user_id_, cart_id_, username_, email_, password_, role_
             FROM users_
             WHERE user_id_ = ?
             """,

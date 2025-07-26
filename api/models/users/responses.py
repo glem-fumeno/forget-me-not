@@ -1,11 +1,12 @@
 from typing import Self
 
-from api.schemas import Response
 from api.models.users.models import RoleLiteral, UserModel
+from api.schemas import Response
 
 
 class UserResponse(Response):
     user_id: int
+    cart_id: int | None
     username: str
     email: str
     role: RoleLiteral
@@ -14,6 +15,7 @@ class UserResponse(Response):
     def from_model(cls, model: UserModel) -> Self:
         return cls(
             user_id=model.user_id,
+            cart_id=model.cart_id,
             username=model.username,
             email=model.email,
             role=model.role,

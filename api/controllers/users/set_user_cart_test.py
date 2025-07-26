@@ -20,14 +20,15 @@ class TestSetUserCart(unittest.TestCase):
 
     def test_raises_error_if_not_found(self):
         with self.assertRaises(CartNotFoundError):
-            self.controllers.carts.set_user_cart(-1)
+            self.controllers.users.set_user_cart(-1)
 
     def test_sets_user_cart(self):
-        result = self.controllers.carts.set_user_cart(self.cart.cart_id)
-        check = self.controllers.carts.read(self.cart.cart_id)
+        result = self.controllers.users.set_user_cart(self.cart.cart_id)
+        self.assertEqual(result.cart_id, self.cart.cart_id)
+        check = self.controllers.users.read_me()
         self.assertEqual(check, result)
 
     def test_user_logged_out_raises_error(self):
         self.ctx.add("token", "")
         with self.assertRaises(LoggedOut):
-            self.controllers.carts.set_user_cart(-1)
+            self.controllers.users.set_user_cart(-1)

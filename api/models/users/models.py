@@ -7,6 +7,7 @@ RoleLiteral = Literal["new", "user", "admin"]
 
 class UserModel(Model):
     user_id: int
+    cart_id: int | None
     username: str
     email: str
     password: str
