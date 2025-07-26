@@ -21,7 +21,10 @@ class CartResponse(Response):
             name=model.name,
             icon=model.icon,
             items=(
-                [ItemResponse.from_model(item) for item in items]
+                [
+                    ItemResponse.from_model(item)
+                    for item in sorted(items, key=lambda i: i.name)
+                ]
                 if items is not None
                 else None
             ),
