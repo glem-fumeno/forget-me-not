@@ -24,7 +24,7 @@ class TestInsertCartItem(unittest.TestCase):
             item = self.faker.item_model
             self.repository.items.insert_item(item)
             items.add(item.item_id)
-        self.repository.carts.insert_cart_items(self.cart.cart_id, items, None)
+        self.repository.carts.insert_cart_items(self.cart.cart_id, items, "")
         result = self.repository.carts.select_cart_items(self.cart.cart_id)
         self.assertEqual(len(result), 6)
-        self.assertIn(self.item.item_id, result)
+        self.assertIn((self.item.item_id, ""), result)

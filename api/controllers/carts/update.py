@@ -23,7 +23,7 @@ class CartUpdateController(CartController):
         items = self.repository.items.select_items()
         cart_items = self.repository.carts.select_cart_items(cart_id)
         return CartResponse.from_model(
-            model, [(items[item], model) for item, model in cart_items.items()]
+            model, [(items[item], origin) for item, origin in cart_items]
         )
 
     def update_name(self):

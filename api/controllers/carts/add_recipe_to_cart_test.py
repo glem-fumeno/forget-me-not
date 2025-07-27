@@ -32,11 +32,17 @@ class TestAddRecipeToCart(unittest.TestCase):
             self.controllers.carts.add_recipe_to_cart(self.cart.cart_id, -1)
 
     def test_upserts_items(self):
+        self.controllers.recipes.add_to_recipe(
+            self.recipe.recipe_id, self.item.item_id
+        )
         for _ in range(5):
             item = self.controllers.items.create(self.faker.item)
             self.controllers.recipes.add_to_recipe(
                 self.recipe.recipe_id, item.item_id
             )
+        self.controllers.carts.add_to_cart(
+            self.cart.cart_id, self.item.item_id
+        )
         for _ in range(3):
             item = self.controllers.items.create(self.faker.item)
             self.controllers.carts.add_to_cart(self.cart.cart_id, item.item_id)
@@ -47,7 +53,7 @@ class TestAddRecipeToCart(unittest.TestCase):
         self.assertEqual(result, check)
 
         assert result.items is not None
-        self.assertEqual(len(result.items), 8)
+        self.assertEqual(len(result.items), 10)
 
     def test_user_logged_out_raises_error(self):
         self.ctx.add("token", "")

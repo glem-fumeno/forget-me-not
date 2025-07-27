@@ -123,6 +123,7 @@ class Endpoints:
                 k: expected_types[k](v) if k in expected_types else v
                 for k, v in kwargs.items()
             }
+            kwargs.update(request.args)
             try:
                 with (
                     DatabaseRepository(ctx) as r,

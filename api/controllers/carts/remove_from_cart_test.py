@@ -22,11 +22,11 @@ class TestRemoveFromCart(unittest.TestCase):
 
     def test_raises_error_if_not_found(self):
         with self.assertRaises(CartNotFoundError):
-            self.controllers.carts.remove_from_cart(-1, self.item.item_id)
+            self.controllers.carts.remove_from_cart(-1, self.item.item_id, "")
 
     def test_raises_error_if_item_not_found(self):
         with self.assertRaises(ItemNotFoundError):
-            self.controllers.carts.remove_from_cart(self.cart.cart_id, -1)
+            self.controllers.carts.remove_from_cart(self.cart.cart_id, -1, "")
 
     def test_removes_item(self):
         for _ in range(5):
@@ -36,7 +36,7 @@ class TestRemoveFromCart(unittest.TestCase):
             self.cart.cart_id, self.item.item_id
         )
         result = self.controllers.carts.remove_from_cart(
-            self.cart.cart_id, self.item.item_id
+            self.cart.cart_id, self.item.item_id, ""
         )
         check = self.controllers.carts.read(self.cart.cart_id)
         self.assertEqual(result, check)
@@ -47,4 +47,4 @@ class TestRemoveFromCart(unittest.TestCase):
     def test_user_logged_out_raises_error(self):
         self.ctx.add("token", "")
         with self.assertRaises(LoggedOut):
-            self.controllers.carts.remove_from_cart(-1, -1)
+            self.controllers.carts.remove_from_cart(-1, -1, "")

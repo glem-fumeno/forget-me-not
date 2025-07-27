@@ -1,6 +1,6 @@
 from typing import Self
 
-from api.models.carts.models import CartItemModel, CartModel
+from api.models.carts.models import CartModel
 from api.models.items.models import ItemModel
 from api.models.items.responses import ItemResponse
 from api.schemas import Response
@@ -10,14 +10,12 @@ class CartItemResponse(ItemResponse):
     origin: str | None
 
     @classmethod
-    def from_model(
-        cls, model: ItemModel, cart_item_model: CartItemModel
-    ) -> Self:
+    def from_model(cls, model: ItemModel, origin: str | None) -> Self:
         return cls(
             item_id=model.item_id,
             name=model.name,
             icon=model.icon,
-            origin=cart_item_model.origin,
+            origin=origin,
         )
 
 
@@ -31,7 +29,7 @@ class CartResponse(Response):
     def from_model(
         cls,
         model: CartModel,
-        items: list[tuple[ItemModel, CartItemModel]] | None,
+        items: list[tuple[ItemModel, str | None]] | None,
     ) -> Self:
         item_responses = None
         if items is not None:

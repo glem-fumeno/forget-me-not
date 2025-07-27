@@ -69,8 +69,9 @@ class CartEndpoints(Endpoints):
         controller: CartRemoveFromCartController,
         cart_id: int,
         item_id: int,
+        origin: str = "",
     ):
-        return controller.run(cart_id, item_id)
+        return controller.run(cart_id, item_id, origin)
 
 
 endpoints = CartEndpoints()

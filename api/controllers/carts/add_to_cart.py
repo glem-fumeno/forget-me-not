@@ -16,10 +16,10 @@ class CartAddToCartController(CartController):
         if item_id not in items:
             raise ItemNotFoundError
 
-        self.repository.carts.insert_cart_items(cart_id, {item_id}, None)
+        self.repository.carts.insert_cart_items(cart_id, {item_id}, "")
         cart_items = self.repository.carts.select_cart_items(cart_id)
         return CartResponse.from_model(
-            model, [(items[item], model) for item, model in cart_items.items()]
+            model, [(items[item], origin) for item, origin in cart_items]
         )
 
     @classmethod

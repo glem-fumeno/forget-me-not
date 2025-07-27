@@ -7,7 +7,7 @@ from api.models.items.errors import ItemNotFoundError
 
 
 class CartRemoveFromCartController(CartController):
-    def run(self, cart_id: int, item_id: int) -> CartResponse:
+    def run(self, cart_id: int, item_id: int, origin: str) -> CartResponse:
         self.validate_access()
         model = self.repository.carts.select_cart(self.issuer.user_id, cart_id)
         if model is None:
@@ -16,10 +16,10 @@ class CartRemoveFromCartController(CartController):
         if item_id not in items:
             raise ItemNotFoundError
 
-        self.repository.carts.delete_cart_item(cart_id, item_id)
+        self.repository.carts.delete_cart_item(cart_id, item_id, origin)
         cart_items = self.repository.carts.select_cart_items(cart_id)
         return CartResponse.from_model(
-            model, [(items[item], model) for item, model in cart_items.items()]
+            model, [(items[item], origin) for item, origin in cart_items]
         )
 
     @classmethod
@@ -27,6 +27,7 @@ class CartRemoveFromCartController(CartController):
         return EndpointDict(
             endpoint="delete /carts/{cart_id}/{item_id}",
             path={"cart_id": "integer", "item_id": "integer"},
+            query={"origin": "string"},
             responses=CartResponse,
             errors=[CartNotFoundError, ItemNotFoundError, LoggedOut],
         )
