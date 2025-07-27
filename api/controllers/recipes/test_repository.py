@@ -1,5 +1,5 @@
 from api.controllers.test_repository import TestRepository
-from api.models.recipes.models import RecipeModel, RecipeUserModel
+from api.models.recipes.models import RecipeModel
 
 
 class RecipeTestRepository(TestRepository):
@@ -18,10 +18,10 @@ class RecipeTestRepository(TestRepository):
         self.recipe_item_map[self.max_recipe_id] = set()
         model.recipe_id = self.max_recipe_id
 
-    def insert_recipe_user(self, model: RecipeUserModel):
-        if model.user_id not in self.user_recipe_map:
-            self.user_recipe_map[model.user_id] = []
-        self.user_recipe_map[model.user_id].append(model.recipe_id)
+    def insert_recipe_user(self, recipe_id: int, user_id: int):
+        if user_id not in self.user_recipe_map:
+            self.user_recipe_map[user_id] = []
+        self.user_recipe_map[user_id].append(recipe_id)
 
     def select_recipe_by_name(self, user_id: int, name: str) -> int | None:
         return self.recipe_name_map.get((user_id, name))

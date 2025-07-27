@@ -19,11 +19,11 @@ class CartAddRecipeToCartController(CartController):
             raise RecipeNotFoundError
         item_ids = self.repository.recipes.select_recipe_items(recipe_id)
 
-        self.repository.carts.insert_cart_items(cart_id, item_ids)
+        self.repository.carts.insert_cart_items(cart_id, item_ids, recipe.name)
         items = self.repository.items.select_items()
         cart_items = self.repository.carts.select_cart_items(cart_id)
         return CartResponse.from_model(
-            model, [items[item_id] for item_id in cart_items]
+            model, [(items[item], model) for item, model in cart_items.items()]
         )
 
     @classmethod

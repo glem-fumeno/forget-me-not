@@ -26,13 +26,42 @@ class TestSelectCartItems(unittest.TestCase):
             item = self.faker.item_model
             self.repository.items.insert_item(item)
             items.add(item.item_id)
-        self.repository.carts.insert_cart_items(self.cart.cart_id, items)
+        self.repository.carts.insert_cart_items(self.cart.cart_id, items, None)
         items = set()
         for _ in range(5):
             item = self.faker.item_model
             self.repository.items.insert_item(item)
             items.add(item.item_id)
-        self.repository.carts.insert_cart_items(self.new_cart.cart_id, items)
+        self.repository.carts.insert_cart_items(
+            self.new_cart.cart_id, items, None
+        )
         result = self.repository.carts.select_cart_items(self.cart.cart_id)
         self.assertEqual(len(result), 13)
         self.assertIn(self.item.item_id, result)
+
+    def test_returns_all_cart_items_with_origin(self):
+        items = set()
+        for _ in range(12):
+            item = self.faker.item_model
+            self.repository.items.insert_item(item)
+            items.add(item.item_id)
+        first_origin = self.faker.noun
+        self.repository.carts.insert_cart_items(
+            self.cart.cart_id, items, first_origin
+        )
+        items = set()
+        for _ in range(5):
+            item = self.faker.item_model
+            self.repository.items.insert_item(item)
+            items.add(item.item_id)
+        second_origin = self.faker.noun
+        self.repository.carts.insert_cart_items(
+            self.cart.cart_id, items, second_origin
+        )
+        result = self.repository.carts.select_cart_items(self.cart.cart_id)
+        self.assertEqual(
+            len([r for r in result.values() if r.origin == first_origin]), 12
+        )
+        self.assertEqual(
+            len([r for r in result.values() if r.origin == second_origin]), 5
+        )

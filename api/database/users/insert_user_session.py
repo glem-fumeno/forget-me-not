@@ -1,10 +1,9 @@
 from api.database.operation import DatabaseOperation
-from api.models.users.models import UserSessionModel
 
 
 class UserInsertUserSessionOperation(DatabaseOperation):
-    def run(self, model: UserSessionModel):
-        self.cursor.execute(self.query, model.parameters)
+    def run(self, user_id: int, token: str):
+        self.cursor.execute(self.query, (user_id, token))
 
     @property
     def query(self) -> str:

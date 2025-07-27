@@ -24,7 +24,7 @@ class TestDeleteCartItem(unittest.TestCase):
             item = self.faker.item_model
             self.repository.items.insert_item(item)
             items.add(item.item_id)
-        self.repository.carts.insert_cart_items(self.cart.cart_id, items)
+        self.repository.carts.insert_cart_items(self.cart.cart_id, items, None)
         self.repository.carts.delete_cart_item(
             self.cart.cart_id, self.item.item_id
         )

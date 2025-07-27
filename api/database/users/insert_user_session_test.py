@@ -3,7 +3,6 @@ import unittest
 from api.context import Context
 from api.database.repository import DatabaseRepository
 from api.faker import Faker
-from api.models.users.models import UserSessionModel
 from api.security import get_uuid
 
 
@@ -18,7 +17,6 @@ class TestInsertUserSession(unittest.TestCase):
     def test_inserts_user_session_to_db(self):
         self.repository.users.insert_user(self.model)
         token = get_uuid()
-        model = UserSessionModel(user_id=self.model.user_id, token=token)
-        self.repository.users.insert_user_session(model)
+        self.repository.users.insert_user_session(self.model.user_id, token)
         result = self.repository.users.select_user_by_token(token)
         self.assertIsNotNone(result)

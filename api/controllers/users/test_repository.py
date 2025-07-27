@@ -1,5 +1,5 @@
 from api.controllers.test_repository import TestRepository
-from api.models.users.models import UserModel, UserSessionModel
+from api.models.users.models import UserModel
 
 
 class UserTestRepository(TestRepository):
@@ -15,8 +15,8 @@ class UserTestRepository(TestRepository):
         self.email_map[model.email] = self.max_user_id
         model.user_id = self.max_user_id
 
-    def insert_user_session(self, model: UserSessionModel):
-        self.user_login_map[model.token] = model.user_id
+    def insert_user_session(self, user_id: int, token: str):
+        self.user_login_map[token] = user_id
 
     def select_user(self, user_id: int) -> UserModel | None:
         result = self.user_map.get(user_id)

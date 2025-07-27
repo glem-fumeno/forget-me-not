@@ -1,5 +1,5 @@
 from api.controllers.test_repository import TestRepository
-from api.models.carts.models import CartModel, CartUserModel
+from api.models.carts.models import CartItemModel, CartModel
 
 
 class CartTestRepository(TestRepository):
@@ -9,19 +9,19 @@ class CartTestRepository(TestRepository):
         self.cart_map: dict[int, CartModel] = {}
         self.cart_name_map: dict[tuple[int, str], int] = {}
         self.user_cart_map: dict[int, list[int]] = {}
-        self.cart_item_map: dict[int, set[int]] = {}
+        self.cart_item_map: dict[int, dict[int, CartItemModel]] = {}
 
     def insert_cart(self, user_id: int, model: CartModel):
         self.max_cart_id += 1
         self.cart_map[self.max_cart_id] = model
         self.cart_name_map[user_id, model.name] = self.max_cart_id
-        self.cart_item_map[self.max_cart_id] = set()
+        self.cart_item_map[self.max_cart_id] = {}
         model.cart_id = self.max_cart_id
 
-    def insert_cart_user(self, model: CartUserModel):
-        if model.user_id not in self.user_cart_map:
-            self.user_cart_map[model.user_id] = []
-        self.user_cart_map[model.user_id].append(model.cart_id)
+    def insert_cart_user(self, cart_id: int, user_id: int):
+        if user_id not in self.user_cart_map:
+            self.user_cart_map[user_id] = []
+        self.user_cart_map[user_id].append(cart_id)
 
     def select_cart_by_name(self, user_id: int, name: str) -> int | None:
         return self.cart_name_map.get((user_id, name))
@@ -35,17 +35,23 @@ class CartTestRepository(TestRepository):
             return
         return result.copy()
 
-    def insert_cart_items(self, cart_id: int, item_ids: set[int]):
+    def insert_cart_items(
+        self, cart_id: int, item_ids: set[int], origin: str | None
+    ):
         if cart_id not in self.cart_item_map:
-            self.cart_item_map[cart_id] = set()
-        items = self.cart_item_map[cart_id].union(item_ids)
-        self.cart_item_map[cart_id] = items
+            self.cart_item_map[cart_id] = {}
+        self.cart_item_map[cart_id].update(
+            {
+                item_id: CartItemModel(item_id=item_id, origin=origin)
+                for item_id in item_ids
+            }
+        )
 
-    def select_cart_items(self, cart_id: int) -> set[int]:
+    def select_cart_items(self, cart_id: int) -> dict[int, CartItemModel]:
         return self.cart_item_map[cart_id]
 
     def delete_cart_item(self, cart_id: int, item_id: int):
-        self.cart_item_map[cart_id].discard(item_id)
+        self.cart_item_map[cart_id].pop(item_id)
 
     def select_carts(self, user_id: int) -> dict[int, CartModel]:
         return {

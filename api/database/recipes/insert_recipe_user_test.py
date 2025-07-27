@@ -3,7 +3,6 @@ import unittest
 from api.context import Context
 from api.database.repository import DatabaseRepository
 from api.faker import Faker
-from api.models.recipes.models import RecipeUserModel
 
 
 class TestInsertRecipeUser(unittest.TestCase):
@@ -20,10 +19,9 @@ class TestInsertRecipeUser(unittest.TestCase):
 
     def test_adds_recipe_to_user_to_db(self):
         self.repository.recipes.insert_recipe(self.user.user_id, self.recipe)
-        model = RecipeUserModel(
-            recipe_id=self.recipe.recipe_id, user_id=self.new_user.user_id
+        self.repository.recipes.insert_recipe_user(
+            self.recipe.recipe_id, self.new_user.user_id
         )
-        self.repository.recipes.insert_recipe_user(model)
         result = self.repository.recipes.select_recipe(
             self.new_user.user_id, self.recipe.recipe_id
         )

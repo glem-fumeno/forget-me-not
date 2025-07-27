@@ -1,10 +1,9 @@
 from api.database.operation import DatabaseOperation
-from api.models.recipes.models import RecipeUserModel
 
 
 class RecipeInsertRecipeUserOperation(DatabaseOperation):
-    def run(self, model: RecipeUserModel):
-        self.cursor.execute(self.query, model.parameters)
+    def run(self, recipe_id: int, user_id: int):
+        self.cursor.execute(self.query, (recipe_id, user_id))
 
     @property
     def query(self) -> str:

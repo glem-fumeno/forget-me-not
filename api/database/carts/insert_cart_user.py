@@ -1,10 +1,9 @@
-from api.models.carts.models import CartUserModel
 from api.database.operation import DatabaseOperation
 
 
 class CartInsertCartUserOperation(DatabaseOperation):
-    def run(self, model: CartUserModel):
-        self.cursor.execute(self.query, model.parameters)
+    def run(self, cart_id: int, user_id: int):
+        self.cursor.execute(self.query, (cart_id, user_id))
 
     @property
     def query(self) -> str:

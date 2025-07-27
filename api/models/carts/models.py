@@ -11,10 +11,10 @@ class CartModel(Model):
         return (self.name, self.icon)
 
 
-class CartUserModel(Model):
-    cart_id: int
-    user_id: int
+class CartItemModel(Model):
+    item_id: int
+    origin: str | None
 
     @property
-    def parameters(self) -> tuple[int, int]:
-        return (self.cart_id, self.user_id)
+    def parameters(self) -> tuple[int, str | None]:
+        return (self.item_id, self.origin)

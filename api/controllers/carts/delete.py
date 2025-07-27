@@ -15,7 +15,7 @@ class CartDeleteController(CartController):
         cart_items = self.repository.carts.select_cart_items(cart_id)
         self.repository.carts.delete_cart(cart_id)
         return CartResponse.from_model(
-            model, [items[item] for item in cart_items]
+            model, [(items[item], model) for item, model in cart_items.items()]
         )
 
     @classmethod

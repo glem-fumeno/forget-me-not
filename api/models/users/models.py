@@ -16,12 +16,3 @@ class UserModel(Model):
     @property
     def parameters(self) -> tuple[str, str, str, str]:
         return (self.username, self.email, self.password, self.role)
-
-
-class UserSessionModel(Model):
-    user_id: int
-    token: str
-
-    @property
-    def parameters(self) -> tuple[int, str]:
-        return (self.user_id, self.token)
