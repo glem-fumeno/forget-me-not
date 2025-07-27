@@ -35,3 +35,13 @@ class TestDelete(unittest.TestCase):
         self.ctx.add("token", "")
         with self.assertRaises(LoggedOut):
             self.controllers.carts.delete(-1)
+
+    def test_more_than_one_user_does_not_remove_the_cart(self):
+        cart = self.controllers.carts.create(self.cart)
+        user = self.controllers.users.register(self.faker.login)
+        self.controllers.carts.add_user_to_cart(cart.cart_id, user.user_id)
+        self.controllers.carts.delete(cart.cart_id)
+        with self.assertRaises(CartNotFoundError):
+            self.controllers.carts.read(cart.cart_id)
+        self.ctx.add("token", user.token)
+        self.controllers.carts.read(cart.cart_id)

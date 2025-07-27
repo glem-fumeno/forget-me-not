@@ -16,12 +16,20 @@ class CartTestRepository(TestRepository):
         self.cart_map[self.max_cart_id] = model
         self.cart_name_map[user_id, model.name] = self.max_cart_id
         self.cart_item_map[self.max_cart_id] = set()
+        self.user_cart_map[user_id] = [self.max_cart_id]
         model.cart_id = self.max_cart_id
 
     def insert_cart_user(self, cart_id: int, user_id: int):
         if user_id not in self.user_cart_map:
             self.user_cart_map[user_id] = []
         self.user_cart_map[user_id].append(cart_id)
+        self.cart_name_map[user_id, self.cart_map[cart_id].name] = cart_id
+
+    def delete_cart_user(self, cart_id: int, user_id: int):
+        if user_id not in self.user_cart_map:
+            return
+        self.user_cart_map[user_id].remove(cart_id)
+        self.cart_name_map.pop((user_id, self.cart_map[cart_id].name))
 
     def select_cart_by_name(self, user_id: int, name: str) -> int | None:
         return self.cart_name_map.get((user_id, name))
@@ -41,6 +49,13 @@ class CartTestRepository(TestRepository):
         self.cart_item_map[cart_id] = self.cart_item_map[cart_id].union(
             {(item_id, origin) for item_id in item_ids}
         )
+
+    def select_cart_users(self, cart_id: int) -> set[int]:
+        return {
+            user_id
+            for (user_id, _), cid in self.cart_name_map.items()
+            if cid == cart_id
+        }
 
     def select_cart_items(self, cart_id: int) -> set[tuple[int, str]]:
         return self.cart_item_map[cart_id]

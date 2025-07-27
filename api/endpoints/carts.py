@@ -4,6 +4,7 @@ from api.controllers.carts.add_recipe_to_cart import (
     CartAddRecipeToCartController,
 )
 from api.controllers.carts.add_to_cart import CartAddToCartController
+from api.controllers.carts.add_user_to_cart import CartAddUserToCartController
 from api.controllers.carts.create import CartCreateController
 from api.controllers.carts.delete import CartDeleteController
 from api.controllers.carts.read import CartReadController
@@ -25,6 +26,7 @@ class CartEndpoints(Endpoints):
         self.route(
             "put /<cart_id>/recipes/<recipe_id>", self.add_recipe_to_cart
         )
+        self.route("put /<cart_id>/users/<user_id>", self.add_user_to_cart)
         self.route("put /<cart_id>/<item_id>", self.add_to_cart)
         self.route("delete /<cart_id>/<item_id>", self.remove_from_cart)
 
@@ -53,6 +55,15 @@ class CartEndpoints(Endpoints):
         self, controller: CartAddToCartController, cart_id: int, item_id: int
     ):
         return controller.run(cart_id, item_id)
+
+    @Endpoints.handler
+    def add_user_to_cart(
+        self,
+        controller: CartAddUserToCartController,
+        cart_id: int,
+        user_id: int,
+    ):
+        return controller.run(cart_id, user_id)
 
     @Endpoints.handler
     def add_recipe_to_cart(
