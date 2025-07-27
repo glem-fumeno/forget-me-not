@@ -10,12 +10,15 @@ class DatabaseConnector:
         self.ctx = ctx
         self.config = get_config()
         self.database_path = self.config.DB_PATH
+        self.migrator = DatabaseMigrator()
         if database_path is not None:
             self.database_path = database_path
-        DatabaseMigrator().migrate(self.database_path)
+            self.migrator.applied = False
 
     def __enter__(self):
         self.connection = sqlite3.connect(self.database_path)
+        self.connection.execute("PRAGMA foreign_keys = ON")
+        self.migrator.migrate(self.connection)
         self.cursor = self.connection.cursor()
         self.cursor.execute("BEGIN")
         return self

@@ -12,11 +12,11 @@ class DatabaseMigrator(metaclass=Singleton):
         self.applied = False
         self.logger = logger
 
-    def migrate(self, database_path: str):
+    def migrate(self, connection: sqlite3.Connection):
         if self.applied:
             return
         self.logger.debug("Migrating")
-        self.connection = sqlite3.connect(database_path)
+        self.connection = connection
         self.cursor = self.connection.cursor()
         self.cursor.execute("BEGIN")
         self.logger.debug("Connected")
@@ -40,7 +40,6 @@ class DatabaseMigrator(metaclass=Singleton):
         except Exception as e:
             self.logger.critical(f"Exception occured: {e}")
             self.connection.rollback()
-        self.connection.close()
 
     def _ensure_migrations_table(self):
         self.cursor.execute(

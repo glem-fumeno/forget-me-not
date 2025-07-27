@@ -8,7 +8,7 @@ from api.security import get_uuid
 
 class TestSelectUserByToken(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = DatabaseRepository(Context(), "test.db")
+        self.repository = DatabaseRepository(Context(), ":memory:")
         self.repository.__enter__()
         self.addCleanup(self.repository.__exit__, 1, None, None)
         self.faker = Faker()
