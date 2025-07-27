@@ -1,9 +1,9 @@
 from api.controllers.carts.test_repository import CartTestRepository
-from api.controllers.faker import Faker
 from api.controllers.items.test_repository import ItemTestRepository
 from api.controllers.recipes.test_repository import RecipeTestRepository
 from api.controllers.test_repository import TestRepository
 from api.controllers.users.test_repository import UserTestRepository
+from api.faker import Faker
 
 
 class MockRepository(TestRepository):

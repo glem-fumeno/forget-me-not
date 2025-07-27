@@ -1,14 +1,42 @@
 import faker
 
+from api.models.carts.models import CartModel
 from api.models.carts.requests import CartCreateRequest
+from api.models.items.models import ItemModel
 from api.models.items.requests import ItemCreateRequest
+from api.models.recipes.models import RecipeModel
 from api.models.recipes.requests import RecipeCreateRequest
+from api.models.users.models import UserModel
 from api.models.users.requests import UserLoginRequest
+from api.security import get_hash
 
 
 class Faker:
     def __init__(self) -> None:
         self.faker = faker.Faker()
+
+    @property
+    def cart_model(self):
+        return CartModel(cart_id=-1, name=self.noun, icon=self.icon)
+
+    @property
+    def recipe_model(self):
+        return RecipeModel(recipe_id=-1, name=self.noun, icon=self.icon)
+
+    @property
+    def item_model(self):
+        return ItemModel(item_id=-1, name=self.noun, icon=self.icon)
+
+    @property
+    def user_model(self):
+        return UserModel(
+            user_id=-1,
+            cart_id=None,
+            username=self.username,
+            email=self.email,
+            password=get_hash(self.password),
+            role="user",
+        )
 
     @property
     def cart(self):

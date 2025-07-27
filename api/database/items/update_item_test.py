@@ -1,30 +1,22 @@
 import unittest
 
 from api.context import Context
-from api.database.test_repository import DatabaseTestRepository
-from api.models.items.models import ItemModel
+from api.database.repository import DatabaseRepository
+from api.faker import Faker
 
 
 class TestUpdateItem(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = DatabaseTestRepository(Context(), "test.db")
+        self.repository = DatabaseRepository(Context(), "test.db")
         self.repository.__enter__()
         self.addCleanup(self.repository.__exit__, 1, None, None)
-        self.repository.initialize_test_cases()
+        self.faker = Faker()
+        self.item = self.faker.item_model
 
     def test_updates_item_in_db(self):
-        item_id = self.repository.item_name_map["milk"]
-        model = ItemModel(
-            item_id=item_id,
-            name="milk carton",
-            icon="https://img.icons8.com/pulsar-line/96/milk-carton.png",
-        )
+        self.repository.items.insert_item(self.item)
+        model = self.faker.item_model
+        model.item_id = self.item.item_id
         self.repository.items.update_item(model)
-        result = self.repository.cursor.execute(
-            """
-            SELECT item_id_, name_, icon_ FROM items_ WHERE item_id_ = ?
-            """,
-            (item_id,),
-        )
-        new_model = ItemModel.from_db(result.description, result.fetchone())
-        self.assertEqual(model, new_model)
+        result = self.repository.items.select_item(self.item.item_id)
+        self.assertEqual(result, model)

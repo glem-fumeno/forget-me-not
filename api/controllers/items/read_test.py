@@ -2,9 +2,9 @@ import unittest
 
 from api.context import Context
 from api.controllers.controllers import Controllers
-from api.controllers.faker import Faker
 from api.controllers.mock_repository import MockRepository
 from api.errors import LoggedOut
+from api.faker import Faker
 from api.models.items.errors import ItemNotFoundError
 
 

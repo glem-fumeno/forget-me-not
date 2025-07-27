@@ -1,7 +1,7 @@
 from typing import Protocol
 
 from api.models.carts.models import CartModel, CartUserModel
-from api.models.items.models import ItemModel, ItemUserModel
+from api.models.items.models import ItemModel
 from api.models.recipes.models import RecipeModel, RecipeUserModel
 from api.models.users.models import UserModel, UserSessionModel
 
@@ -20,7 +20,6 @@ class CartRepository(Protocol):
 
 class ItemRepository(Protocol):
     def insert_item(self, model: ItemModel): ...
-    def insert_item_user(self, model: ItemUserModel): ...
     def select_item(self, item_id: int) -> ItemModel | None: ...
     def select_items(self) -> dict[int, ItemModel]: ...
     def select_item_by_name(self, name: str) -> int | None: ...

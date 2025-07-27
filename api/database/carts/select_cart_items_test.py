@@ -1,20 +1,38 @@
 import unittest
 
 from api.context import Context
-from api.database.test_repository import DatabaseTestRepository
+from api.database.repository import DatabaseRepository
+from api.faker import Faker
 
 
 class TestSelectCartItems(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = DatabaseTestRepository(Context(), "test.db")
+        self.repository = DatabaseRepository(Context(), "test.db")
         self.repository.__enter__()
         self.addCleanup(self.repository.__exit__, 1, None, None)
-        self.repository.initialize_test_cases()
+        self.faker = Faker()
+        self.user = self.faker.user_model
+        self.repository.users.insert_user(self.user)
+        self.cart = self.faker.cart_model
+        self.repository.carts.insert_cart(self.user.user_id, self.cart)
+        self.new_cart = self.faker.cart_model
+        self.repository.carts.insert_cart(self.user.user_id, self.new_cart)
+        self.item = self.faker.item_model
 
     def test_returns_all_cart_items(self):
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        cart_id = self.repository.cart_name_map[user_id, "groceries"]
-        result = self.repository.carts.select_cart_items(cart_id)
-        self.assertEqual(len(result), 2)
-        self.assertIn(self.repository.item_name_map["milk"], result)
-        self.assertIn(self.repository.item_name_map["rice"], result)
+        self.repository.items.insert_item(self.item)
+        items = {self.item.item_id}
+        for _ in range(12):
+            item = self.faker.item_model
+            self.repository.items.insert_item(item)
+            items.add(item.item_id)
+        self.repository.carts.insert_cart_items(self.cart.cart_id, items)
+        items = set()
+        for _ in range(5):
+            item = self.faker.item_model
+            self.repository.items.insert_item(item)
+            items.add(item.item_id)
+        self.repository.carts.insert_cart_items(self.new_cart.cart_id, items)
+        result = self.repository.carts.select_cart_items(self.cart.cart_id)
+        self.assertEqual(len(result), 13)
+        self.assertIn(self.item.item_id, result)

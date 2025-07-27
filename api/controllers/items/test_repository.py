@@ -1,5 +1,5 @@
 from api.controllers.test_repository import TestRepository
-from api.models.items.models import ItemModel, ItemUserModel
+from api.models.items.models import ItemModel
 
 
 class ItemTestRepository(TestRepository):
@@ -9,11 +9,6 @@ class ItemTestRepository(TestRepository):
         self.item_map[self.max_item_id] = model
         self.item_name_map[model.name] = self.max_item_id
         model.item_id = self.max_item_id
-
-    def insert_item_user(self, model: ItemUserModel):
-        if model.user_id not in self.user_item_map:
-            self.user_item_map[model.user_id] = []
-        self.user_item_map[model.user_id].append(model.item_id)
 
     def select_item_by_name(self, name: str) -> int | None:
         return self.item_name_map.get(name)

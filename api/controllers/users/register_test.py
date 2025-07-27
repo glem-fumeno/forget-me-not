@@ -2,8 +2,8 @@ import unittest
 
 from api.context import Context
 from api.controllers.controllers import Controllers
-from api.controllers.faker import Faker
 from api.controllers.mock_repository import MockRepository
+from api.faker import Faker
 from api.models.users.errors import UserExistsError
 
 

@@ -1,31 +1,26 @@
 import unittest
 
 from api.context import Context
-from api.database.test_repository import DatabaseTestRepository
-from api.models.carts.models import CartModel
+from api.database.repository import DatabaseRepository
+from api.faker import Faker
 
 
 class TestUpdateCart(unittest.TestCase):
     def setUp(self) -> None:
-        self.repository = DatabaseTestRepository(Context(), "test.db")
+        self.repository = DatabaseRepository(Context(), "test.db")
         self.repository.__enter__()
         self.addCleanup(self.repository.__exit__, 1, None, None)
-        self.repository.initialize_test_cases()
+        self.faker = Faker()
+        self.user = self.faker.user_model
+        self.repository.users.insert_user(self.user)
+        self.cart = self.faker.cart_model
 
     def test_updates_cart_in_db(self):
-        user_id = self.repository.email_map["alice.anderson@example.com"]
-        cart_id = self.repository.cart_name_map[user_id, "groceries"]
-        model = CartModel(
-            cart_id=cart_id,
-            name="shopping",
-            icon="https://img.icons8.com/pulsar-line/96/shopping-trolley.png",
-        )
+        self.repository.carts.insert_cart(self.user.user_id, self.cart)
+        model = self.faker.cart_model
+        model.cart_id = self.cart.cart_id
         self.repository.carts.update_cart(model)
-        result = self.repository.cursor.execute(
-            """
-            SELECT cart_id_, name_, icon_ FROM carts_ WHERE cart_id_ = ?
-            """,
-            (cart_id,),
+        result = self.repository.carts.select_cart(
+            self.user.user_id, model.cart_id
         )
-        new_model = CartModel.from_db(result.description, result.fetchone())
-        self.assertEqual(model, new_model)
+        self.assertEqual(result, model)
