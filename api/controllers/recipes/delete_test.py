@@ -35,3 +35,15 @@ class TestDelete(unittest.TestCase):
         self.ctx.add("token", "")
         with self.assertRaises(LoggedOut):
             self.controllers.recipes.delete(-1)
+
+    def test_more_than_one_user_does_not_remove_the_recipe(self):
+        recipe = self.controllers.recipes.create(self.recipe)
+        user = self.controllers.users.register(self.faker.login)
+        self.controllers.recipes.add_user_to_recipe(
+            recipe.recipe_id, user.user_id
+        )
+        self.controllers.recipes.delete(recipe.recipe_id)
+        with self.assertRaises(RecipeNotFoundError):
+            self.controllers.recipes.read(recipe.recipe_id)
+        self.ctx.add("token", user.token)
+        self.controllers.recipes.read(recipe.recipe_id)

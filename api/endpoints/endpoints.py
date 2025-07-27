@@ -135,7 +135,8 @@ class Endpoints:
                 logger.debug(error.MESSAGE)
                 result = make_response({"error": error.MESSAGE}, error.CODE)
                 code = error.CODE
-            except Exception:
+            except Exception as e:
+                logger.debug(e)
                 result = make_response({"error": "internal server error"}, 500)
                 code = 500
             logger.info(

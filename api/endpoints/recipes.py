@@ -1,6 +1,9 @@
 from flask import request
 
 from api.controllers.recipes.add_to_recipe import RecipeAddToRecipeController
+from api.controllers.recipes.add_user_to_recipe import (
+    RecipeAddUserToRecipeController,
+)
 from api.controllers.recipes.create import RecipeCreateController
 from api.controllers.recipes.delete import RecipeDeleteController
 from api.controllers.recipes.read import RecipeReadController
@@ -24,6 +27,7 @@ class RecipeEndpoints(Endpoints):
         self.route("get /<recipe_id>", self.read)
         self.route("patch /<recipe_id>", self.update)
         self.route("delete /<recipe_id>", self.delete)
+        self.route("put /<recipe_id>/users/<user_id>", self.add_user_to_recipe)
         self.route("put /<recipe_id>/<item_id>", self.add_to_recipe)
         self.route("delete /<recipe_id>/<item_id>", self.remove_from_recipe)
 
@@ -48,6 +52,15 @@ class RecipeEndpoints(Endpoints):
     @Endpoints.handler
     def delete(self, controller: RecipeDeleteController, recipe_id: int):
         return controller.run(recipe_id)
+
+    @Endpoints.handler
+    def add_user_to_recipe(
+        self,
+        controller: RecipeAddUserToRecipeController,
+        recipe_id: int,
+        user_id: int,
+    ):
+        return controller.run(recipe_id, user_id)
 
     @Endpoints.handler
     def add_to_recipe(

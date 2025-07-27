@@ -16,12 +16,29 @@ class RecipeTestRepository(TestRepository):
         self.recipe_map[self.max_recipe_id] = model
         self.recipe_name_map[user_id, model.name] = self.max_recipe_id
         self.recipe_item_map[self.max_recipe_id] = set()
+        self.user_recipe_map[user_id] = [self.max_recipe_id]
         model.recipe_id = self.max_recipe_id
 
     def insert_recipe_user(self, recipe_id: int, user_id: int):
         if user_id not in self.user_recipe_map:
             self.user_recipe_map[user_id] = []
         self.user_recipe_map[user_id].append(recipe_id)
+        self.recipe_name_map[user_id, self.recipe_map[recipe_id].name] = (
+            recipe_id
+        )
+
+    def delete_recipe_user(self, recipe_id: int, user_id: int):
+        if user_id not in self.user_recipe_map:
+            return
+        self.user_recipe_map[user_id].remove(recipe_id)
+        self.recipe_name_map.pop((user_id, self.recipe_map[recipe_id].name))
+
+    def select_recipe_users(self, recipe_id: int) -> set[int]:
+        return {
+            user_id
+            for (user_id, _), cid in self.recipe_name_map.items()
+            if cid == recipe_id
+        }
 
     def select_recipe_by_name(self, user_id: int, name: str) -> int | None:
         return self.recipe_name_map.get((user_id, name))

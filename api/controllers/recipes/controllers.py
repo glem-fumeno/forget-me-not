@@ -1,5 +1,8 @@
 from api.controllers.facade import Facade
 from api.controllers.recipes.add_to_recipe import RecipeAddToRecipeController
+from api.controllers.recipes.add_user_to_recipe import (
+    RecipeAddUserToRecipeController,
+)
 from api.controllers.recipes.create import RecipeCreateController
 from api.controllers.recipes.delete import RecipeDeleteController
 from api.controllers.recipes.read import RecipeReadController
@@ -11,6 +14,7 @@ from api.controllers.recipes.update import RecipeUpdateController
 
 
 class RecipeControllers(Facade):
+    add_user_to_recipe = RecipeAddUserToRecipeController.run
     create = RecipeCreateController.run
     read = RecipeReadController.run
     update = RecipeUpdateController.run
