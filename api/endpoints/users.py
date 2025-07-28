@@ -10,6 +10,9 @@ from api.controllers.users.set_user_cart import CartSetUserCartController
 from api.controllers.users.update import UserUpdateController
 from api.endpoints.endpoints import Endpoints
 from api.models.users.requests import UserLoginRequest, UserUpdateRequest
+from config import get_config
+
+config = get_config()
 
 
 class UserEndpoints(Endpoints):
@@ -28,14 +31,22 @@ class UserEndpoints(Endpoints):
     def register(self, controller: UserRegisterController):
         response_ = controller.run(UserLoginRequest.from_flask(request))
         response = make_response(response_.to_dict())
-        response.set_cookie(key="token", value=response_.token)
+        response.set_cookie(
+            key="token",
+            value=response_.token,
+            domain=config.FRONTEND_URL.removeprefix("https://"),
+        )
         return response
 
     @Endpoints.handler
     def login(self, controller: UserLoginController):
         response_ = controller.run(UserLoginRequest.from_flask(request))
         response = make_response(response_.to_dict())
-        response.set_cookie(key="token", value=response_.token)
+        response.set_cookie(
+            key="token",
+            value=response_.token,
+            domain=config.FRONTEND_URL.removeprefix("https://"),
+        )
         return response
 
     @Endpoints.handler
