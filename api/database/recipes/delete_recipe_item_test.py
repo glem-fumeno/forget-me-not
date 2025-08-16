@@ -32,7 +32,7 @@ class TestDeleteRecipeItem(unittest.TestCase):
             self.recipe.recipe_id, self.item.item_id
         )
         result = self.repository.recipes.select_recipe_items(
-            self.recipe.recipe_id
+            [self.recipe.recipe_id]
         )
-        self.assertEqual(len(result), 5)
-        self.assertNotIn(self.item.item_id, result)
+        self.assertEqual(len(result[0]), 5)
+        self.assertNotIn(self.item.item_id, result[0])

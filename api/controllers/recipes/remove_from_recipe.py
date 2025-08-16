@@ -9,7 +9,9 @@ from api.models.recipes.responses import RecipeResponse
 class RecipeRemoveFromRecipeController(RecipeController):
     def run(self, recipe_id: int, item_id: int) -> RecipeResponse:
         self.validate_access()
-        model = self.repository.recipes.select_recipe(self.issuer.user_id, recipe_id)
+        model = self.repository.recipes.select_recipe(
+            self.issuer.user_id, recipe_id
+        )
         if model is None:
             raise RecipeNotFoundError
         items = self.repository.items.select_items()
@@ -17,9 +19,9 @@ class RecipeRemoveFromRecipeController(RecipeController):
             raise ItemNotFoundError
 
         self.repository.recipes.delete_recipe_item(recipe_id, item_id)
-        recipe_items = self.repository.recipes.select_recipe_items(recipe_id)
+        recipe_items = self.repository.recipes.select_recipe_items([recipe_id])
         return RecipeResponse.from_model(
-            model, [items[item] for item in recipe_items]
+            model, [items[item] for item in recipe_items[0]]
         )
 
     @classmethod

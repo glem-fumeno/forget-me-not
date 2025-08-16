@@ -14,7 +14,7 @@ class RecipeDeleteController(RecipeController):
         if model is None:
             raise RecipeNotFoundError
         items = self.repository.items.select_items()
-        recipe_items = self.repository.recipes.select_recipe_items(recipe_id)
+        recipe_items = self.repository.recipes.select_recipe_items([recipe_id])
         self.repository.recipes.delete_recipe_user(
             recipe_id, self.issuer.user_id
         )
@@ -22,7 +22,7 @@ class RecipeDeleteController(RecipeController):
         if len(users) < 1:
             self.repository.recipes.delete_recipe(recipe_id)
         return RecipeResponse.from_model(
-            model, [items[item] for item in recipe_items]
+            model, [items[item] for item in recipe_items[0]]
         )
 
     @classmethod

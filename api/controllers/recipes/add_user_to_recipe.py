@@ -20,9 +20,9 @@ class RecipeAddUserToRecipeController(RecipeController):
 
         self.repository.recipes.insert_recipe_user(recipe_id, user_id)
         items = self.repository.items.select_items()
-        recipe_items = self.repository.recipes.select_recipe_items(recipe_id)
+        recipe_items = self.repository.recipes.select_recipe_items([recipe_id])
         return RecipeResponse.from_model(
-            model, [items[item] for item in recipe_items]
+            model, [items[item] for item in recipe_items[0]]
         )
 
     @classmethod

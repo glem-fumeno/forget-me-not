@@ -26,10 +26,10 @@ class RecipeUpdateController(RecipeController):
         self.repository.recipes.update_recipe(self.model)
         items = self.repository.items.select_items()
         recipe_items = self.repository.recipes.select_recipe_items(
-            self.recipe_id
+            [self.recipe_id]
         )
         return RecipeResponse.from_model(
-            model, [items[item] for item in recipe_items]
+            model, [items[item] for item in recipe_items[0]]
         )
 
     def update_name(self):

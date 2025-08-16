@@ -59,8 +59,8 @@ class RecipeTestRepository(TestRepository):
             self.recipe_item_map[recipe_id] = set()
         self.recipe_item_map[recipe_id].add(item_id)
 
-    def select_recipe_items(self, recipe_id: int) -> set[int]:
-        return self.recipe_item_map[recipe_id]
+    def select_recipe_items(self, recipe_ids: list[int]) -> list[set[int]]:
+        return [self.recipe_item_map[recipe_id] for recipe_id in recipe_ids]
 
     def delete_recipe_item(self, recipe_id: int, item_id: int):
         self.recipe_item_map[recipe_id].discard(item_id)

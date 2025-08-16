@@ -29,7 +29,7 @@ class TestInsertRecipeItem(unittest.TestCase):
                 self.recipe.recipe_id, item.item_id
             )
         result = self.repository.recipes.select_recipe_items(
-            self.recipe.recipe_id
+            [self.recipe.recipe_id]
         )
-        self.assertEqual(len(result), 6)
-        self.assertIn(self.item.item_id, result)
+        self.assertEqual(len(result[0]), 6)
+        self.assertIn(self.item.item_id, result[0])

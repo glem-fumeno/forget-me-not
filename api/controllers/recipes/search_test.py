@@ -23,6 +23,19 @@ class TestSearch(unittest.TestCase):
         self.assertEqual(len(result.recipes), 12)
         self.assertEqual(result.count, 12)
 
+    def test_returns_recipes_with_items(self):
+        self.ctx.add("token", self.user.token)
+        recipe = self.controllers.recipes.create(self.faker.recipe)
+        for _ in range(3):
+            item = self.controllers.items.create(self.faker.item)
+            self.controllers.recipes.add_to_recipe(
+                recipe.recipe_id, item.item_id
+            )
+        result = self.controllers.recipes.search()
+        self.assertEqual(len(result.recipes), 1)
+        assert result.recipes[0].items is not None
+        self.assertEqual(len(result.recipes[0].items), 3)
+
     def test_user_logged_out_raises_error(self):
         with self.assertRaises(LoggedOut):
             self.controllers.recipes.search()
