@@ -1,16 +1,12 @@
-from api.controllers.recipes.controller import RecipeController
+from api.controllers.controller import Controller
 from api.docs.models import EndpointDict
-from api.errors import LoggedOut
 from api.models.recipes.errors import RecipeNotFoundError
 from api.models.recipes.responses import RecipeResponse
 
 
-class RecipeReadController(RecipeController):
+class RecipeReadController(Controller):
     def run(self, recipe_id: int) -> RecipeResponse:
-        self.validate_access()
-        model = self.repository.recipes.select_recipe(
-            self.issuer.user_id, recipe_id
-        )
+        model = self.repository.recipes.select_recipe(recipe_id)
         if model is None:
             raise RecipeNotFoundError
         items = self.repository.items.select_items()
@@ -25,5 +21,5 @@ class RecipeReadController(RecipeController):
             endpoint="get /recipes/{recipe_id}",
             path={"recipe_id": "integer"},
             responses=RecipeResponse,
-            errors=[LoggedOut, RecipeNotFoundError],
+            errors=[RecipeNotFoundError],
         )

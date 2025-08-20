@@ -1,22 +1,11 @@
-import unittest
-
-from api.context import Context
-from api.controllers.controllers import Controllers
-from api.controllers.mock_repository import MockRepository
-from api.errors import LoggedOut
-from api.faker import Faker
 from api.models.items.errors import ItemNotFoundError
 from api.models.recipes.errors import RecipeNotFoundError
+from api.test_case import TestCase
 
 
-class TestRemoveFromRecipe(unittest.TestCase):
+class TestRemoveFromRecipe(TestCase):
     def setUp(self) -> None:
-        self.ctx = Context()
-        self.faker = Faker()
-        self.controllers = Controllers(self.ctx, MockRepository())
-        self.login = self.faker.login
-        self.user = self.controllers.users.register(self.login)
-        self.ctx.add("token", self.user.token)
+        super().setUp()
         self.recipe = self.controllers.recipes.create(self.faker.recipe)
         self.item = self.controllers.items.create(self.faker.item)
 
@@ -47,8 +36,3 @@ class TestRemoveFromRecipe(unittest.TestCase):
 
         assert result.items is not None
         self.assertEqual(len(result.items), 5)
-
-    def test_user_logged_out_raises_error(self):
-        self.ctx.add("token", "")
-        with self.assertRaises(LoggedOut):
-            self.controllers.recipes.remove_from_recipe(-1, -1)

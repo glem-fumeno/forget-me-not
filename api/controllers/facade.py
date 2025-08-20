@@ -1,12 +1,12 @@
-
 import inspect
 from typing import Any
+
 from api.context import Context
-from api.controllers.repository import Repository
+from api.database.repository import DatabaseRepository
 
 
 class Facade:
-    def __init__(self, ctx: Context, repository: Repository) -> None:
+    def __init__(self, ctx: Context, repository: DatabaseRepository) -> None:
         self.ctx = ctx
         self.repository = repository
 

@@ -2,19 +2,15 @@ from api.controllers.controller import Controller
 from api.docs.models import EndpointDict
 from api.models.carts.errors import CartNotFoundError
 from api.models.carts.responses import CartResponse
-from api.models.items.errors import ItemNotFoundError
 
 
-class CartAddToCartController(Controller):
-    def run(self, cart_id: int, item_id: int) -> CartResponse:
+class CartUpdateDefaultController(Controller):
+    def run(self, cart_id: int) -> CartResponse:
         model = self.repository.carts.select_cart(cart_id)
         if model is None:
             raise CartNotFoundError
+        self.repository.carts.update_default_cart(cart_id)
         items = self.repository.items.select_items()
-        if item_id not in items:
-            raise ItemNotFoundError
-
-        self.repository.carts.insert_cart_items(cart_id, {item_id}, "")
         cart_items = self.repository.carts.select_cart_items(cart_id)
         return CartResponse.from_model(
             model, [(items[item], origin) for item, origin in cart_items]
@@ -23,8 +19,8 @@ class CartAddToCartController(Controller):
     @classmethod
     def get_docs(cls):
         return EndpointDict(
-            endpoint="put /carts/{cart_id}/{item_id}",
-            path={"cart_id": "integer", "item_id": "integer"},
+            endpoint="put /carts/default",
+            query={"cart_id": "integer"},
             responses=CartResponse,
-            errors=[CartNotFoundError, ItemNotFoundError],
+            errors=[CartNotFoundError],
         )

@@ -1,10 +1,10 @@
-from api.models.carts.models import CartModel
 from api.database.operation import DatabaseOperation
+from api.models.carts.models import CartModel
 
 
 class CartSelectCartsOperation(DatabaseOperation):
-    def run(self, user_id: int) -> dict[int, CartModel]:
-        result = self.cursor.execute(self.query, (user_id,))
+    def run(self) -> dict[int, CartModel]:
+        result = self.cursor.execute(self.query)
         results = result.fetchall()
         return {
             columns[0]: CartModel.from_db(result.description, columns)
@@ -16,6 +16,4 @@ class CartSelectCartsOperation(DatabaseOperation):
         return """
             SELECT cart_id_, name_, icon_
             FROM carts_
-            INNER JOIN carts_users_ USING (cart_id_)
-            WHERE user_id_ = ?
         """

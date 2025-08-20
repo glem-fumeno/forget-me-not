@@ -1,15 +1,13 @@
-from api.controllers.carts.controller import CartController
+from api.controllers.controller import Controller
 from api.docs.models import EndpointDict
-from api.errors import LoggedOut
 from api.models.carts.errors import CartNotFoundError
 from api.models.carts.requests import CartUpdateRequest
 from api.models.carts.responses import CartResponse
 
 
-class CartUpdateController(CartController):
+class CartUpdateController(Controller):
     def run(self, cart_id: int, request: CartUpdateRequest) -> CartResponse:
-        self.validate_access()
-        model = self.repository.carts.select_cart(self.issuer.user_id, cart_id)
+        model = self.repository.carts.select_cart(cart_id)
         if model is None:
             raise CartNotFoundError
         self.model = model
@@ -43,5 +41,5 @@ class CartUpdateController(CartController):
             path={"cart_id": "integer"},
             body=CartUpdateRequest,
             responses=CartResponse,
-            errors=[CartNotFoundError, LoggedOut],
+            errors=[CartNotFoundError],
         )

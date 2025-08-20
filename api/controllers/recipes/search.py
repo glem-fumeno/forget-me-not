@@ -1,13 +1,11 @@
-from api.controllers.recipes.controller import RecipeController
+from api.controllers.controller import Controller
 from api.docs.models import EndpointDict
-from api.errors import LoggedOut
 from api.models.recipes.responses import RecipeListResponse, RecipeResponse
 
 
-class RecipeSearchController(RecipeController):
+class RecipeSearchController(Controller):
     def run(self) -> RecipeListResponse:
-        self.validate_access()
-        recipes = self.repository.recipes.select_recipes(self.issuer.user_id)
+        recipes = self.repository.recipes.select_recipes()
         recipe_list = list(recipes.values())
         recipes_items = self.repository.recipes.select_recipe_items(
             [recipe.recipe_id for recipe in recipe_list]
@@ -28,5 +26,5 @@ class RecipeSearchController(RecipeController):
         return EndpointDict(
             endpoint="get /recipes/search",
             responses=RecipeListResponse,
-            errors=[LoggedOut],
+            errors=[],
         )

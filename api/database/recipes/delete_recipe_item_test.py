@@ -12,12 +12,10 @@ class TestDeleteRecipeItem(unittest.TestCase):
         self.addCleanup(self.repository.__exit__, 1, None, None)
         self.faker = Faker()
         self.item = self.faker.item_model
-        self.user = self.faker.user_model
         self.recipe = self.faker.recipe_model
 
     def test_deletes_recipe_item_from_db(self):
-        self.repository.users.insert_user(self.user)
-        self.repository.recipes.insert_recipe(self.user.user_id, self.recipe)
+        self.repository.recipes.insert_recipe(self.recipe)
         self.repository.items.insert_item(self.item)
         self.repository.recipes.insert_recipe_item(
             self.recipe.recipe_id, self.item.item_id

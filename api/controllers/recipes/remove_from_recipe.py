@@ -1,17 +1,13 @@
-from api.controllers.recipes.controller import RecipeController
+from api.controllers.controller import Controller
 from api.docs.models import EndpointDict
-from api.errors import LoggedOut
 from api.models.items.errors import ItemNotFoundError
 from api.models.recipes.errors import RecipeNotFoundError
 from api.models.recipes.responses import RecipeResponse
 
 
-class RecipeRemoveFromRecipeController(RecipeController):
+class RecipeRemoveFromRecipeController(Controller):
     def run(self, recipe_id: int, item_id: int) -> RecipeResponse:
-        self.validate_access()
-        model = self.repository.recipes.select_recipe(
-            self.issuer.user_id, recipe_id
-        )
+        model = self.repository.recipes.select_recipe(recipe_id)
         if model is None:
             raise RecipeNotFoundError
         items = self.repository.items.select_items()
@@ -30,5 +26,5 @@ class RecipeRemoveFromRecipeController(RecipeController):
             endpoint="delete /recipes/{recipe_id}/{item_id}",
             path={"recipe_id": "integer", "item_id": "integer"},
             responses=RecipeResponse,
-            errors=[RecipeNotFoundError, ItemNotFoundError, LoggedOut],
+            errors=[RecipeNotFoundError, ItemNotFoundError],
         )

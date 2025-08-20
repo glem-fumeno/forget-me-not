@@ -11,17 +11,13 @@ class TestInsertCart(unittest.TestCase):
         self.repository.__enter__()
         self.addCleanup(self.repository.__exit__, 1, None, None)
         self.faker = Faker()
-        self.user = self.faker.user_model
-        self.repository.users.insert_user(self.user)
         self.cart = self.faker.cart_model
 
     def test_changes_cart_id(self):
-        self.repository.carts.insert_cart(self.user.user_id, self.cart)
+        self.repository.carts.insert_cart(self.cart)
         self.assertNotEqual(self.cart.cart_id, -1)
 
     def test_inserts_cart_to_db(self):
-        self.repository.carts.insert_cart(self.user.user_id, self.cart)
-        result = self.repository.carts.select_cart(
-            self.user.user_id, self.cart.cart_id
-        )
+        self.repository.carts.insert_cart(self.cart)
+        result = self.repository.carts.select_cart(self.cart.cart_id)
         self.assertIsNotNone(result)

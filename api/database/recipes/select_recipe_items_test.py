@@ -11,14 +11,10 @@ class TestSelectRecipeItems(unittest.TestCase):
         self.repository.__enter__()
         self.addCleanup(self.repository.__exit__, 1, None, None)
         self.faker = Faker()
-        self.user = self.faker.user_model
-        self.repository.users.insert_user(self.user)
         self.recipe = self.faker.recipe_model
-        self.repository.recipes.insert_recipe(self.user.user_id, self.recipe)
+        self.repository.recipes.insert_recipe(self.recipe)
         self.new_recipe = self.faker.recipe_model
-        self.repository.recipes.insert_recipe(
-            self.user.user_id, self.new_recipe
-        )
+        self.repository.recipes.insert_recipe(self.new_recipe)
         self.item = self.faker.item_model
 
     def test_returns_all_recipe_items(self):

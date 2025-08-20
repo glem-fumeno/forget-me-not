@@ -1,22 +1,11 @@
-import unittest
-
-from api.context import Context
-from api.controllers.controllers import Controllers
-from api.controllers.mock_repository import MockRepository
-from api.errors import Inaccessible, LoggedOut
-from api.faker import Faker
 from api.models.items.errors import ItemExistsError, ItemNotFoundError
 from api.models.items.requests import ItemUpdateRequest
+from api.test_case import TestCase
 
 
-class TestUpdate(unittest.TestCase):
+class TestUpdate(TestCase):
     def setUp(self) -> None:
-        self.ctx = Context()
-        self.faker = Faker()
-        self.controllers = Controllers(self.ctx, MockRepository())
-        self.login = self.faker.login
-        self.user = self.controllers.users.register(self.login)
-        self.ctx.add("token", self.user.token)
+        super().setUp()
         self.item = self.controllers.items.create(self.faker.item)
         self.new_item = self.controllers.items.create(self.faker.item)
         self.request = ItemUpdateRequest()
@@ -53,14 +42,3 @@ class TestUpdate(unittest.TestCase):
         self.assertEqual(result.item_id, self.item.item_id)
         self.assertEqual(result.name, self.item.name)
         self.assertEqual(result.icon, self.request.icon)
-
-    def test_user_logged_out_raises_error(self):
-        self.ctx.add("token", "")
-        with self.assertRaises(LoggedOut):
-            self.controllers.items.update(-1, self.request)
-
-    def test_user_role_raises_error(self):
-        user = self.controllers.users.register(self.faker.login)
-        self.ctx.add("token", user.token)
-        with self.assertRaises(Inaccessible):
-            self.controllers.items.update(-1, self.request)

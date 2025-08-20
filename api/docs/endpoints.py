@@ -3,11 +3,9 @@ from flask import Blueprint, send_file
 from api.endpoints.carts import endpoints as carts
 from api.endpoints.items import endpoints as items
 from api.endpoints.recipes import endpoints as recipes
-from api.endpoints.users import endpoints as users
 
 blueprint = Blueprint("docs", "docs", url_prefix="/docs")
 docs = [
-    *users.docs,
     *items.docs,
     *carts.docs,
     *recipes.docs,

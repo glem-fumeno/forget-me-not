@@ -1,22 +1,11 @@
-import unittest
-
-from api.context import Context
-from api.controllers.controllers import Controllers
-from api.controllers.mock_repository import MockRepository
-from api.errors import LoggedOut
-from api.faker import Faker
 from api.models.carts.errors import CartNotFoundError
 from api.models.carts.requests import CartUpdateRequest
+from api.test_case import TestCase
 
 
-class TestUpdate(unittest.TestCase):
+class TestUpdate(TestCase):
     def setUp(self) -> None:
-        self.ctx = Context()
-        self.faker = Faker()
-        self.controllers = Controllers(self.ctx, MockRepository())
-        self.login = self.faker.login
-        self.user = self.controllers.users.register(self.login)
-        self.ctx.add("token", self.user.token)
+        super().setUp()
         self.cart = self.controllers.carts.create(self.faker.cart)
         self.request = CartUpdateRequest()
 
@@ -43,8 +32,3 @@ class TestUpdate(unittest.TestCase):
         self.assertEqual(result.cart_id, self.cart.cart_id)
         self.assertEqual(result.name, self.cart.name)
         self.assertEqual(result.icon, self.request.icon)
-
-    def test_user_logged_out_raises_error(self):
-        self.ctx.add("token", "")
-        with self.assertRaises(LoggedOut):
-            self.controllers.carts.update(-1, self.request)

@@ -2,18 +2,18 @@ from api.models.carts.errors import CartNotFoundError
 from api.test_case import TestCase
 
 
-class TestRead(TestCase):
+class TestUpdateDefault(TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.cart = self.faker.cart
 
     def test_raises_error_if_not_found(self):
         with self.assertRaises(CartNotFoundError):
-            self.controllers.carts.read(-1)
+            self.controllers.carts.update_default(-1)
 
     def test_returns_cart_if_found(self):
         cart = self.controllers.carts.create(self.cart)
-        result = self.controllers.carts.read(cart.cart_id)
+        result = self.controllers.carts.update_default(cart.cart_id)
         self.assertEqual(result.cart_id, cart.cart_id)
         self.assertEqual(result.name, cart.name)
         self.assertEqual(result.icon, cart.icon)

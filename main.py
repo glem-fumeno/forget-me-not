@@ -8,7 +8,6 @@ from api.docs.endpoints import blueprint
 from api.endpoints.carts import endpoints as carts
 from api.endpoints.items import endpoints as items
 from api.endpoints.recipes import endpoints as recipes
-from api.endpoints.users import endpoints as users
 from api.logger import init_logger
 from config import get_config
 
@@ -23,7 +22,6 @@ CORS(
 )
 logging.getLogger("werkzeug").setLevel(logging.ERROR)
 app.register_blueprint(blueprint)
-app.register_blueprint(users.blueprint)
 app.register_blueprint(items.blueprint)
 app.register_blueprint(carts.blueprint)
 app.register_blueprint(recipes.blueprint)

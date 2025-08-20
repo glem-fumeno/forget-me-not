@@ -1,13 +1,11 @@
-from api.controllers.carts.controller import CartController
+from api.controllers.controller import Controller
 from api.docs.models import EndpointDict
-from api.errors import LoggedOut
 from api.models.carts.responses import CartListResponse, CartResponse
 
 
-class CartSearchController(CartController):
+class CartSearchController(Controller):
     def run(self) -> CartListResponse:
-        self.validate_access()
-        carts = self.repository.carts.select_carts(self.issuer.user_id)
+        carts = self.repository.carts.select_carts()
         return CartListResponse(
             carts=[
                 CartResponse.from_model(model, None)
@@ -21,5 +19,5 @@ class CartSearchController(CartController):
         return EndpointDict(
             endpoint="get /carts/search",
             responses=CartListResponse,
-            errors=[LoggedOut],
+            errors=[],
         )

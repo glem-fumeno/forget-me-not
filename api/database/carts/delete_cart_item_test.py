@@ -12,12 +12,10 @@ class TestDeleteCartItem(unittest.TestCase):
         self.addCleanup(self.repository.__exit__, 1, None, None)
         self.faker = Faker()
         self.item = self.faker.item_model
-        self.user = self.faker.user_model
         self.cart = self.faker.cart_model
 
     def test_deletes_cart_item_from_db(self):
-        self.repository.users.insert_user(self.user)
-        self.repository.carts.insert_cart(self.user.user_id, self.cart)
+        self.repository.carts.insert_cart(self.cart)
         self.repository.items.insert_item(self.item)
         items = {self.item.item_id}
         for _ in range(5):

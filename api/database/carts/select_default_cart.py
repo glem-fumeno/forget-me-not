@@ -2,9 +2,9 @@ from api.database.operation import DatabaseOperation
 from api.models.carts.models import CartModel
 
 
-class CartSelectCartOperation(DatabaseOperation):
-    def run(self, cart_id: int) -> CartModel | None:
-        result = self.cursor.execute(self.query, (cart_id,))
+class CartSelectDefaultCartOperation(DatabaseOperation):
+    def run(self) -> CartModel | None:
+        result = self.cursor.execute(self.query)
         columns = result.fetchone()
         if columns is None:
             return
@@ -14,6 +14,7 @@ class CartSelectCartOperation(DatabaseOperation):
     def query(self) -> str:
         return """
             SELECT cart_id_, name_, icon_
-            FROM carts_
-            WHERE cart_id_ = ?
+            FROM metadata_
+            INNER JOIN carts_ USING (cart_id_)
+            WHERE metadata_id_ = 0
         """

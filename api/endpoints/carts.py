@@ -4,13 +4,14 @@ from api.controllers.carts.add_recipe_to_cart import (
     CartAddRecipeToCartController,
 )
 from api.controllers.carts.add_to_cart import CartAddToCartController
-from api.controllers.carts.add_user_to_cart import CartAddUserToCartController
 from api.controllers.carts.create import CartCreateController
 from api.controllers.carts.delete import CartDeleteController
 from api.controllers.carts.read import CartReadController
+from api.controllers.carts.read_default import CartReadDefaultController
 from api.controllers.carts.remove_from_cart import CartRemoveFromCartController
 from api.controllers.carts.search import CartSearchController
 from api.controllers.carts.update import CartUpdateController
+from api.controllers.carts.update_default import CartUpdateDefaultController
 from api.endpoints.endpoints import Endpoints
 from api.models.carts.requests import CartCreateRequest, CartUpdateRequest
 
@@ -22,11 +23,12 @@ class CartEndpoints(Endpoints):
         self.route("get /search", self.search)
         self.route("get /<cart_id>", self.read)
         self.route("patch /<cart_id>", self.update)
+        self.route("put /default", self.update_default)
+        self.route("get /default", self.read_default)
         self.route("delete /<cart_id>", self.delete)
         self.route(
             "put /<cart_id>/recipes/<recipe_id>", self.add_recipe_to_cart
         )
-        self.route("put /<cart_id>/users/<user_id>", self.add_user_to_cart)
         self.route("put /<cart_id>/<item_id>", self.add_to_cart)
         self.route("delete /<cart_id>/<item_id>", self.remove_from_cart)
 
@@ -43,8 +45,18 @@ class CartEndpoints(Endpoints):
         return controller.run(cart_id)
 
     @Endpoints.handler
+    def read_default(self, controller: CartReadDefaultController):
+        return controller.run()
+
+    @Endpoints.handler
     def update(self, controller: CartUpdateController, cart_id: int):
         return controller.run(cart_id, CartUpdateRequest.from_flask(request))
+
+    @Endpoints.handler
+    def update_default(
+        self, controller: CartUpdateDefaultController, cart_id: int
+    ):
+        return controller.run(cart_id)
 
     @Endpoints.handler
     def delete(self, controller: CartDeleteController, cart_id: int):
@@ -55,15 +67,6 @@ class CartEndpoints(Endpoints):
         self, controller: CartAddToCartController, cart_id: int, item_id: int
     ):
         return controller.run(cart_id, item_id)
-
-    @Endpoints.handler
-    def add_user_to_cart(
-        self,
-        controller: CartAddUserToCartController,
-        cart_id: int,
-        user_id: int,
-    ):
-        return controller.run(cart_id, user_id)
 
     @Endpoints.handler
     def add_recipe_to_cart(
