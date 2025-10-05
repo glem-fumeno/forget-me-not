@@ -28,4 +28,3 @@ class CartStreamMethod(Method):
                 ]
             )
             yield f"event: cart\ndata: {data}\n\n"
-            self.queue.task_done()
