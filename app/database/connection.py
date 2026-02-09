@@ -26,6 +26,7 @@ class DatabaseConnection:
 
     async def connect(self):
         self.connection = await connect(self.file)
+        await self.connection.execute("PRAGMA foreign_keys = ON")
         self.connection.row_factory = Row
 
     async def migrate(self):
